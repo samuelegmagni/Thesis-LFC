@@ -33,5 +33,5 @@ L =
 Re = rho*u*2*R_CC/mu;     %Re_paper = 65797
 
 u_exp_vect = zeros(1)
-
+% ciaos
 u_exp = sqrt(Re*)
