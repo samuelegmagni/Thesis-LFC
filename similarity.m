@@ -44,9 +44,11 @@ u_exp = Re*(data.mu./( data.Rho*data.Mw*D_test ));
 
 m_dot_exp = data.Rho*data.Mw.*u_exp*0.25*pi*D_test^2;
 
+adjust_vect = ones(length(T_vect),length(P_vect));
+
 T_amb = 298;
 
-q_dot_exp = m_dot_exp.*( (data.Cp/data.Mw).*T_vect' - ( (data.Cp(1,1)/data.Mw)*T_amb*ones(111,42) ) );
+q_dot_exp = m_dot_exp.*( (data.Cp/data.Mw).*T_vect' - ( (data.Cp(1,1)/data.Mw)*T_amb*adjust_vect ) );
 
 figure()
 contourf(data.P*1e-5,data.T,m_dot_exp); 
@@ -72,7 +74,7 @@ u_exp = G./(data.Rho*data.Mw);
 
 m_dot_exp = data.Rho*data.Mw.*u_exp*0.25*pi*D_test^2;
 
-q_dot_exp = m_dot_exp.*( (data.Cp/data.Mw).*T_vect' - ( (data.Cp(1,1)/data.Mw)*T_amb*ones(111,42) ) );
+q_dot_exp = m_dot_exp.*( (data.Cp/data.Mw).*T_vect' - ( (data.Cp(1,1)/data.Mw)*T_amb*adjust_vect ) );
 
 figure()
 contourf(data.P*1e-5,data.T,m_dot_exp); 
@@ -98,7 +100,7 @@ u_exp = sqrt(mom_flux./(data.Rho*data.Mw));
 
 m_dot_exp = data.Rho*data.Mw.*u_exp*0.25*pi*D_test^2;
 
-q_dot_exp = m_dot_exp.*( (data.Cp/data.Mw).*T_vect' - ( (data.Cp(1,1)/data.Mw)*T_amb*ones(111,42) ) );
+q_dot_exp = m_dot_exp.*( (data.Cp/data.Mw).*T_vect' - ( (data.Cp(1,1)/data.Mw)*T_amb*adjust_vect ) );
 
 figure()
 contourf(data.P*1e-5,data.T,m_dot_exp); 
@@ -120,11 +122,11 @@ c.Label.String = 'q_{N_2} [kW/m^2]';
 
 energy_flux = rho*u*c_p*T;      % energy_flux_paper = 284.6*1e6;
 
-u_exp = energy_flux./( ((data.Rho*data.Mw).*(data.Cp/data.Mw)) .* (T_vect'*ones(1,42)) );
+u_exp = energy_flux./( ((data.Rho*data.Mw).*(data.Cp/data.Mw)) .* (T_vect'*ones(1,length(P_vect))) );
 
 m_dot_exp = data.Rho*data.Mw.*u_exp*0.25*pi*D_test^2;
 
-q_dot_exp = m_dot_exp.*( (data.Cp/data.Mw).*T_vect' - ( (data.Cp(1,1)/data.Mw)*T_amb*ones(111,42) ) );
+q_dot_exp = m_dot_exp.*( (data.Cp/data.Mw).*T_vect' - ( (data.Cp(1,1)/data.Mw)*T_amb*adjust_vect ) );
 
 figure()
 contourf(data.P*1e-5,data.T,m_dot_exp); 
