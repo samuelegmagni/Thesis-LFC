@@ -147,7 +147,7 @@ c.Label.String = 'q_{N_2} [kW/m^2]';
 
 %% Small scale test facility
 
-T_small = [298:5:650];
+T_small = [298:5:850];
 P_small = [1:0.2:8];
 
 data = nistdata('N2',T_small,P_small);

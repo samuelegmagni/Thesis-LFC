@@ -47,7 +47,7 @@ c.Label.String = '\lambda_{N_2} [W/m*K]';
 
 figure()
 contourf(data.P*1e-5,data.T,data.mu); 
-title('Conductivity')
+title('Viscosity')
 xlabel('Pressure $[bar]$')
 ylabel('Temperature $[K]$')
 c = colorbar;
