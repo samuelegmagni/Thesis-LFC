@@ -16,38 +16,40 @@ P = [1:5:200];
 data = nistdata('N2',T,P); 
 %% Density
 
+figure()
 contourf(data.P*1e-5,data.T,data.Rho*data.Mw); 
 title('Density')
 xlabel('Pressure $[bar]$')
 ylabel('Temperature $[K]$')
 c = colorbar;
-c.Label.String = '\rho_{N2} [kg/m^3]';
+c.Label.String = '\rho_{N_2} [kg/m^3]';
 %% Heat capacity at constant pressure
 
+figure()
 contourf(data.P*1e-5,data.T,data.Cp/data.Mw); 
 title('Heat capacity at constant pressure')
 xlabel('Pressure $[bar]$')
 ylabel('Temperature $[K]$')
 c = colorbar;
-c.Label.String = 'c_{p,N2} [J/Kg*K]';
+c.Label.String = 'c_{p,N_2} [J/Kg*K]';
 
 %% Conductivity 
 
+figure()
 contourf(data.P*1e-5,data.T,data.k); 
 title('Conductivity')
 xlabel('Pressure $[bar]$')
 ylabel('Temperature $[K]$')
 c = colorbar;
-c.Label.String = '\lambda [W/m*K]';
+c.Label.String = '\lambda_{N_2} [W/m*K]';
 
 %% Viscosity 
 
 figure()
 contourf(data.P*1e-5,data.T,data.mu); 
-shading flat
 title('Conductivity')
 xlabel('Pressure $[bar]$')
 ylabel('Temperature $[K]$')
 c = colorbar;
-c.Label.String = '\mu [Pa*s]';
+c.Label.String = '\mu_{N_2} [Pa*s]';
 
