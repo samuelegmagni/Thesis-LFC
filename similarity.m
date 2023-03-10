@@ -10,6 +10,7 @@ set(0,'DefaultAxesTickLabelInterpreter','Latex');
 set(0,'DefaultTextInterpreter','Latex');
 set(0,'DefaultLegendFontSize',12);
 
+%%
 T_vect = [298:5:850];
 P_vect = [1:5:210];
 
@@ -142,9 +143,9 @@ ylabel('Temperature $[K]$')
 c = colorbar;
 c.Label.String = 'q_{N_2} [kW/m^2]';
 
-%% Small scale test facility
+%% Small scale test facility: momentum flux analogy
 
-T_small = [298:5:850];
+T_small = [298:5:650];
 P_small = [1:0.2:8];
 
 data = nistdata('N2',T_small,P_small);
@@ -158,11 +159,13 @@ u_exp = sqrt(mom_flux./(data.Rho*data.Mw));
 
 m_dot_exp = data.Rho*data.Mw.*u_exp*L_test^2;
 
-q_dot_exp = m_dot_exp.*( (data.Cp/data.Mw).*T_vect' - ( (data.Cp(1,1)/data.Mw)*T_amb*ones(111,36) ) );
+adjust_vect = ones(length(T_small),length(P_small));
+
+q_dot_exp = m_dot_exp.*( (data.Cp/data.Mw).*T_small' - ( (data.Cp(1,1)/data.Mw)*T_small(1)*adjust_vect ) );
 
 figure()
 contourf(data.P*1e-5,data.T,m_dot_exp); 
-title('Mass flow rate: momentum flux similarity')
+title('Slab 30x30: mass flow rate')
 xlabel('Pressure $[bar]$')
 ylabel('Temperature $[K]$')
 c = colorbar;
@@ -170,7 +173,7 @@ c.Label.String = 'm_{N_2} [kg/s]';
 
 figure()
 contourf(data.P*1e-5,data.T,1e-3*q_dot_exp/1);     % area di riferimento 1 m^2
-title('Energy flux: momentum flux similarity')
+title('Slab 30x30: energy flux')
 xlabel('Pressure $[bar]$')
 ylabel('Temperature $[K]$')
 c = colorbar;
@@ -185,11 +188,11 @@ u_exp = sqrt(mom_flux./(data.Rho*data.Mw));
 
 m_dot_exp = data.Rho*data.Mw.*u_exp*A_test;
 
-q_dot_exp = m_dot_exp.*( (data.Cp/data.Mw).*T_vect' - ( (data.Cp(1,1)/data.Mw)*T_amb*ones(111,36) ) );
+q_dot_exp = m_dot_exp.*( (data.Cp/data.Mw).*T_small' - ( (data.Cp(1,1)/data.Mw)*T_small(1)*adjust_vect ) );
 
 figure()
 contourf(data.P*1e-5,data.T,m_dot_exp); 
-title('Mass flow rate: momentum flux similarity')
+title('Slab 49x30: mass flow rate')
 xlabel('Pressure $[bar]$')
 ylabel('Temperature $[K]$')
 c = colorbar;
@@ -197,7 +200,7 @@ c.Label.String = 'm_{N_2} [kg/s]';
 
 figure()
 contourf(data.P*1e-5,data.T,1e-3*q_dot_exp/1);     % area di riferimento 1 m^2
-title('Energy flux: momentum flux similarity')
+title('Slab 49x30: energy flux')
 xlabel('Pressure $[bar]$')
 ylabel('Temperature $[K]$')
 c = colorbar;
@@ -212,11 +215,11 @@ u_exp = sqrt(mom_flux./(data.Rho*data.Mw));
 
 m_dot_exp = data.Rho*data.Mw.*u_exp*A_test;
 
-q_dot_exp = m_dot_exp.*( (data.Cp/data.Mw).*T_vect' - ( (data.Cp(1,1)/data.Mw)*T_amb*ones(111,36) ) );
+q_dot_exp = m_dot_exp.*( (data.Cp/data.Mw).*T_small' - ( (data.Cp(1,1)/data.Mw)*T_small(1)*adjust_vect ) );
 
 figure()
 contourf(data.P*1e-5,data.T,m_dot_exp); 
-title('Mass flow rate: momentum flux similarity')
+title('Slab 69x30: mass flow rate')
 xlabel('Pressure $[bar]$')
 ylabel('Temperature $[K]$')
 c = colorbar;
@@ -224,7 +227,7 @@ c.Label.String = 'm_{N_2} [kg/s]';
 
 figure()
 contourf(data.P*1e-5,data.T,1e-3*q_dot_exp/1);     % area di riferimento 1 m^2
-title('Energy flux: momentum flux similarity')
+title('Slab 69x30: energy flux')
 xlabel('Pressure $[bar]$')
 ylabel('Temperature $[K]$')
 c = colorbar;
@@ -239,11 +242,11 @@ u_exp = sqrt(mom_flux./(data.Rho*data.Mw));
 
 m_dot_exp = data.Rho*data.Mw.*u_exp*A_test;
 
-q_dot_exp = m_dot_exp.*( (data.Cp/data.Mw).*T_vect' - ( (data.Cp(1,1)/data.Mw)*T_amb*ones(111,36) ) );
+q_dot_exp = m_dot_exp.*( (data.Cp/data.Mw).*T_small' - ( (data.Cp(1,1)/data.Mw)*T_small(1)*adjust_vect ) );
 
 figure()
 contourf(data.P*1e-5,data.T,m_dot_exp); 
-title('Mass flow rate: momentum flux similarity')
+title('Slab 69x69: mass flow rate')
 xlabel('Pressure $[bar]$')
 ylabel('Temperature $[K]$')
 c = colorbar;
@@ -251,7 +254,7 @@ c.Label.String = 'm_{N_2} [kg/s]';
 
 figure()
 contourf(data.P*1e-5,data.T,1e-3*q_dot_exp/1);     % area di riferimento 1 m^2
-title('Energy flux: momentum flux similarity')
+title('Slab 69x69: energy flux')
 xlabel('Pressure $[bar]$')
 ylabel('Temperature $[K]$')
 c = colorbar;
