@@ -145,14 +145,14 @@ ylabel('Temperature $[K]$')
 c = colorbar;
 c.Label.String = 'q_{N_2} [kW/m^2]';
 
-%% Small scale test facility: momentum flux analogy
+%% Small scale test facility
 
 T_small = [298:5:650];
 P_small = [1:0.2:8];
 
 data = nistdata('N2',T_small,P_small);
 
-%% 30x30
+%% 30x30 momentum flux analogy
 L_test = 30*1e-3;
 
 mom_flux = rho*u^2;      % mom_flux_paper = 896.89;
@@ -167,7 +167,7 @@ q_dot_exp = m_dot_exp.*( (data.Cp/data.Mw).*T_small' - ( (data.Cp(1,1)/data.Mw)*
 
 figure()
 contourf(data.P*1e-5,data.T,m_dot_exp); 
-title('Slab 30x30: mass flow rate')
+title('Slab 30x30: mass flow rate momentum flux analogy')
 xlabel('Pressure $[bar]$')
 ylabel('Temperature $[K]$')
 c = colorbar;
@@ -175,13 +175,13 @@ c.Label.String = 'm_{N_2} [kg/s]';
 
 figure()
 contourf(data.P*1e-5,data.T,1e-3*q_dot_exp/1);     % area di riferimento 1 m^2
-title('Slab 30x30: energy flux')
+title('Slab 30x30: energy flux momentum flux analogy')
 xlabel('Pressure $[bar]$')
 ylabel('Temperature $[K]$')
 c = colorbar;
 c.Label.String = 'q_{N_2} [kW/m^2]';
 
-%% 49x30
+%% 49x30 momentum flux analogy
 A_test = 49*30*1e-6;
 
 mom_flux = rho*u^2;      % mom_flux_paper = 896.89;
@@ -194,7 +194,7 @@ q_dot_exp = m_dot_exp.*( (data.Cp/data.Mw).*T_small' - ( (data.Cp(1,1)/data.Mw)*
 
 figure()
 contourf(data.P*1e-5,data.T,m_dot_exp); 
-title('Slab 49x30: mass flow rate')
+title('Slab 49x30: mass flow rate momentum flux analogy')
 xlabel('Pressure $[bar]$')
 ylabel('Temperature $[K]$')
 c = colorbar;
@@ -202,13 +202,13 @@ c.Label.String = 'm_{N_2} [kg/s]';
 
 figure()
 contourf(data.P*1e-5,data.T,1e-3*q_dot_exp/1);     % area di riferimento 1 m^2
-title('Slab 49x30: energy flux')
+title('Slab 49x30: energy flux momentum flux analogy')
 xlabel('Pressure $[bar]$')
 ylabel('Temperature $[K]$')
 c = colorbar;
 c.Label.String = 'q_{N_2} [kW/m^2]';
 
-%% 69x30
+%% 69x30 momentum flux analogy
 A_test = 69*30*1e-6;
 
 mom_flux = rho*u^2;      % mom_flux_paper = 896.89;
@@ -221,7 +221,7 @@ q_dot_exp = m_dot_exp.*( (data.Cp/data.Mw).*T_small' - ( (data.Cp(1,1)/data.Mw)*
 
 figure()
 contourf(data.P*1e-5,data.T,m_dot_exp); 
-title('Slab 69x30: mass flow rate')
+title('Slab 69x30: mass flow rate momentum flux analogy')
 xlabel('Pressure $[bar]$')
 ylabel('Temperature $[K]$')
 c = colorbar;
@@ -229,13 +229,13 @@ c.Label.String = 'm_{N_2} [kg/s]';
 
 figure()
 contourf(data.P*1e-5,data.T,1e-3*q_dot_exp/1);     % area di riferimento 1 m^2
-title('Slab 69x30: energy flux')
+title('Slab 69x30: energy flux momentum flux analogy')
 xlabel('Pressure $[bar]$')
 ylabel('Temperature $[K]$')
 c = colorbar;
 c.Label.String = 'q_{N_2} [kW/m^2]';
 
-%% 69x69
+%% 69x69 momentum flux analogy
 A_test = 69*69*1e-6;
 
 mom_flux = rho*u^2;      % mom_flux_paper = 896.89;
@@ -248,7 +248,7 @@ q_dot_exp = m_dot_exp.*( (data.Cp/data.Mw).*T_small' - ( (data.Cp(1,1)/data.Mw)*
 
 figure()
 contourf(data.P*1e-5,data.T,m_dot_exp); 
-title('Slab 69x69: mass flow rate')
+title('Slab 69x69: mass flow rate momentum flux analogy')
 xlabel('Pressure $[bar]$')
 ylabel('Temperature $[K]$')
 c = colorbar;
@@ -256,7 +256,297 @@ c.Label.String = 'm_{N_2} [kg/s]';
 
 figure()
 contourf(data.P*1e-5,data.T,1e-3*q_dot_exp/1);     % area di riferimento 1 m^2
-title('Slab 69x69: energy flux')
+title('Slab 69x69: energy flux momentum flux analogy')
+xlabel('Pressure $[bar]$')
+ylabel('Temperature $[K]$')
+c = colorbar;
+c.Label.String = 'q_{N_2} [kW/m^2]';
+
+%% 30x30 Reynolds analogy
+L_test = 30*1e-3;
+
+Re = rho*u*L_test/mu;     %Re_paper = 65797
+
+u_exp = Re*(data.mu./( data.Rho*data.Mw*L_test ));
+
+m_dot_exp = data.Rho*data.Mw.*u_exp*L_test^2;
+
+adjust_vect = ones(length(T_small),length(P_small));
+
+q_dot_exp = m_dot_exp.*( (data.Cp/data.Mw).*T_small' - ( (data.Cp(1,1)/data.Mw)*T_small(1)*adjust_vect ) );
+
+figure()
+contourf(data.P*1e-5,data.T,m_dot_exp); 
+title('Slab 30x30: mass flow rate Reynolds analogy')
+xlabel('Pressure $[bar]$')
+ylabel('Temperature $[K]$')
+c = colorbar;
+c.Label.String = 'm_{N_2} [kg/s]';
+
+figure()
+contourf(data.P*1e-5,data.T,1e-3*q_dot_exp/1);     % area di riferimento 1 m^2
+title('Slab 30x30: energy flux Reynolds analogy')
+xlabel('Pressure $[bar]$')
+ylabel('Temperature $[K]$')
+c = colorbar;
+c.Label.String = 'q_{N_2} [kW/m^2]';
+
+%% 69x69 Reynolds analogy
+L_test = 69*1e-3;
+
+Re = rho*u*L_test/mu;     %Re_paper = 65797
+
+u_exp = Re*(data.mu./( data.Rho*data.Mw*L_test ));
+
+m_dot_exp = data.Rho*data.Mw.*u_exp*L_test^2;
+
+adjust_vect = ones(length(T_small),length(P_small));
+
+q_dot_exp = m_dot_exp.*( (data.Cp/data.Mw).*T_small' - ( (data.Cp(1,1)/data.Mw)*T_small(1)*adjust_vect ) );
+
+figure()
+contourf(data.P*1e-5,data.T,m_dot_exp); 
+title('Slab 69x69: mass flow rate Reynolds analogy')
+xlabel('Pressure $[bar]$')
+ylabel('Temperature $[K]$')
+c = colorbar;
+c.Label.String = 'm_{N_2} [kg/s]';
+
+figure()
+contourf(data.P*1e-5,data.T,1e-3*q_dot_exp/1);     % area di riferimento 1 m^2
+title('Slab 69x69: energy flux Reynolds analogy')
+xlabel('Pressure $[bar]$')
+ylabel('Temperature $[K]$')
+c = colorbar;
+c.Label.String = 'q_{N_2} [kW/m^2]';
+
+%% 30x30 mass flux analogy
+L_test = 30*1e-3;
+
+G = rho*u;      % G_paper = 40.54;
+
+u_exp = G./(data.Rho*data.Mw);
+
+m_dot_exp = data.Rho*data.Mw.*u_exp*L_test^2;
+
+adjust_vect = ones(length(T_small),length(P_small));
+
+q_dot_exp = m_dot_exp.*( (data.Cp/data.Mw).*T_small' - ( (data.Cp(1,1)/data.Mw)*T_small(1)*adjust_vect ) );
+
+figure()
+contourf(data.P*1e-5,data.T,m_dot_exp); 
+title('Slab 30x30: mass flow rate mass flux analogy')
+xlabel('Pressure $[bar]$')
+ylabel('Temperature $[K]$')
+c = colorbar;
+c.Label.String = 'm_{N_2} [kg/s]';
+
+figure()
+contourf(data.P*1e-5,data.T,1e-3*q_dot_exp/1);     % area di riferimento 1 m^2
+title('Slab 30x30: energy flux mass flux analogy')
+xlabel('Pressure $[bar]$')
+ylabel('Temperature $[K]$')
+c = colorbar;
+c.Label.String = 'q_{N_2} [kW/m^2]';
+
+%% 49x30 mass flux analogy
+A_test = 30*49*1e-6;
+
+G = rho*u;      % G_paper = 40.54;
+
+u_exp = G./(data.Rho*data.Mw);
+
+m_dot_exp = data.Rho*data.Mw.*u_exp*A_test;
+
+adjust_vect = ones(length(T_small),length(P_small));
+
+q_dot_exp = m_dot_exp.*( (data.Cp/data.Mw).*T_small' - ( (data.Cp(1,1)/data.Mw)*T_small(1)*adjust_vect ) );
+
+figure()
+contourf(data.P*1e-5,data.T,m_dot_exp); 
+title('Slab 49x30: mass flow rate mass flux analogy')
+xlabel('Pressure $[bar]$')
+ylabel('Temperature $[K]$')
+c = colorbar;
+c.Label.String = 'm_{N_2} [kg/s]';
+
+figure()
+contourf(data.P*1e-5,data.T,1e-3*q_dot_exp/1);     % area di riferimento 1 m^2
+title('Slab 49x30: energy flux mass flux analogy')
+xlabel('Pressure $[bar]$')
+ylabel('Temperature $[K]$')
+c = colorbar;
+c.Label.String = 'q_{N_2} [kW/m^2]';
+
+%% 69x30 mass flux analogy
+A_test = 30*69*1e-6;
+
+G = rho*u;      % G_paper = 40.54;
+
+u_exp = G./(data.Rho*data.Mw);
+
+m_dot_exp = data.Rho*data.Mw.*u_exp*A_test;
+
+adjust_vect = ones(length(T_small),length(P_small));
+
+q_dot_exp = m_dot_exp.*( (data.Cp/data.Mw).*T_small' - ( (data.Cp(1,1)/data.Mw)*T_small(1)*adjust_vect ) );
+
+figure()
+contourf(data.P*1e-5,data.T,m_dot_exp); 
+title('Slab 69x30: mass flow rate mass flux analogy')
+xlabel('Pressure $[bar]$')
+ylabel('Temperature $[K]$')
+c = colorbar;
+c.Label.String = 'm_{N_2} [kg/s]';
+
+figure()
+contourf(data.P*1e-5,data.T,1e-3*q_dot_exp/1);     % area di riferimento 1 m^2
+title('Slab 69x30: energy flux mass flux analogy')
+xlabel('Pressure $[bar]$')
+ylabel('Temperature $[K]$')
+c = colorbar;
+c.Label.String = 'q_{N_2} [kW/m^2]';
+
+%% 69x69 mass flux analogy
+L_test = 69*1e-3;
+
+G = rho*u;      % G_paper = 40.54;
+
+u_exp = G./(data.Rho*data.Mw);
+
+m_dot_exp = data.Rho*data.Mw.*u_exp*L_test^2;
+
+adjust_vect = ones(length(T_small),length(P_small));
+
+q_dot_exp = m_dot_exp.*( (data.Cp/data.Mw).*T_small' - ( (data.Cp(1,1)/data.Mw)*T_small(1)*adjust_vect ) );
+
+figure()
+contourf(data.P*1e-5,data.T,m_dot_exp); 
+title('Slab 69x69: mass flow rate mass flux analogy')
+xlabel('Pressure $[bar]$')
+ylabel('Temperature $[K]$')
+c = colorbar;
+c.Label.String = 'm_{N_2} [kg/s]';
+
+figure()
+contourf(data.P*1e-5,data.T,1e-3*q_dot_exp/1);     % area di riferimento 1 m^2
+title('Slab 69x69: energy flux mass flux analogy')
+xlabel('Pressure $[bar]$')
+ylabel('Temperature $[K]$')
+c = colorbar;
+c.Label.String = 'q_{N_2} [kW/m^2]';
+
+%% 30x30 energy  flux analogy
+L_test = 30*1e-3;
+
+energy_flux = rho*u*c_p*T;      % energy_flux_paper = 284.6*1e6;
+
+u_exp = energy_flux./( ((data.Rho*data.Mw).*(data.Cp/data.Mw)) .* (T_vect'*ones(1,length(P_vect))) );
+
+m_dot_exp = data.Rho*data.Mw.*u_exp*L_test^2;
+
+adjust_vect = ones(length(T_small),length(P_small));
+
+q_dot_exp = m_dot_exp.*( (data.Cp/data.Mw).*T_small' - ( (data.Cp(1,1)/data.Mw)*T_small(1)*adjust_vect ) );
+
+figure()
+contourf(data.P*1e-5,data.T,m_dot_exp); 
+title('Slab 30x30: mass flow rate energy flux analogy')
+xlabel('Pressure $[bar]$')
+ylabel('Temperature $[K]$')
+c = colorbar;
+c.Label.String = 'm_{N_2} [kg/s]';
+
+figure()
+contourf(data.P*1e-5,data.T,1e-3*q_dot_exp/1);     % area di riferimento 1 m^2
+title('Slab 30x30: energy flux energy flux analogy')
+xlabel('Pressure $[bar]$')
+ylabel('Temperature $[K]$')
+c = colorbar;
+c.Label.String = 'q_{N_2} [kW/m^2]';
+
+%% 49x30 energy  flux analogy
+A_test = 30*49*1e-6;
+
+energy_flux = rho*u*c_p*T;      % energy_flux_paper = 284.6*1e6;
+
+u_exp = energy_flux./( ((data.Rho*data.Mw).*(data.Cp/data.Mw)) .* (T_vect'*ones(1,length(P_vect))) );
+
+m_dot_exp = data.Rho*data.Mw.*u_exp*A_test;
+
+adjust_vect = ones(length(T_small),length(P_small));
+
+q_dot_exp = m_dot_exp.*( (data.Cp/data.Mw).*T_small' - ( (data.Cp(1,1)/data.Mw)*T_small(1)*adjust_vect ) );
+
+figure()
+contourf(data.P*1e-5,data.T,m_dot_exp); 
+title('Slab 49x30: mass flow rate energy flux analogy')
+xlabel('Pressure $[bar]$')
+ylabel('Temperature $[K]$')
+c = colorbar;
+c.Label.String = 'm_{N_2} [kg/s]';
+
+figure()
+contourf(data.P*1e-5,data.T,1e-3*q_dot_exp/1);     % area di riferimento 1 m^2
+title('Slab 49x30: energy flux energy flux analogy')
+xlabel('Pressure $[bar]$')
+ylabel('Temperature $[K]$')
+c = colorbar;
+c.Label.String = 'q_{N_2} [kW/m^2]';
+
+%% 49x30 energy  flux analogy
+A_test = 30*69*1e-6;
+
+energy_flux = rho*u*c_p*T;      % energy_flux_paper = 284.6*1e6;
+
+u_exp = energy_flux./( ((data.Rho*data.Mw).*(data.Cp/data.Mw)) .* (T_vect'*ones(1,length(P_vect))) );
+
+m_dot_exp = data.Rho*data.Mw.*u_exp*A_test;
+
+adjust_vect = ones(length(T_small),length(P_small));
+
+q_dot_exp = m_dot_exp.*( (data.Cp/data.Mw).*T_small' - ( (data.Cp(1,1)/data.Mw)*T_small(1)*adjust_vect ) );
+
+figure()
+contourf(data.P*1e-5,data.T,m_dot_exp); 
+title('Slab 69x30: mass flow rate energy flux analogy')
+xlabel('Pressure $[bar]$')
+ylabel('Temperature $[K]$')
+c = colorbar;
+c.Label.String = 'm_{N_2} [kg/s]';
+
+figure()
+contourf(data.P*1e-5,data.T,1e-3*q_dot_exp/1);     % area di riferimento 1 m^2
+title('Slab 69x30: energy flux energy flux analogy')
+xlabel('Pressure $[bar]$')
+ylabel('Temperature $[K]$')
+c = colorbar;
+c.Label.String = 'q_{N_2} [kW/m^2]';
+
+%% 69x69 energy  flux analogy
+L_test = 69*1e-3;
+
+energy_flux = rho*u*c_p*T;      % energy_flux_paper = 284.6*1e6;
+
+u_exp = energy_flux./( ((data.Rho*data.Mw).*(data.Cp/data.Mw)) .* (T_vect'*ones(1,length(P_vect))) );
+
+m_dot_exp = data.Rho*data.Mw.*u_exp*L_test^2;
+
+adjust_vect = ones(length(T_small),length(P_small));
+
+q_dot_exp = m_dot_exp.*( (data.Cp/data.Mw).*T_small' - ( (data.Cp(1,1)/data.Mw)*T_small(1)*adjust_vect ) );
+
+figure()
+contourf(data.P*1e-5,data.T,m_dot_exp); 
+title('Slab 69x69: mass flow rate energy flux analogy')
+xlabel('Pressure $[bar]$')
+ylabel('Temperature $[K]$')
+c = colorbar;
+c.Label.String = 'm_{N_2} [kg/s]';
+
+figure()
+contourf(data.P*1e-5,data.T,1e-3*q_dot_exp/1);     % area di riferimento 1 m^2
+title('Slab 69x69: energy flux energy flux analogy')
 xlabel('Pressure $[bar]$')
 ylabel('Temperature $[K]$')
 c = colorbar;
