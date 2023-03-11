@@ -308,7 +308,7 @@ q_dot_exp = m_dot_exp.*( (data.Cp/data.Mw).*T_small' - ( (data.Cp(1,1)/data.Mw)*
 
 figure()
 contourf(data.P*1e-5,data.T,m_dot_exp); 
-title('Slab 30x30: mass flow rate Reynolds analogy')
+title('Slab 49x30: mass flow rate Reynolds analogy')
 xlabel('Pressure $[bar]$')
 ylabel('Temperature $[K]$')
 c = colorbar;
@@ -316,7 +316,7 @@ c.Label.String = 'm_{N_2} [kg/s]';
 
 figure()
 contourf(data.P*1e-5,data.T,1e-3*q_dot_exp/1);     % area di riferimento 1 m^2
-title('Slab 30x30: energy flux Reynolds analogy')
+title('Slab 49x30: energy flux Reynolds analogy')
 xlabel('Pressure $[bar]$')
 ylabel('Temperature $[K]$')
 c = colorbar;
@@ -339,7 +339,7 @@ q_dot_exp = m_dot_exp.*( (data.Cp/data.Mw).*T_small' - ( (data.Cp(1,1)/data.Mw)*
 
 figure()
 contourf(data.P*1e-5,data.T,m_dot_exp); 
-title('Slab 30x30: mass flow rate Reynolds analogy')
+title('Slab 69x30: mass flow rate Reynolds analogy')
 xlabel('Pressure $[bar]$')
 ylabel('Temperature $[K]$')
 c = colorbar;
@@ -347,7 +347,7 @@ c.Label.String = 'm_{N_2} [kg/s]';
 
 figure()
 contourf(data.P*1e-5,data.T,1e-3*q_dot_exp/1);     % area di riferimento 1 m^2
-title('Slab 30x30: energy flux Reynolds analogy')
+title('Slab 69x30: energy flux Reynolds analogy')
 xlabel('Pressure $[bar]$')
 ylabel('Temperature $[K]$')
 c = colorbar;
