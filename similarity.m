@@ -291,6 +291,67 @@ ylabel('Temperature $[K]$')
 c = colorbar;
 c.Label.String = 'q_{N_2} [kW/m^2]';
 
+%% 49x30 Reynolds analogy
+A_test = 30*49*1e-6;
+
+L_test= 4*30*49*1e-6/ ((49*2+60)*1e-3);
+
+Re = rho*u*L_test/mu;     %Re_paper = 65797
+
+u_exp = Re*(data.mu./( data.Rho*data.Mw*L_test ));
+
+m_dot_exp = data.Rho*data.Mw.*u_exp*A_test;
+
+adjust_vect = ones(length(T_small),length(P_small));
+
+q_dot_exp = m_dot_exp.*( (data.Cp/data.Mw).*T_small' - ( (data.Cp(1,1)/data.Mw)*T_small(1)*adjust_vect ) );
+
+figure()
+contourf(data.P*1e-5,data.T,m_dot_exp); 
+title('Slab 30x30: mass flow rate Reynolds analogy')
+xlabel('Pressure $[bar]$')
+ylabel('Temperature $[K]$')
+c = colorbar;
+c.Label.String = 'm_{N_2} [kg/s]';
+
+figure()
+contourf(data.P*1e-5,data.T,1e-3*q_dot_exp/1);     % area di riferimento 1 m^2
+title('Slab 30x30: energy flux Reynolds analogy')
+xlabel('Pressure $[bar]$')
+ylabel('Temperature $[K]$')
+c = colorbar;
+c.Label.String = 'q_{N_2} [kW/m^2]';
+
+%% 69x30 Reynolds analogy
+A_test = 30*69*1e-6;
+
+L_test= 4*30*69*1e-6/ ((69*2+60)*1e-3);
+
+Re = rho*u*L_test/mu;     %Re_paper = 65797
+
+u_exp = Re*(data.mu./( data.Rho*data.Mw*L_test ));
+
+m_dot_exp = data.Rho*data.Mw.*u_exp*A_test;
+
+adjust_vect = ones(length(T_small),length(P_small));
+
+q_dot_exp = m_dot_exp.*( (data.Cp/data.Mw).*T_small' - ( (data.Cp(1,1)/data.Mw)*T_small(1)*adjust_vect ) );
+
+figure()
+contourf(data.P*1e-5,data.T,m_dot_exp); 
+title('Slab 30x30: mass flow rate Reynolds analogy')
+xlabel('Pressure $[bar]$')
+ylabel('Temperature $[K]$')
+c = colorbar;
+c.Label.String = 'm_{N_2} [kg/s]';
+
+figure()
+contourf(data.P*1e-5,data.T,1e-3*q_dot_exp/1);     % area di riferimento 1 m^2
+title('Slab 30x30: energy flux Reynolds analogy')
+xlabel('Pressure $[bar]$')
+ylabel('Temperature $[K]$')
+c = colorbar;
+c.Label.String = 'q_{N_2} [kW/m^2]';
 %% 69x69 Reynolds analogy
 L_test = 69*1e-3;
 
