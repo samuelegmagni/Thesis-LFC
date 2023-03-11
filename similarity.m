@@ -52,6 +52,7 @@ q_dot_exp = m_dot_exp.*( (data.Cp/data.Mw).*T_vect' - ( (data.Cp(1,1)/data.Mw)*T
 
 figure()
 contourf(data.P*1e-5,data.T,m_dot_exp); 
+shading flat;
 title('Mass flow rate $Re_D$ similarity')
 xlabel('Pressure $[bar]$')
 ylabel('Temperature $[K]$')
@@ -60,6 +61,7 @@ c.Label.String = 'm_{N_2} [kg/s]';
 
 figure()
 contourf(data.P*1e-5,data.T,1e-3*q_dot_exp/1);     % area di riferimento 1 m^2
+shading flat;
 title('Energy flux $Re_D$ similarity')
 xlabel('Pressure $[bar]$')
 ylabel('Temperature $[K]$')
