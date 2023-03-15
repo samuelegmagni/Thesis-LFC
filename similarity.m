@@ -34,7 +34,6 @@ lambda = 0.3372;
 
 A_tot = pi*2*R_CC*L_CC + 2*pi*R_CC^2;
 
-%% 
 %% Full scale test section: Re similarity
 
 D_test = 2*R_CC;
