@@ -8,12 +8,12 @@ clc
 % Qcomb=-deltaHreaz*1e3; % W/kg
 
 m_dot_N2 = 60*1e-3;          % kg/s
-T_fin = 650;                 % K
+T_fin = 1.2*650;             % K
 T_amb = 298.15;              % K
 cp_N2 = 1050;                % J/kgK
 q_N2 = m_dot_N2*cp_N2*(T_fin - T_amb);   % W
 cp_g = 2363;                 % J/kgK
-T_fl = 2305;                 % K
+T_fl = 0.8*2305;             % K
 
 f = @(x) m_dot_N2*cp_N2*(T_fin - T_amb) + x*cp_g*(T_fl) - (m_dot_N2 + x) * ( (cp_N2*m_dot_N2)/(m_dot_N2 + x) + (cp_g*x)/(m_dot_N2 + x) )*(T_fin);
 m_dot_p = 1.2*fzero(f,0.5) ;
