@@ -50,8 +50,8 @@ set(groot,'DefaultAxesTickLabelInterpreter','Latex');
 set(0,'DefaultTextInterpreter','Latex');
 set(0,'DefaultLegendFontSize',12);
 
-T = 1.2*[300:5:600];
-P = [1:2:100];
+T = 1.2*[300:5:650];
+P = [1:0.2:10];
 
 T_amb = 298.15;
 cp_g = 2363;                 % J/kgK
