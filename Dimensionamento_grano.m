@@ -76,8 +76,8 @@ for i = 1 : length(T)
 
     for m = 1 : length(P)
 
-        f = @(x) m_dot_N2(i,m)*cp_N2(i,m)*(T(i) - T_amb) + x*cp_g*(T_fl) - (m_dot_N2(i,m) + x) * ( (cp_N2(i,m)*m_dot_N2(i,m))/(m_dot_N2(i,m) + x) + (cp_g*x)/(m_dot_N2(i,m) + x) )*(T(i));
-        z = 1.2*fzero(f,0.5) ;
+        f = @(x) m_dot_N2(i,m)*cp_N2(1,m)*T_amb + x*cp_g*(T_fl) - (m_dot_N2(i,m) + x) * ( (cp_N2(end,m)*m_dot_N2(i,m) + (cp_g*x))/(m_dot_N2(i,m) + x) )*(T(i));
+        z = fzero(f,0.05) ;
         m_dot_p(i,m) = z; 
 
     end
@@ -90,15 +90,17 @@ title('Slab 30x30: mass flow rate momentum flux analogy')
 xlabel('Pressure $[bar]$')
 ylabel('Temperature $[K]$')
 c = colorbar;
-c.Label.String = 'm_{dot,N_2} [g/s]';
+c.Label.Interpreter = 'latex';
+c.Label.String = '$\dot{m}_{N_2}$ [g/s]';
 
 figure()
 contourf(data.P*1e-5,data.T,m_dot_p*1e3); 
-title('Slab 30x30: mass flow rate momentum flux analogy')
+title('Slab 30x30: propellant mass flow rate')
 xlabel('Pressure $[bar]$')
 ylabel('Temperature $[K]$')
 c = colorbar;
-c.Label.String = 'm_{dot,p} [g/s]';
+c.Label.Interpreter = 'latex';
+c.Label.String = '$\dot{m}_{prop}$ [g/s]';
 
 P_prop = 1;     % bar
 r_b = (1.152*P_prop^0.768)*1e-3;  % m/s
@@ -121,16 +123,18 @@ m_prop=A_b*thickness*1e-9*rho_mix;
 
 figure()
 contourf(data.P*1e-5,data.T,d_b); 
-title('Slab 30x30: mass flow rate momentum flux analogy')
+title('Slab 30x30: SRM charge diameter')
 xlabel('Pressure $[bar]$')
 ylabel('Temperature $[K]$')
 c = colorbar;
+c.Label.Interpreter = 'latex';
 c.Label.String = 'd_b [mm]';
 
 figure()
 contourf(data.P*1e-5,data.T,m_prop); 
-title('Slab 30x30: mass flow rate momentum flux analogy')
+title('Slab 30x30: SRM charge mass')
 xlabel('Pressure $[bar]$')
 ylabel('Temperature $[K]$')
 c = colorbar;
-c.Label.String = 'm_{prop} [kg]';
+c.Label.Interpreter = 'latex';
+c.Label.String = '$m_{prop}$ [kg]';
