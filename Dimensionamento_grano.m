@@ -12,12 +12,12 @@ m_dot_N2 = 60*1e-3;          % kg/s
 T_fin = 1.2*650;             % K
 T_amb = 298.15;              % K
 cp_N2 = 1050;                % J/kgK
-q_N2 = m_dot_N2*cp_N2*(T_fin - T_amb);   % W
+cp_N2_fin = 1117.4;          % J/kgK
 cp_g = 2363;                 % J/kgK
 T_fl = 0.8*2305;             % K
 
-f = @(x) m_dot_N2*cp_N2*(T_fin - T_amb) + x*cp_g*(T_fl) - (m_dot_N2 + x) * ( (cp_N2*m_dot_N2)/(m_dot_N2 + x) + (cp_g*x)/(m_dot_N2 + x) )*(T_fin);
-m_dot_p = 1.2*fzero(f,0.5) ;
+f = @(x) m_dot_N2*cp_N2*T_amb + x*cp_g*(T_fl) - (m_dot_N2 + x) * ( (cp_N2_fin*m_dot_N2 + cp_g*x)/(m_dot_N2 + x) )*(T_fin);
+m_dot_p = fzero(f,0.5) 
 
 
 P = 1;     % bar
@@ -34,10 +34,10 @@ rho_mix = (m_AP + m_HTPB)/(V_AP + V_HTPB);  % kg/m^3
 t_b = 20;            % s
 
 A_b = (m_dot_p/(r_b*rho_mix))*1e6;    % mm^2
-d_b = 2*sqrt(A_b/pi);                 % mm
+d_b = 2*sqrt(A_b/pi)                 % mm
 
-thickness = r_b*t_b*1e3;              % mm
-m_prop=A_b*thickness*1e-9*rho_mix;
+thickness = r_b*t_b*1e3              % mm
+m_prop=A_b*thickness*1e-9*rho_mix
 
 %%
 
@@ -86,21 +86,21 @@ end
 
 figure()
 contourf(data.P*1e-5,data.T,m_dot_N2*1e3); 
-title('Slab 30x30: mass flow rate momentum flux analogy')
+title('Slab 30x30: momentum flux analogy')
 xlabel('Pressure $[bar]$')
 ylabel('Temperature $[K]$')
 c = colorbar;
 c.Label.Interpreter = 'latex';
-c.Label.String = '$\dot{m}_{N_2}$ [g/s]';
+c.Label.String = 'Nitrogen mass flow rate $\dot{m}_{N_2}$ [g/s]';
 
 figure()
 contourf(data.P*1e-5,data.T,m_dot_p*1e3); 
-title('Slab 30x30: propellant mass flow rate')
+title('Slab 30x30: momentum flux analogy')
 xlabel('Pressure $[bar]$')
 ylabel('Temperature $[K]$')
 c = colorbar;
 c.Label.Interpreter = 'latex';
-c.Label.String = '$\dot{m}_{prop}$ [g/s]';
+c.Label.String = 'Propellant mass flow rate $\dot{m}_{prop}$ [g/s]';
 
 P_prop = 1;     % bar
 r_b = (1.152*P_prop^0.768)*1e-3;  % m/s
@@ -123,18 +123,18 @@ m_prop=A_b*thickness*1e-9*rho_mix;
 
 figure()
 contourf(data.P*1e-5,data.T,d_b); 
-title('Slab 30x30: SRM charge diameter')
+title('Slab 30x30: momentum flux analogy')
 xlabel('Pressure $[bar]$')
 ylabel('Temperature $[K]$')
 c = colorbar;
 c.Label.Interpreter = 'latex';
-c.Label.String = 'd_b [mm]';
+c.Label.String = 'SRM charge diameter $d_b$ [mm]';
 
 figure()
 contourf(data.P*1e-5,data.T,m_prop); 
-title('Slab 30x30: SRM charge mass')
+title('Slab 30x30: momentum flux analogy')
 xlabel('Pressure $[bar]$')
 ylabel('Temperature $[K]$')
 c = colorbar;
 c.Label.Interpreter = 'latex';
-c.Label.String = '$m_{prop}$ [kg]';
+c.Label.String = 'SRM charge mass $m_{prop}$ [kg]';
