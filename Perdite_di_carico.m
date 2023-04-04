@@ -13,7 +13,7 @@ P = 7:1:20;
 data = nistdata('N2',T,P);
 %% 
 P_c = 7;                             % Pressure in the test chamber [bar]
-d_p_ext = 6*1e-3;                   % Pipe external diameter [m]
+d_p_ext = 12*1e-3;                   % Pipe external diameter [m]
 t = 0.9*1e-3;                        % Thickness of the tube  [m]
 d_p_int = d_p_ext - 2*t;             % Pipe internal diameter [m]
 A_int = pi*(d_p_int/2)^2;            % Internal cross sectional area [m^2]
@@ -29,12 +29,33 @@ mu_N2 = data.mu;                     % Viscosity of Nitrogen [Pa*s]
 % mom_flux = rho*u^2;                  % Momentum flux in full scale facility [kg/ms^2]
 m_dot_N2 = 60*1e-3;                  % Nitrogen mass flow rate [kg/s]
 v_N2 = m_dot_N2./(A_int*rho_N2);     % Velocity of the fluid inside the pipes [m/s]
-delta_P_inj = 1e-5*40*sqrt(10*P_c*1e5)  
+delta_P_inj = 1e-5*40*sqrt(10*P_c*1e5);  
 
 d_inj = 0.5*1e-3;                    % Injector diameter (conical entrance) [m]
 C_d = 0.7;                           % Discharge coefficient
 A_inj = pi*0.25*d_inj^2;             % Injector cross sectional area
 
-c = (gamma*(8314/28)*T).^0.5         % Speed of sound [m/s]
-M = v_N2./c                          % Mach number [-]
+c = (gamma*(8314/28)*T).^0.5;        % Speed of sound [m/s]
+M = v_N2./c;                         % Mach number [-]
 
+Re = (rho_N2.*v_N2*d_p_int)./mu_N2;  % Reynolds number [-]
+
+eps = 0.015*1e-3;                     % Absolute roughness of stainless steel [m]
+eps_rel = eps/d_p_ext;                % Relative roughness of stainless steel [-]
+
+lambda = zeros(length(Re),1);
+
+for i = 1:length(Re)
+    
+    if Re(i) < 2300
+        
+        lambda(i) = 64/Re(i);
+    
+    else 
+        
+        z = @(x) 1/sqrt(x) + 2*log10(2.51./(Re(i)*sqrt(x)) + eps_rel/3.71);   % Colebrook-White correlation
+        lambda(i) = fsolve(z,0.0004);
+
+    end
+
+end
