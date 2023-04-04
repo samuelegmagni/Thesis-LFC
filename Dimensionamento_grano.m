@@ -76,8 +76,12 @@ for i = 1 : length(T)
 
     for m = 1 : length(P)
 
+        f = @(x) m_dot_N2(i,m)*cp_N2(i,m)*(T(i) - T_amb) + x*cp_g*(T_fl) - (m_dot_N2(i,m) + x) * ( (cp_N2(i,m)*m_dot_N2(i,m))/(m_dot_N2(i,m) + x) + (cp_g*x)/(m_dot_N2(i,m) + x) )*(T(i));
+        z = fsolve(f,0.05) ;
+
         f = @(x) m_dot_N2(i,m)*cp_N2(1,m)*T_amb + x*cp_g*(T_fl) - (m_dot_N2(i,m) + x) * ( (cp_N2(end,m)*m_dot_N2(i,m) + (cp_g*x))/(m_dot_N2(i,m) + x) )*(T(i));
         z = fzero(f,0.05) ;
+
         m_dot_p(i,m) = z; 
 
     end
