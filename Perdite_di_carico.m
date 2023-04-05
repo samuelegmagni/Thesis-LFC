@@ -29,7 +29,8 @@ mu_N2 = data.mu;                     % Viscosity of Nitrogen [Pa*s]
 % mom_flux = rho*u^2;                  % Momentum flux in full scale facility [kg/ms^2]
 m_dot_N2 = 60*1e-3;                  % Nitrogen mass flow rate [kg/s]
 v_N2 = m_dot_N2./(A_int*rho_N2);     % Velocity of the fluid inside the pipes [m/s]
-delta_P_inj = 1e-5*40*sqrt(10*P_c*1e5);  
+delta_P_inj =0.4*100*sqrt(10*P_c*1e5); %deltaPinjection [Pa] 
+L=1;                                  %length of the tube
 
 d_inj = 0.5*1e-3;                    % Injector diameter (conical entrance) [m]
 C_d = 0.7;                           % Discharge coefficient
@@ -59,3 +60,8 @@ for i = 1:length(Re)
     end
 
 end
+
+%for i = 1:length(lambda)
+%f= @(x) ((x^2-(P_c*10^5+delta_P_inj)^2)/(2*x))-lambda(i)*(x*28/(8314*T))*(L/d_p_int)*(m_dot_N2/(A_int*(x*28/(8314*T))))^2*0.5;
+%P_distr(i) = fzero(f,0.1);
+%end
