@@ -53,7 +53,7 @@ for i = 1:length(Re)
     
     else 
         
-        z = @(x) 1/sqrt(x) + 2*log10(2.51./(Re(i)*sqrt(x)) + eps_rel/3.71);   % Colebrook-White correlation
+        z = @(x) 1/sqrt(x) + 2*log10(2.51/(Re(i)*sqrt(x)) + eps_rel/3.71);   % Colebrook-White correlation
         lambda(i) = fsolve(z,0.0004);
 
     end
