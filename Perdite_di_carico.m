@@ -8,11 +8,7 @@ set(0,'DefaultLegendInterpreter','Latex');
 set(groot,'DefaultAxesTickLabelInterpreter','Latex');
 set(0,'DefaultTextInterpreter','Latex');
 set(0,'DefaultLegendFontSize',12);
-T = 298.15:1:350.15;
-P = 7:1:50;
-data = nistdata('N2',T,P);
-%% 
-P_c = 7;                             % Pressure in the test chamber [bar]
+
 d_p_ext = 12*1e-3;                   % Pipe external diameter [m]
 t = 0.9*1e-3;                        % Thickness of the tube  [m]
 d_p_int = d_p_ext - 2*t;             % Pipe internal diameter [m]
@@ -20,6 +16,11 @@ A_int = pi*(d_p_int/2)^2;            % Internal cross sectional area [m^2]
 
 eps = 0.015*1e-3;                    % Absolute roughness of stainless steel [m]
 eps_rel = eps/d_p_ext;               % Relative roughness of stainless steel [-]
+
+%%
+T = 298.15:1:350.15;
+P = 34:0.2:36;
+data = nistdata('N2',T,P);
 
 rho_N2 = data.Rho*data.Mw;           % Density of Nitrogen [kg/m^3] 
 cp_N2 = data.Cp/data.Mw;             % Specific heat at constant pressure of Nitrogen [J/kgK]
@@ -41,29 +42,6 @@ L=1;                                   % Length of the tube [m]
 % d_inj = 0.5*1e-3;                    % Injector diameter (conical entrance) [m]
 % C_d = 0.7;                           % Discharge coefficient
 % A_inj = pi*0.25*d_inj^2;             % Injector cross sectional area
-
-% c = (gamma*(8314/28)*T).^0.5;        % Speed of sound [m/s]
-% M = v_N2./c;                         % Mach number [-]
-% 
-% Re = (rho_N2.*v_N2*d_p_int)./mu_N2;  % Reynolds number [-]
-% 
-% 
-% lambda = zeros(length(Re),1);
-% 
-% for i = 1:length(Re)
-% 
-%     if Re(i) < 2300
-% 
-%         lambda(i) = 64/Re(i);
-% 
-%     else 
-% 
-%         z = @(x) 1/sqrt(x) + 2*log10(2.51/(Re(i)*sqrt(x)) + eps_rel/3.71);   % Colebrook-White correlation
-%         lambda(i) = fsolve(z,0.0004);
-% 
-%     end
-% 
-% end
 
 %for i = 1:length(lambda)
 %f= @(x) ((x^2-(P_c*10^5+delta_P_inj)^2)/(2*x))-lambda(i)*(x*28/(8314*T))*(L/d_p_int)*(m_dot_N2/(A_int*(x*28/(8314*T))))^2*0.5;
@@ -108,9 +86,70 @@ P2 = P_star*((1/M2)*sqrt(0.5*(gamma1 + 1)/(1 + (gamma1 - 1)*0.5*M2^2)));
 rho_star = rho1/((1/M1)*sqrt( 2*(1 + (gamma1 - 1)*0.5*M1^2)/(gamma1 + 1)));
 rho2 = rho_star*((1/M2)*sqrt( 2*(1 + (gamma1 - 1)*0.5*M2^2)/(gamma1 + 1)));
 
-% CADUTE DI PRESSIONE MOLTO BASSE SE TUBO LUNGO 1 METRO: PENSARE A
-% DISCRETIZZARE CON UNO STEP PIU' BASSO LE PRESSIONI PER I DATI NEL NIST.
-% OPPURE FORSE CONVIENE RICALCOLARE LE PROPRIETA' DEL NIST DI VOLTA IN
-% VOLTA IN BASE AI RISULTATI CHE CI ESCONO, PIUTTOSTO CHE UTILIZZARE SEMPRE
-% I DATI CALCOLATI ALL'INIZIO. IN QUESTO MODO POTREMMO DISCRETIZZARE DI
-% VOLTA IN VOLTA UTILIZZANDO UNO STEP DIVERSO IN BASE ALLE ESIGENZE.
+% gamma in un tratto di tubo è al momento considerata costante, anche se in
+% realtà varia siccome variano pressione e temperatura, siccome una delle
+% ipotesi del flusso di Fanno è che gamma sia costante. Si potrebbe fare un
+% ciclo for usando come guess iniziale gamma1 per il punto 2, per poi 
+% aggiornarla iterativamente finchè non si giunge a convergenza. Al
+% momento, considerando P1 = 35 bar, sembra non ne valga la pena: la
+% pressione nel punto 2 cambia veramente poco.
+
+%%
+c2 = sqrt(gamma1*R*T2);
+v2 = M2*c2;
+
+P3 = 1e-5*(P2*1e5 - 0.1*rho2*2^2);                % Pressure drop related to the T fitting (dump line)  [bar]
+T3 = T2;
+
+rho3 = rho_N2(find(T==298.15),find(P==34.2));     % Density downstream the pressure regulator [kg/m^3]
+gamma3 = gamma_N2(find(T==298.15),find(P==34.2)); % Ratio of specific heats downstream the pressure regulator [-]
+mu3 = mu_N2(find(T==298.15),find(P==34.2));       % Viscosity downstream the pressure regulator [Pa*s]
+v3 = m_dot_N2/(A_int*rho3);                     % Gas velocity downstream the pressure regulator [m/s]
+c3 = (gamma3*R*T3)^0.5;                         % Sound speed downstream the pressure regulator [m/s]
+M3 = v3/c3;                                     % Mach number downstream the pressure regulator [-]
+Re3 = (rho3*v3*d_p_int)/mu3;                    % Reynolds number downstream the pressure regulator [-]
+
+
+if Re3 < 2300
+
+        lambda = 64/Re3;
+
+    else 
+
+        z = @(x) 1/sqrt(x) + 2*log10(2.51/(Re3*sqrt(x)) + eps_rel/3.71);   % Colebrook-White correlation
+        lambda = fsolve(z,0.0004);
+
+end
+
+g_M3 = (1 - M3^2)/(gamma3*M3^2) + ((gamma3 + 1)/(2*gamma3))*log(((gamma3 + 1)*M3^2)/(2 + (gamma3 - 1)*M3^2) );
+g_M4 = g_M3 - lambda*(L/d_p_int);
+
+y = @(x) g_M4 - (1 - x^2)/(gamma3*x^2) + ((gamma3 + 1)/(2*gamma3))*log(((gamma3 + 1)*x^2)/(2 + (gamma3 - 1)*x^2) );
+M4 = fsolve(y,0.006);
+
+T_star = T3/(0.5*(gamma3 + 1)/(1 + (gamma3 - 1)*0.5*M3^2));
+T4 = T_star*(0.5*(gamma3 + 1)/(1 + (gamma3 - 1)*0.5*M4^2));
+
+P_star = P1/((1/M3)*sqrt(0.5*(gamma3 + 1)/(1 + (gamma3 - 1)*0.5*M3^2)));
+P4 = P_star*((1/M4)*sqrt(0.5*(gamma3 + 1)/(1 + (gamma3 - 1)*0.5*M4^2)));
+
+rho_star = rho3/((1/M3)*sqrt( 2*(1 + (gamma3 - 1)*0.5*M3^2)/(gamma3 + 1)));
+rho4 = rho_star*((1/M4)*sqrt( 2*(1 + (gamma3 - 1)*0.5*M4^2)/(gamma3 + 1)));
+
+c4 = sqrt(gamma3*R*T4);
+v4 = M4*c4;
+
+%% 
+T = 298.15:1:350.15;
+P = 34:0.05:34.5;
+data = nistdata('N2',T,P);
+
+rho_N2 = data.Rho*data.Mw;           % Density of Nitrogen [kg/m^3] 
+cp_N2 = data.Cp/data.Mw;             % Specific heat at constant pressure of Nitrogen [J/kgK]
+cv_N2 = data.Cv/data.Mw;             % Specific heat at constant volume of Nitrogen [J/kgK]
+gamma_N2 = cp_N2./cv_N2;             % Ratio of specific heats [-]
+mu_N2 = data.mu;   
+
+G_g = rho4/1.205;
+
+
