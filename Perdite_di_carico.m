@@ -18,7 +18,7 @@ A_int = pi*(d_p_int/2)^2;            % Internal cross sectional area [m^2]
 eps = 0.015*1e-3;                    % Absolute roughness of stainless steel [m]
 eps_rel = eps/d_p_ext;               % Relative roughness of stainless steel [-]
 
-%%
+%% After pressure regulator (point 1) and before first manual ball valve (point 2)
 T = 298.15:1:300.15;
 P = 33:0.05:35;
 data = nistdata('N2',T,P);
@@ -39,7 +39,7 @@ R = 8314/28;                           % Specific ideal gas constant [J/kgK]
 % P_c = 7 
 % delta_P_inj = 0.4*100*sqrt(10*P_c*1e5); % Pressure drop across the injection plate [Pa] 
 
-L = 1;                                   % Length of the tube [m]
+L = 0.3;                                   % Length of the tube [m]
 
 % d_inj = 0.5*1e-3;                    % Injector diameter (conical entrance) [m]
 % C_d = 0.7;                           % Discharge coefficient
@@ -52,7 +52,7 @@ L = 1;                                   % Length of the tube [m]
 
 
 T1 = T(1);                                      % Temperature downstream the pressure regulator [K]
-P1 = 35;                                        % Pressure downstream the pressure regulator [bar]
+P1 = 45;                                        % Pressure downstream the pressure regulator [bar]
 rho1 = rho_N2(find(T==298.15),find(P==35));     % Density downstream the pressure regulator [kg/m^3]
 gamma1 = gamma_N2(find(T==298.15),find(P==35)); % Ratio of specific heats downstream the pressure regulator [-]
 mu1 = mu_N2(find(T==298.15),find(P==35));       % Viscosity downstream the pressure regulator [Pa*s]
@@ -95,7 +95,7 @@ rho2 = rho_star*((1/M2)*sqrt( 2*(1 + (gamma1 - 1)*0.5*M2^2)/(gamma1 + 1)));
 % momento, considerando P1 = 35 bar, sembra non ne valga la pena: la
 % pressione nel punto 2 cambia veramente poco.
 
-%%
+%% After first manual ball valve (point 3) and before second manual ball valve (point 4)
 c2 = sqrt(gamma1*R*T2);
 v2 = M2*c2;
 
@@ -140,7 +140,7 @@ rho4 = rho_star*((1/M4)*sqrt( 2*(1 + (gamma4 - 1)*0.5*M4^2)/(gamma4 + 1)));
 
 c4 = sqrt(gamma4*R*T4);
 v4 = M4*c4;
-%%
+%% Before second manual ball valve (point 4) and after second manual ball valve (point 5)
 G_g = rho4/1.205;                      % Nitrogen specific gravity [-]
 q_N2 = (m_dot_N2/rho4)*1000;           % Nitrogen volumetric flow rate [L/s]
 q_N2_std = (P4*q_N2*T4*60)/(1*273.15); % Nitrogen volumetric flow rate at std conditions [std L/min]
@@ -150,7 +150,7 @@ z = @(x) q_N2_std - 6950*C_V*P4*(1 - (2/3)*(P4 - x)/P4)*sqrt((P4 - x)/(P4*G_g*T4
 P5 = fsolve(z,32);
 T5 = T4;
 
-%% 
+%% After second manual ball valve (point 5) and before MFM (point 6)
 T = 297.45:0.5:298.45;
 P = 29.5:0.05:30.5;
 data = nistdata('N2',T,P);
@@ -199,17 +199,17 @@ rho6 = rho_star*((1/M6)*sqrt( 2*(1 + (gamma6 - 1)*0.5*M6^2)/(gamma6 + 1)));
 c6 = sqrt(gamma6*R*T6);
 v6 = c6*M6;
 
-%%
+%% Before MFM (point 6) and after MFM (point 7)
 G_g = rho6/1.205;                      % Nitrogen specific gravity [-]
 q_N2 = (m_dot_N2/rho6)*1000;           % Nitrogen volumetric flow rate [L/s]
 q_N2_std = (P6*q_N2*T6*60)/(1*273.15); % Nitrogen volumetric flow rate at std conditions [std L/min]
-C_V = 1.8;                             % Flow coefficient ball valve
+C_V = 1.8;                             % Flow coefficient needle valve
 
 z = @(x) q_N2_std - 6950*C_V*P6*(1 - (2/3)*(P6 - x)/P6)*sqrt((P6 - x)/(P6*G_g*T6));
 P7 = fsolve(z,20);                                                                    % Pressure downstream the mass flow meter (needle valve approx) [bar]
 T7 = T6;                                                                              % Temperature downstream the mass flow meter (needle valve approx) [K]
 
-%%
+%% After MFM (point 7) and before servo valve (point 8)
 T = 297.25:0.5:298.75;
 P = 13.3:0.1:14.8;
 data = nistdata('N2',T,P);
@@ -259,7 +259,7 @@ rho8 = rho_star*((1/M8)*sqrt( 2*(1 + (gamma8 - 1)*0.5*M8^2)/(gamma8 + 1)));
 c8 = sqrt(gamma8*R*T8);
 v8 = c8*M8;
 
-%%
+%% Before servovalve (point 8) and after servovalve (point 9)
 G_g = rho8/1.205;                      % Nitrogen specific gravity [-]
 q_N2 = (m_dot_N2/rho8)*1000;           % Nitrogen volumetric flow rate [L/s]
 q_N2_std = (P8*q_N2*T8*60)/(1*273.15); % Nitrogen volumetric flow rate at std conditions [std L/min]
@@ -269,7 +269,7 @@ z = @(x) q_N2_std - 6950*C_V*P8*(1 - (2/3)*(P8 - x)/P8)*sqrt((P8 - x)/(P8*G_g*T8
 P9 = fsolve(z,13);                                                                    % Pressure downstream the servovalve (ball valve approx) [bar]
 T9 = T8;                                                                              % Temperature downstream the servovalve (ball valve approx) [K]
 
-%%
+%% Before check valve (point 9) and after check valve (point 10)
 T = 297.25:0.5:298.75;
 P = 9.35:0.1:9.45;
 data = nistdata('N2',T,P);
@@ -291,13 +291,13 @@ Re9 = (rho9*v9*d_p_int)/mu9;                      % Reynolds number downstream t
 G_g = rho9/1.205;                      % Nitrogen specific gravity [-]
 q_N2 = (m_dot_N2/rho9)*1000;           % Nitrogen volumetric flow rate [L/s]
 q_N2_std = (P9*q_N2*T9*60)/(1*273.15); % Nitrogen volumetric flow rate at std conditions [std L/min]
-C_V = 1.8;                             % Flow coefficient ball valve
+C_V = 1.8;                             % Flow coefficient check valve
 
 z = @(x) q_N2_std - 6950*C_V*P9*(1 - (2/3)*(P9 - x)/P9)*sqrt((P9 - x)/(P9*G_g*T9));
 P10 = fsolve(z,9);                                                                    % Pressure downstream the check valve [bar]
 T10 = T9;
 
-%%
+%% After check valve (point 10) and before injector (point 11)
 T = 297.25:0.5:298.75;
 P = 3.7:0.1:4.8;
 data = nistdata('N2',T,P);
@@ -346,3 +346,8 @@ rho11 = rho_star*((1/M11)*sqrt( 2*(1 + (gamma11 - 1)*0.5*M11^2)/(gamma11 + 1)));
 
 c11 = sqrt(gamma11*R*T11);
 v11 = c11*M11;
+
+%% Injector pressure loss
+% P_c = 7 
+% delta_P_inj = 0.4*100*sqrt(10*P_c*1e5); % Pressure drop across the injection plate [Pa] 
+% P12= P11 - delta_P_inj 
