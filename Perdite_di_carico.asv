@@ -70,6 +70,7 @@ L=1;                                   % Length of the tube [m]
 %P_distr(i) = fzero(f,0.1);
 %end
 
+%% Distribuited pressure drops
 
 T1 = T(1);                                      % Temperature downstream the pressure regulator [K]
 P1 = 35;                                        % Pressure downstream the pressure regulator [bar]
@@ -113,3 +114,29 @@ rho2 = rho_star*((1/M2)*sqrt( 2*(1 + (gamma1 - 1)*0.5*M2^2)/(gamma1 + 1)));
 % VOLTA IN BASE AI RISULTATI CHE CI ESCONO, PIUTTOSTO CHE UTILIZZARE SEMPRE
 % I DATI CALCOLATI ALL'INIZIO. IN QUESTO MODO POTREMMO DISCRETIZZARE DI
 % VOLTA IN VOLTA UTILIZZANDO UNO STEP DIVERSO IN BASE ALLE ESIGENZE.
+
+
+%% Concentrated pressure drops
+
+% Gaseous stream case 
+q=3318;
+N2=6950;
+Cv1=17.06*16.67; % for nominal diameter of 10 mm
+p1=35;   
+Gg=22/997;
+T1=298.15;
+f=@(x) q-N2*Cv1*p1*(1-(2*x/(3*p1)))*sqrt((x)/(p1*Gg*T1));
+deltapvalve_gas = fsolve(f,0);
+
+
+% Check with liquid case 
+ql=40;
+N1=14.42;
+Cv2=17.06*16.67;
+deltaPvalve_liq= (ql/(N1*Cv2))^2*Gg;
+
+
+%Check with standard formula
+K=17.06
+rho_N2=7
+deltaPvalve_stand=K*rho_N2
