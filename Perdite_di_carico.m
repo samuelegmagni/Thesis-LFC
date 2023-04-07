@@ -104,7 +104,7 @@ T3 = T2;
 
 rho3 = rho_N2(find(T==298.15),find(P==34.2));     % Density downstream the pressure regulator [kg/m^3]
 gamma3 = gamma_N2(find(T==298.15),find(P==34.2)); % Ratio of specific heats downstream the pressure regulator [-]
-gamma4 = gamma_N2(find(T==298.15),find(P==33.35));
+gamma4 = gamma_N2(find(T==298.15),find(P==33.4));
 mu3 = mu_N2(find(T==298.15),find(P==34.2));       % Viscosity downstream the pressure regulator [Pa*s]
 v3 = m_dot_N2/(A_int*rho3);                     % Gas velocity downstream the pressure regulator [m/s]
 c3 = (gamma3*R*T3)^0.5;                         % Sound speed downstream the pressure regulator [m/s]
@@ -152,7 +152,7 @@ T5 = T4;
 
 %% 
 T = 297.45:0.5:298.45;
-P = 29.5:0.05:30.5;
+P = 29.6:0.05:30.5;
 data = nistdata('N2',T,P);
 
 rho_N2 = data.Rho*data.Mw;           % Density of Nitrogen [kg/m^3] 
@@ -161,10 +161,10 @@ cv_N2 = data.Cv/data.Mw;             % Specific heat at constant volume of Nitro
 gamma_N2 = cp_N2./cv_N2;             % Ratio of specific heats [-]
 mu_N2 = data.mu;  
 
-rho5 = rho_N2(find(T==297.95),find(P==30.45));     % Density downstream the manual ball valve [kg/m^3]
-gamma5 = gamma_N2(find(T==297.95),find(P==30.45)); % Ratio of specific heats downstream the manual ball valve  [-]
-gamma6 = gamma_N2(find(T==297.95),find(P==29.55));
-mu5 = mu_N2(find(T==297.95),find(P==30.45));       % Viscosity downstream the manual ball valve [Pa*s]
+rho5 = rho_N2(find(T==297.95),find(P==30.5));     % Density downstream the manual ball valve [kg/m^3]
+gamma5 = gamma_N2(find(T==297.95),find(P==30.5)); % Ratio of specific heats downstream the manual ball valve  [-]
+gamma6 = gamma_N2(find(T==297.95),find(P==29.6));
+mu5 = mu_N2(find(T==297.95),find(P==30.5));       % Viscosity downstream the manual ball valve [Pa*s]
 v5 = m_dot_N2/(A_int*rho5);                     % Gas velocity downstream the manual ball valve [m/s]
 c5 = (gamma5*R*T5)^0.5;                         % Sound speed downstream the manual ball valve [m/s]
 M5 = v5/c5;                                     % Mach number downstream the manual ball valve [-]
@@ -206,7 +206,8 @@ q_N2_std = (P6*q_N2*T6*60)/(1*273.15); % Nitrogen volumetric flow rate at std co
 C_V = 1.8;                             % Flow coefficient ball valve
 
 z = @(x) q_N2_std - 6950*C_V*P6*(1 - (2/3)*(P6 - x)/P6)*sqrt((P6 - x)/(P6*G_g*T6));
-P7 = fsolve(z,20);                                                                    % Pressure downstream the mass flow meter (needle valve approx) [bar]
+options = optimoptions('fsolve','FunctionTolerance',1e-14);
+P7 = fsolve(z,25,options)                                                                    % Pressure downstream the mass flow meter (needle valve approx) [bar]
 T7 = T6;                                                                              % Temperature downstream the mass flow meter (needle valve approx) [K]
 
 %%
