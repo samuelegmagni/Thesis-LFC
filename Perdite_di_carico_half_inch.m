@@ -1,4 +1,4 @@
-%% Pressure drops in N2 line with 12 mm tubes
+%% Pressure drops in N2 line with 1/2 inch tubes
 clc
 clear
 
@@ -10,7 +10,7 @@ set(groot,'DefaultAxesTickLabelInterpreter','Latex');
 set(0,'DefaultTextInterpreter','Latex');
 set(0,'DefaultLegendFontSize',12);
 
-d_p_ext = 12*1e-3;                   % Pipe external diameter [m]
+d_p_ext = 12.7*1e-3;                   % Pipe external diameter [m]
 t = 0.9*1e-3;                        % Thickness of the tube  [m]
 d_p_int = d_p_ext - 2*t;             % Pipe internal diameter [m]
 A_int = pi*(d_p_int/2)^2;            % Internal cross sectional area [m^2]
@@ -36,7 +36,7 @@ L = 0.4;                             % Length of the tube [m]
 %% After pressure regulator (point 1) and before first manual ball valve (point 2)
 
 T1 = 298;                                       % Temperature downstream the pressure regulator [K]
-P_reg = 25;                                     % Pressure downstream the pressure regulator [bar]
+P_reg = 24;                                     % Pressure downstream the pressure regulator [bar]
 rho_reg = rho_N2(find(T==round(T1,1)),find(abs(P - round(P_reg,1)) < 0.001)); % Density downstream the pressure regulator [kg/m^3]
 v_reg = m_dot_N2/(A_int*rho_reg);                                             % Velocity downstream the pressure regulator [m/s]
 P1 = 1e-5*(P_reg*1e5 - 1.3*rho_reg*v_reg^2);                                  % Pressure downstream the pipe bending after the pressure regulator [bar]
@@ -151,7 +151,7 @@ end
 G_g = rho4/1000;                      % Nitrogen specific gravity [-]
 q_N2 = (m_dot_N2/rho4)*1000;           % Nitrogen volumetric flow rate [L/s]
 % q_N2_std = (P4*q_N2*T4*60)/(1*273.15); % Nitrogen volumetric flow rate at std conditions [std L/min]
-C_V = 3.8;
+C_V = 4;
 
 P5 = P4 - (G_g*(q_N2*60)^2)/(14.42*C_V)^2;
 T5 = T4;
@@ -280,7 +280,7 @@ end
 G_g = rho8/1000;                      % Nitrogen specific gravity [-]
 q_N2 = (m_dot_N2/rho8)*1000;           % Nitrogen volumetric flow rate [L/s]
 % q_N2_std = (P8*q_N2*T8*60)/(1*273.15); % Nitrogen volumetric flow rate at std conditions [std L/min]
-C_V = 3.8;                             % Flow coefficient ball valve
+C_V = 4;                             % Flow coefficient ball valve
 
 P9 = P8 - (G_g*(q_N2*60)^2)/(14.42*C_V)^2;                                                                   % Pressure downstream the servovalve (ball valve approx) [bar]
 T9 = T8;                                                                              % Temperature downstream the servovalve (ball valve approx) [K]
