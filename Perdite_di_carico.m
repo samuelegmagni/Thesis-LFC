@@ -19,7 +19,7 @@ eps = 0.015*1e-3;                    % Absolute roughness of stainless steel [m]
 eps_rel = eps/d_p_ext;               % Relative roughness of stainless steel [-]
 
 %% After pressure regulator (point 1) and before first manual ball valve (point 2)
-T = 298.15:1:300.15;
+T = 298:1:300;
 P = 33:0.05:35;
 data = nistdata('N2',T,P);
 
@@ -52,10 +52,10 @@ L = 0.3;                                   % Length of the tube [m]
 
 
 T1 = T(1);                                      % Temperature downstream the pressure regulator [K]
-P1 = 45;                                        % Pressure downstream the pressure regulator [bar]
-rho1 = rho_N2(find(T==298.15),find(P==35));     % Density downstream the pressure regulator [kg/m^3]
-gamma1 = gamma_N2(find(T==298.15),find(P==35)); % Ratio of specific heats downstream the pressure regulator [-]
-mu1 = mu_N2(find(T==298.15),find(P==35));       % Viscosity downstream the pressure regulator [Pa*s]
+P1 = 35;                                        % Pressure downstream the pressure regulator [bar]
+rho1 = rho_N2(find(T==round(T1,1)),find(P==round(P1,1)));     % Density downstream the pressure regulator [kg/m^3]
+gamma1 = gamma_N2(find(T==round(T1,1)),find(P==round(P1,1))); % Ratio of specific heats downstream the pressure regulator [-]
+mu1 = mu_N2(find(T==round(T1,1)),find(P==round(P1,1)));       % Viscosity downstream the pressure regulator [Pa*s]
 v1 = m_dot_N2/(A_int*rho1);                     % Gas velocity downstream the pressure regulator [m/s]
 c1 = (gamma1*R*T1)^0.5;                         % Sound speed downstream the pressure regulator [m/s]
 M1 = v1/c1;                                     % Mach number downstream the pressure regulator [-]
@@ -102,10 +102,10 @@ v2 = M2*c2;
 P3 = 1e-5*(P2*1e5 - 0.1*rho2*2^2);                % Pressure drop related to the T fitting (dump line)  [bar]
 T3 = T2;
 
-rho3 = rho_N2(find(T==298.15),find(P==34.2));     % Density downstream the pressure regulator [kg/m^3]
-gamma3 = gamma_N2(find(T==298.15),find(P==34.2)); % Ratio of specific heats downstream the pressure regulator [-]
-gamma4 = gamma_N2(find(T==298.15),find(P==33.4));
-mu3 = mu_N2(find(T==298.15),find(P==34.2));       % Viscosity downstream the pressure regulator [Pa*s]
+rho3 = rho_N2(find(T==round(T3,1)),find(P==round(P3,1)));     % Density downstream the pressure regulator [kg/m^3]
+gamma3 = gamma_N2(find(T==round(T3,1)),find(P==round(P3,1))); % Ratio of specific heats downstream the pressure regulator [-]
+gamma4 = gamma_N2(find(T==round(T3,1)),find(P==33.6));
+mu3 = mu_N2(find(T==round(T3,1)),find(P==round(P3,1)));       % Viscosity downstream the pressure regulator [Pa*s]
 v3 = m_dot_N2/(A_int*rho3);                     % Gas velocity downstream the pressure regulator [m/s]
 c3 = (gamma3*R*T3)^0.5;                         % Sound speed downstream the pressure regulator [m/s]
 M3 = v3/c3;                                     % Mach number downstream the pressure regulator [-]
@@ -141,18 +141,17 @@ rho4 = rho_star*((1/M4)*sqrt( 2*(1 + (gamma4 - 1)*0.5*M4^2)/(gamma4 + 1)));
 c4 = sqrt(gamma4*R*T4);
 v4 = M4*c4;
 %% Before second manual ball valve (point 4) and after second manual ball valve (point 5)
-G_g = rho4/1.205;                      % Nitrogen specific gravity [-]
+G_g = rho4/1000;                      % Nitrogen specific gravity [-]
 q_N2 = (m_dot_N2/rho4)*1000;           % Nitrogen volumetric flow rate [L/s]
-q_N2_std = (P4*q_N2*T4*60)/(1*273.15); % Nitrogen volumetric flow rate at std conditions [std L/min]
+% q_N2_std = (P4*q_N2*T4*60)/(1*273.15); % Nitrogen volumetric flow rate at std conditions [std L/min]
 C_V = 5.2;
 
-z = @(x) q_N2_std - 6950*C_V*P4*(1 - (2/3)*(P4 - x)/P4)*sqrt((P4 - x)/(P4*G_g*T4));
-P5 = fsolve(z,32);
+P5 = P4 - (G_g*(q_N2*60)^2)/(14.42*C_V)^2;
 T5 = T4;
 
 %% After second manual ball valve (point 5) and before MFM (point 6)
-T = 297.45:0.5:298.45;
-P = 29.6:0.05:30.5;
+T = 297:0.5:299;
+P = 32.5:0.05:33.55;
 data = nistdata('N2',T,P);
 
 rho_N2 = data.Rho*data.Mw;           % Density of Nitrogen [kg/m^3] 
@@ -161,10 +160,10 @@ cv_N2 = data.Cv/data.Mw;             % Specific heat at constant volume of Nitro
 gamma_N2 = cp_N2./cv_N2;             % Ratio of specific heats [-]
 mu_N2 = data.mu;  
 
-rho5 = rho_N2(find(T==297.95),find(P==30.5));     % Density downstream the manual ball valve [kg/m^3]
-gamma5 = gamma_N2(find(T==297.95),find(P==30.5)); % Ratio of specific heats downstream the manual ball valve  [-]
-gamma6 = gamma_N2(find(T==297.95),find(P==29.6));
-mu5 = mu_N2(find(T==297.95),find(P==30.5));       % Viscosity downstream the manual ball valve [Pa*s]
+rho5 = rho_N2(find(T==round(T5)),find(P==round(P5,1)));     % Density downstream the manual ball valve [kg/m^3]
+gamma5 = gamma_N2(find(T==round(T5)),find(P==round(P5,1))); % Ratio of specific heats downstream the manual ball valve  [-]
+gamma6 = gamma_N2(find(T==round(T5)),find(P==32.8));
+mu5 = mu_N2(find(T==round(T5)),find(P==round(P5,1)));       % Viscosity downstream the manual ball valve [Pa*s]
 v5 = m_dot_N2/(A_int*rho5);                     % Gas velocity downstream the manual ball valve [m/s]
 c5 = (gamma5*R*T5)^0.5;                         % Sound speed downstream the manual ball valve [m/s]
 M5 = v5/c5;                                     % Mach number downstream the manual ball valve [-]
@@ -200,19 +199,17 @@ c6 = sqrt(gamma6*R*T6);
 v6 = c6*M6;
 
 %% Before MFM (point 6) and after MFM (point 7)
-G_g = rho6/1.205;                      % Nitrogen specific gravity [-]
+G_g = rho6/1000;                       % Nitrogen specific gravity [-]
 q_N2 = (m_dot_N2/rho6)*1000;           % Nitrogen volumetric flow rate [L/s]
-q_N2_std = (P6*q_N2*T6*60)/(1*273.15); % Nitrogen volumetric flow rate at std conditions [std L/min]
-C_V = 1.8;                             % Flow coefficient needle valve
+% q_N2_std = (P6*q_N2*T6*60)/(1*273.15); % Nitrogen volumetric flow rate at std conditions [std L/min]
+C_V = 0.7;                             % Flow coefficient needle valve
 
-z = @(x) q_N2_std - 6950*C_V*P6*(1 - (2/3)*(P6 - x)/P6)*sqrt((P6 - x)/(P6*G_g*T6));
-options = optimoptions('fsolve','FunctionTolerance',1e-14);
-P7 = fsolve(z,25,options)                                                                    % Pressure downstream the mass flow meter (needle valve approx) [bar]
+P7 = P6 - (G_g*(q_N2*60)^2)/(14.42*C_V)^2;                                            % Pressure downstream the mass flow meter (needle valve approx) [bar]
 T7 = T6;                                                                              % Temperature downstream the mass flow meter (needle valve approx) [K]
 
 %% After MFM (point 7) and before servo valve (point 8)
-T = 297.25:0.5:298.75;
-P = 13.3:0.1:14.8;
+T = 297:0.5:298;
+P = 28.5:0.05:30;
 data = nistdata('N2',T,P);
 
 rho_N2 = data.Rho*data.Mw;           % Density of Nitrogen [kg/m^3] 
@@ -221,10 +218,10 @@ cv_N2 = data.Cv/data.Mw;             % Specific heat at constant volume of Nitro
 gamma_N2 = cp_N2./cv_N2;             % Ratio of specific heats [-]
 mu_N2 = data.mu;  
 
-rho7 = rho_N2(find(T==297.75),find(P==14.8));     % Density downstream the mass flow meter (needle valve approx) [kg/m^3]
-gamma7 = gamma_N2(find(T==297.75),find(P==14.8)); % Ratio of specific heats the mass flow meter (needle valve approx)  [-]
-gamma8 = gamma_N2(find(T==297.25),find(P==13.3));
-mu7 = mu_N2(find(T==297.75),find(P==14.8));       % Viscosity downstream the mass flow meter (needle valve approx) [Pa*s]
+rho7 = rho_N2(find(T==round(T7)),find(P==round(P7,1)));     % Density downstream the mass flow meter (needle valve approx) [kg/m^3]
+gamma7 = gamma_N2(find(T==round(T7)),find(P==round(P7,1))); % Ratio of specific heats the mass flow meter (needle valve approx)  [-]
+gamma8 = gamma_N2(find(T==round(T7)),find(P==28.5));
+mu7 = mu_N2(find(T==round(T7)),find(P==round(P7,1)));      % Viscosity downstream the mass flow meter (needle valve approx) [Pa*s]
 v7 = m_dot_N2/(A_int*rho7);                       % Gas velocity downstream the mass flow meter (needle valve approx) [m/s]
 c7 = (gamma7*R*T7)^0.5;                           % Sound speed downstream the mass flow meter (needle valve approx) [m/s]
 M7 = v7/c7;                                       % Mach number downstream the mass flow meter (needle valve approx) [-]
@@ -261,18 +258,17 @@ c8 = sqrt(gamma8*R*T8);
 v8 = c8*M8;
 
 %% Before servovalve (point 8) and after servovalve (point 9)
-G_g = rho8/1.205;                      % Nitrogen specific gravity [-]
+G_g = rho8/1000;                      % Nitrogen specific gravity [-]
 q_N2 = (m_dot_N2/rho8)*1000;           % Nitrogen volumetric flow rate [L/s]
-q_N2_std = (P8*q_N2*T8*60)/(1*273.15); % Nitrogen volumetric flow rate at std conditions [std L/min]
+% q_N2_std = (P8*q_N2*T8*60)/(1*273.15); % Nitrogen volumetric flow rate at std conditions [std L/min]
 C_V = 5.2;                             % Flow coefficient ball valve
 
-z = @(x) q_N2_std - 6950*C_V*P8*(1 - (2/3)*(P8 - x)/P8)*sqrt((P8 - x)/(P8*G_g*T8));
-P9 = fsolve(z,13);                                                                    % Pressure downstream the servovalve (ball valve approx) [bar]
+P9 = P8 - (G_g*(q_N2*60)^2)/(14.42*C_V)^2;                                                                   % Pressure downstream the servovalve (ball valve approx) [bar]
 T9 = T8;                                                                              % Temperature downstream the servovalve (ball valve approx) [K]
 
 %% Before check valve (point 9) and after check valve (point 10)
-T = 297.25:0.5:298.75;
-P = 9.35:0.1:9.45;
+T = 297:0.5:298;
+P = 28.3:0.05:28.8;
 data = nistdata('N2',T,P);
 
 rho_N2 = data.Rho*data.Mw;           % Density of Nitrogen [kg/m^3] 
@@ -281,26 +277,25 @@ cv_N2 = data.Cv/data.Mw;             % Specific heat at constant volume of Nitro
 gamma_N2 = cp_N2./cv_N2;             % Ratio of specific heats [-]
 mu_N2 = data.mu;  
 
-rho9 = rho_N2(find(T==297.25),find(P==9.35));     % Density downstream the servovalve (ball valve approx) [kg/m^3]
-gamma9 = gamma_N2(find(T==297.25),find(P==9.35)); % Ratio of specific heats the servovalve (ball valve approx)  [-]
-mu9 = mu_N2(find(T==297.25),find(P==9.35));       % Viscosity downstream the servovalve (ball valve approx) [Pa*s]
+rho9 = rho_N2(find(T==round(T9)),find(P==round(P9,1)));     % Density downstream the servovalve (ball valve approx) [kg/m^3]
+gamma9 = gamma_N2(find(T==round(T9)),find(P==round(P9,1))); % Ratio of specific heats the servovalve (ball valve approx)  [-]
+mu9 = mu_N2(find(T==round(T9)),find(P==round(P9,1)));      % Viscosity downstream the servovalve (ball valve approx) [Pa*s]
 v9 = m_dot_N2/(A_int*rho9);                       % Gas velocity downstream the servovalve (ball valve approx) [m/s]
 c9 = (gamma9*R*T9)^0.5;                           % Sound speed downstream the servovalve (ball valve approx) [m/s]
 M9 = v9/c9;                                       % Mach number downstream the servovalve (ball valve approx) [-]
 Re9 = (rho9*v9*d_p_int)/mu9;                      % Reynolds number downstream the servovalve (ball valve approx) [-]
 
-G_g = rho9/1.205;                      % Nitrogen specific gravity [-]
+G_g = rho9/1000;                      % Nitrogen specific gravity [-]
 q_N2 = (m_dot_N2/rho9)*1000;           % Nitrogen volumetric flow rate [L/s]
-q_N2_std = (P9*q_N2*T9*60)/(1*273.15); % Nitrogen volumetric flow rate at std conditions [std L/min]
+%q_N2_std = (P9*q_N2*T9*60)/(1*273.15); % Nitrogen volumetric flow rate at std conditions [std L/min]
 C_V = 1.8;                             % Flow coefficient check valve
 
-z = @(x) q_N2_std - 6950*C_V*P9*(1 - (2/3)*(P9 - x)/P9)*sqrt((P9 - x)/(P9*G_g*T9));
-P10 = fsolve(z,9);                                                                    % Pressure downstream the check valve [bar]
+% z = @(x) q_N2_std - 6950*C_V*P9*(1 - (2/3)*(P9 - x)/P9)*sqrt((P9 - x)/(P9*G_g*T9));
+P10 = P9 - (G_g*(q_N2*60)^2)/(14.42*C_V)^2;                                                                % Pressure downstream the check valve [bar]
 T10 = T9;
 
 %% After check valve (point 10) and before injector (point 11)
-T = 297.25:0.5:298.75;
-P = 3.7:0.1:4.8;
+P = 26.7:0.05:28;
 data = nistdata('N2',T,P);
 
 rho_N2 = data.Rho*data.Mw;           % Density of Nitrogen [kg/m^3] 
@@ -309,10 +304,10 @@ cv_N2 = data.Cv/data.Mw;             % Specific heat at constant volume of Nitro
 gamma_N2 = cp_N2./cv_N2;             % Ratio of specific heats [-]
 mu_N2 = data.mu;  
 
-rho10 = rho_N2(find(T==297.25),find(P==4.7));     % Density downstream the check valve [kg/m^3]
-gamma10 = gamma_N2(find(T==297.25),find(P==4.7)); % Ratio of specific heats the check valve  [-]
-gamma11 = gamma_N2(find(T==297.25),find(P==3.7));
-mu10 = mu_N2(find(T==297.25),find(P==4.7));       % Viscosity downstream the check valve [Pa*s]
+rho10 = rho_N2(find(T==round(T10)),find(P==round(P10,1)));     % Density downstream the check valve [kg/m^3]
+gamma10 = gamma_N2(find(T==round(T10)),find(P==round(P10,1))); % Ratio of specific heats the check valve  [-]
+gamma11 = gamma_N2(find(T==round(T10)),find(P==round(P10,1)));
+mu10 = mu_N2(find(T==round(T10)),find(P==round(P10,1)));      % Viscosity downstream the check valve [Pa*s]
 v10 = m_dot_N2/(A_int*rho9);                       % Gas velocity downstream the check valve [m/s]
 c10 = (gamma9*R*T9)^0.5;                           % Sound speed downstream the check valve [m/s]
 M10 = v10/c10;                                     % Mach number downstream the check valve [-]
@@ -329,24 +324,38 @@ if Re10 < 2300
 
 end
 
-g_M10 = (1 - M10^2)/(gamma10*M10^2) + ((gamma10 + 1)/(2*gamma10))*log(((gamma10 + 1)*M10^2)/(2 + (gamma10 - 1)*M10^2) );
-L = 1;
-g_M11 = g_M10 - lambda*(L/d_p_int);
+iter = 0;
+err = 1;
 
-y = @(x) g_M11 - (1 - x^2)/(gamma11*x^2) + ((gamma11 + 1)/(2*gamma11))*log(((gamma11 + 1)*x^2)/(2 + (gamma11 - 1)*x^2) );
-M11 = fsolve(y,0.006);
+while err > 1e-6
 
-T_star = T10/(0.5*(gamma10 + 1)/(1 + (gamma10 - 1)*0.5*M10^2));
-T11 = T_star*(0.5*(gamma11 + 1)/(1 + (gamma11 - 1)*0.5*M11^2));
+    iter = iter + 1;
+    g_M10 = (1 - M10^2)/(gamma10*M10^2) + ((gamma10 + 1)/(2*gamma10))*log(((gamma10 + 1)*M10^2)/(2 + (gamma10 - 1)*M10^2) );
+    L = 1;
+    g_M11 = g_M10 - lambda*(L/d_p_int);
 
-P_star = P10/((1/M10)*sqrt(0.5*(gamma10 + 1)/(1 + (gamma10 - 1)*0.5*M10^2)));
-P11 = P_star*((1/M11)*sqrt(0.5*(gamma11 + 1)/(1 + (gamma11 - 1)*0.5*M11^2)));
+    y = @(x) g_M11 - (1 - x^2)/(gamma11*x^2) + ((gamma11 + 1)/(2*gamma11))*log(((gamma11 + 1)*x^2)/(2 + (gamma11 - 1)*x^2) );
+    M11 = fsolve(y,0.006);
 
-rho_star = rho10/((1/M10)*sqrt( 2*(1 + (gamma10 - 1)*0.5*M10^2)/(gamma10 + 1)));
-rho11 = rho_star*((1/M11)*sqrt( 2*(1 + (gamma11 - 1)*0.5*M11^2)/(gamma11 + 1)));
+    T_star = T10/(0.5*(gamma10 + 1)/(1 + (gamma10 - 1)*0.5*M10^2));
+    T11 = T_star*(0.5*(gamma11 + 1)/(1 + (gamma11 - 1)*0.5*M11^2));
 
-c11 = sqrt(gamma11*R*T11);
-v11 = c11*M11;
+    P_star = P10/((1/M10)*sqrt(0.5*(gamma10 + 1)/(1 + (gamma10 - 1)*0.5*M10^2)));
+    P11 = P_star*((1/M11)*sqrt(0.5*(gamma11 + 1)/(1 + (gamma11 - 1)*0.5*M11^2)));
+
+    rho_star = rho10/((1/M10)*sqrt( 2*(1 + (gamma10 - 1)*0.5*M10^2)/(gamma10 + 1)));
+    rho11 = rho_star*((1/M11)*sqrt( 2*(1 + (gamma11 - 1)*0.5*M11^2)/(gamma11 + 1)));
+
+    c11 = sqrt(gamma11*R*T11);
+    v11 = c11*M11;
+
+    gamma11_new = gamma_N2(find(T==round(T10)),find(P==round(P11,1)));
+
+    err = gamma11 - gamma11_new;
+
+    gamma11 = gamma11_new;
+
+end
 
 %% Injector pressure loss
 % P_c = 7 
