@@ -1,4 +1,4 @@
-%% Pressure drops in N2 line with 1/4 inch tubes
+%% Pressure drops in N2 line with 1/4 inch diameter tubes
 clc
 clear
 
@@ -18,8 +18,11 @@ A_int = pi*(d_p_int/2)^2;            % Internal cross sectional area [m^2]
 eps = 0.015*1e-3;                    % Absolute roughness of stainless steel [m]
 eps_rel = eps/d_p_ext;               % Relative roughness of stainless steel [-]
 
-T = 285:0.5:300;
-P = 7:0.05:60;
+T1 = 298;                                       % Temperature downstream the pressure regulator [K]
+P_reg = 60;                                     % Pressure downstream the pressure regulator [bar]
+
+T = (floor(T1)-3):0.5:(ceil(T1));
+P = (floor(P_reg)-10):0.05:(ceil(P_reg));
 data = nistdata('N2',T,P);
 
 rho_N2 = data.Rho*data.Mw;           % Density of Nitrogen [kg/m^3] 
@@ -35,14 +38,13 @@ L = 0.4;                             % Length of the tube [m]
 
 %% After pressure regulator (point 1) and before first manual ball valve (point 2)
 
-T1 = 298;                                       % Temperature downstream the pressure regulator [K]
-P_reg = 60;                                     % Pressure downstream the pressure regulator [bar]
-rho_reg = rho_N2(find(T==round(T1,1)),find(abs(P - round(P_reg,1)) < 0.001)); % Density downstream the pressure regulator [kg/m^3]
+rho_reg = rho_N2(find(T==round(T1)),find(abs(P - round(P_reg,1)) < 0.001)); % Density downstream the pressure regulator [kg/m^3]
 v_reg = m_dot_N2/(A_int*rho_reg);                                             % Velocity downstream the pressure regulator [m/s]
 P1 = 1e-5*(P_reg*1e5 - 1.3*rho_reg*v_reg^2);                                  % Pressure downstream the pipe bending after the pressure regulator [bar]
-rho1 = rho_N2(find(T==round(T1,1)),find(abs(P - round(P1,1)) < 0.001));       % Density downstream the pipe bending after the pressure regulator [kg/m^3]
-gamma1 = gamma_N2(find(T==round(T1,1)),find(abs(P - round(P1,1)) < 0.001));   % Ratio of specific heats downstream the pipe bending after the pressure regulator [-]
-mu1 = mu_N2(find(T==round(T1,1)),find(abs(P - round(P1,1)) < 0.001));         % Viscosity downstream the pipe bending after the pressure regulator [Pa*s]
+rho1 = rho_N2(find(T==round(T1)),find(abs(P - round(P1,1)) < 0.001));       % Density downstream the pipe bending after the pressure regulator [kg/m^3]
+gamma1 = gamma_N2(find(T==round(T1)),find(abs(P - round(P1,1)) < 0.001));   % Ratio of specific heats downstream the pipe bending after the pressure regulator [-]
+gamma2 = gamma_N2(find(T==round(T1)),find(abs(P - round(P1,1)) < 0.001));
+mu1 = mu_N2(find(T==round(T1)),find(abs(P - round(P1,1)) < 0.001));         % Viscosity downstream the pipe bending after the pressure regulator [Pa*s]
 v1 = m_dot_N2/(A_int*rho1);                     % Gas velocity downstream the pipe bending after pressure regulator [m/s]
 c1 = (gamma1*R*T1)^0.5;                         % Sound speed downstream the pipe bending after pressure regulator [m/s]
 M1 = v1/c1;                                     % Mach number downstream the pipe bending after pressure regulator [-]
@@ -59,39 +61,55 @@ if Re1 < 2300
 
 end
 
+iter = 0;
+err = 1;
 
+while err > 1e-6
 
-g_M1 = (1 - M1^2)/(gamma1*M1^2) + ((gamma1 + 1)/(2*gamma1))*log(((gamma1 + 1)*M1^2)/(2 + (gamma1 - 1)*M1^2) );
-g_M2 = g_M1 - lambda*(L/d_p_int);
+    iter = iter + 1;
 
-y = @(x) g_M2 - (1 - x^2)/(gamma1*x^2) + ((gamma1 + 1)/(2*gamma1))*log(((gamma1 + 1)*x^2)/(2 + (gamma1 - 1)*x^2) );
-M2 = fsolve(y,0.006);
+    g_M1 = (1 - M1^2)/(gamma1*M1^2) + ((gamma1 + 1)/(2*gamma1))*log(((gamma1 + 1)*M1^2)/(2 + (gamma1 - 1)*M1^2) );
+    g_M2 = g_M1 - lambda*(L/d_p_int);
+    
+    y = @(x) g_M2 - (1 - x^2)/(gamma2*x^2) + ((gamma2 + 1)/(2*gamma2))*log(((gamma2 + 1)*x^2)/(2 + (gamma2 - 1)*x^2) );
+    M2 = fsolve(y,0.006);
+    
+    T_star = T1/(0.5*(gamma1 + 1)/(1 + (gamma1 - 1)*0.5*M1^2));
+    T2 = T_star*(0.5*(gamma2 + 1)/(1 + (gamma2 - 1)*0.5*M2^2));
+    
+    P_star = P1/((1/M1)*sqrt(0.5*(gamma1 + 1)/(1 + (gamma1 - 1)*0.5*M1^2)));
+    P2 = P_star*((1/M2)*sqrt(0.5*(gamma2 + 1)/(1 + (gamma2 - 1)*0.5*M2^2)));
+    
+    rho_star = rho1/((1/M1)*sqrt( 2*(1 + (gamma1 - 1)*0.5*M1^2)/(gamma1 + 1)));
+    rho2 = rho_star*((1/M2)*sqrt( 2*(1 + (gamma2 - 1)*0.5*M2^2)/(gamma2 + 1)));
+    
+    c2 = sqrt(gamma2*R*T2);
+    v2 = M2*c2;
 
-T_star = T1/(0.5*(gamma1 + 1)/(1 + (gamma1 - 1)*0.5*M1^2));
-T2 = T_star*(0.5*(gamma1 + 1)/(1 + (gamma1 - 1)*0.5*M2^2));
+    gamma2_new = gamma_N2(find(T==round(T2)),find(abs(P - round(P2,1)) < 0.001));
 
-P_star = P1/((1/M1)*sqrt(0.5*(gamma1 + 1)/(1 + (gamma1 - 1)*0.5*M1^2)));
-P2 = P_star*((1/M2)*sqrt(0.5*(gamma1 + 1)/(1 + (gamma1 - 1)*0.5*M2^2)));
+    err = abs(gamma2 - gamma2_new);
 
-rho_star = rho1/((1/M1)*sqrt( 2*(1 + (gamma1 - 1)*0.5*M1^2)/(gamma1 + 1)));
-rho2 = rho_star*((1/M2)*sqrt( 2*(1 + (gamma1 - 1)*0.5*M2^2)/(gamma1 + 1)));
+    gamma2 = gamma2_new;
 
+end
 
-
-% gamma in un tratto di tubo è al momento considerata costante, anche se in
-% realtà varia siccome variano pressione e temperatura, siccome una delle
-% ipotesi del flusso di Fanno è che gamma sia costante. Si potrebbe fare un
-% ciclo for usando come guess iniziale gamma1 per il punto 2, per poi 
-% aggiornarla iterativamente finchè non si giunge a convergenza. Al
-% momento, considerando P1 = 35 bar, sembra non ne valga la pena: la
-% pressione nel punto 2 cambia veramente poco.
+clear gamma2_new
 
 %% After first manual ball valve (point 3) and before second manual ball valve (point 4)
-c2 = sqrt(gamma1*R*T2);
-v2 = M2*c2;
 
 P3 = 1e-5*(P2*1e5 - 0.1*rho2*v2^2);                % Pressure drop related to the T fitting (dump line)  [bar]
 T3 = T2;
+
+T = (floor(T3)-4):0.5:(ceil(T3));
+P = (floor(P3)-9):0.05:(ceil(P3));
+data = nistdata('N2',T,P);
+
+rho_N2 = data.Rho*data.Mw;           % Density of Nitrogen [kg/m^3] 
+cp_N2 = data.Cp/data.Mw;             % Specific heat at constant pressure of Nitrogen [J/kgK]
+cv_N2 = data.Cv/data.Mw;             % Specific heat at constant volume of Nitrogen [J/kgK]
+gamma_N2 = cp_N2./cv_N2;             % Ratio of specific heats [-]
+mu_N2 = data.mu;                     % Viscosity of Nitrogen [Pa*s]
 
 rho3 = rho_N2(find(T==round(T3)),find(abs(P - round(P3,1)) < 0.001));     % Density downstream the pressure regulator [kg/m^3]
 gamma3 = gamma_N2(find(T==round(T3)),find(abs(P - round(P3,1)) < 0.001)); % Ratio of specific heats downstream the pressure regulator [-]
@@ -139,24 +157,36 @@ while err > 1e-6
     c4 = sqrt(gamma4*R*T4);
     v4 = M4*c4;
 
-    gamma4_new = gamma_N2(find(T==round(T3)),find(abs(P - round(P4,1)) < 0.001));
+    gamma4_new = gamma_N2(find(T==round(T4)),find(abs(P - round(P4,1)) < 0.001));
 
-    err = gamma4 - gamma4_new;
+    err = abs(gamma4 - gamma4_new);
 
     gamma4 = gamma4_new;
 
 end
 
+clear gamma4_new
+
 %% Before second manual ball valve (point 4) and after second manual ball valve (point 5)
 G_g = rho4/1000;                      % Nitrogen specific gravity [-]
 q_N2 = (m_dot_N2/rho4)*1000;           % Nitrogen volumetric flow rate [L/s]
 % q_N2_std = (P4*q_N2*T4*60)/(1*273.15); % Nitrogen volumetric flow rate at std conditions [std L/min]
-C_V = 1.7;
+C_V = 1.4;
 
 P5 = P4 - (G_g*(q_N2*60)^2)/(14.42*C_V)^2;
 T5 = T4;
 
 %% After second manual ball valve (point 5) and before MFM (point 6) 
+T = (floor(T5)-3):0.5:(ceil(T5));
+P = (floor(P5)-9):0.05:(ceil(P5));
+data = nistdata('N2',T,P);
+
+rho_N2 = data.Rho*data.Mw;           % Density of Nitrogen [kg/m^3] 
+cp_N2 = data.Cp/data.Mw;             % Specific heat at constant pressure of Nitrogen [J/kgK]
+cv_N2 = data.Cv/data.Mw;             % Specific heat at constant volume of Nitrogen [J/kgK]
+gamma_N2 = cp_N2./cv_N2;             % Ratio of specific heats [-]
+mu_N2 = data.mu;                     % Viscosity of Nitrogen [Pa*s]
+
 
 rho5 = rho_N2(find(T==round(T5)),find(abs(P - round(P5,1)) < 0.001));     % Density downstream the manual ball valve [kg/m^3]
 gamma5 = gamma_N2(find(T==round(T5)),find(abs(P - round(P5,1)) < 0.001)); % Ratio of specific heats downstream the manual ball valve  [-]
@@ -203,13 +233,15 @@ while err > 1e-6
     c6 = sqrt(gamma6*R*T6);
     v6 = c6*M6;
 
-    gamma6_new = gamma_N2(find(T==round(T5)),find(abs(P - round(P6,1)) < 0.001));
+    gamma6_new = gamma_N2(find(T==round(T6)),find(abs(P - round(P6,1)) < 0.001));
 
-    err = gamma6 - gamma6_new;
+    err = abs(gamma6 - gamma6_new);
 
     gamma6 = gamma6_new;
 
 end
+
+clear gamma6_new
 
 %% Before MFM (point 6) and after MFM (point 7)
 G_g = rho6/1000;                       % Nitrogen specific gravity [-]
@@ -221,6 +253,16 @@ P7 = P6 - (G_g*(q_N2*60)^2)/(14.42*C_V)^2;                                      
 T7 = T6;                                                                              % Temperature downstream the mass flow meter (needle valve approx) [K]
 
 %% After MFM (point 7) and before servo valve (point 8)
+T = (floor(T7)-12):0.5:(ceil(T7));
+P = (floor(P7)-12):0.05:(ceil(P7));
+data = nistdata('N2',T,P);
+
+rho_N2 = data.Rho*data.Mw;           % Density of Nitrogen [kg/m^3] 
+cp_N2 = data.Cp/data.Mw;             % Specific heat at constant pressure of Nitrogen [J/kgK]
+cv_N2 = data.Cv/data.Mw;             % Specific heat at constant volume of Nitrogen [J/kgK]
+gamma_N2 = cp_N2./cv_N2;             % Ratio of specific heats [-]
+mu_N2 = data.mu;                     % Viscosity of Nitrogen [Pa*s]
+
 
 rho7 = rho_N2(find(T==round(T7)),find(abs(P - round(P7,1)) < 0.001));     % Density downstream the mass flow meter (needle valve approx) [kg/m^3]
 gamma7 = gamma_N2(find(T==round(T7)),find(abs(P - round(P7,1)) < 0.001)); % Ratio of specific heats the mass flow meter (needle valve approx)  [-]
@@ -250,7 +292,7 @@ while err > 1e-6
     iter = iter + 1;
     
     g_M7 = (1 - M7^2)/(gamma7*M7^2) + ((gamma7 + 1)/(2*gamma7))*log(((gamma7 + 1)*M7^2)/(2 + (gamma7 - 1)*M7^2) );
-    L = 1;
+    L = 0.5;
     g_M8 = g_M7 - lambda*(L/d_p_int);
     y = @(x) g_M8 - (1 - x^2)/(gamma8*x^2) + ((gamma8 + 1)/(2*gamma8))*log(((gamma8 + 1)*x^2)/(2 + (gamma8 - 1)*x^2) );
     M8 = fsolve(y,0.006);
@@ -267,25 +309,35 @@ while err > 1e-6
     c8 = sqrt(gamma8*R*T8);
     v8 = c8*M8;
 
-    gamma8_new = gamma_N2(find(T==round(T7)),find(abs(P - round(P8,1)) < 0.001));
+    gamma8_new = gamma_N2(find(T==round(T8)),find(abs(P - round(P8,1)) < 0.001));
 
-    err = gamma8 - gamma8_new;
+    err = abs(gamma8 - gamma8_new);
 
     gamma8 = gamma8_new;
 
 end
 
-
+clear gamma8_new
 %% Before servovalve (point 8) and after servovalve (point 9)
 G_g = rho8/1000;                      % Nitrogen specific gravity [-]
 q_N2 = (m_dot_N2/rho8)*1000;           % Nitrogen volumetric flow rate [L/s]
 % q_N2_std = (P8*q_N2*T8*60)/(1*273.15); % Nitrogen volumetric flow rate at std conditions [std L/min]
-C_V = 1.7;                             % Flow coefficient ball valve
+C_V = 1.4;                             % Flow coefficient ball valve
 
 P9 = P8 - (G_g*(q_N2*60)^2)/(14.42*C_V)^2;                                                                   % Pressure downstream the servovalve (ball valve approx) [bar]
 T9 = T8;                                                                              % Temperature downstream the servovalve (ball valve approx) [K]
 
 %% Before check valve (point 9) and after check valve (point 10)
+
+T = (floor(T9)-3):0.5:(ceil(T9));
+P = (floor(P9)-2):0.05:(ceil(P9));
+data = nistdata('N2',T,P);
+
+rho_N2 = data.Rho*data.Mw;           % Density of Nitrogen [kg/m^3] 
+cp_N2 = data.Cp/data.Mw;             % Specific heat at constant pressure of Nitrogen [J/kgK]
+cv_N2 = data.Cv/data.Mw;             % Specific heat at constant volume of Nitrogen [J/kgK]
+gamma_N2 = cp_N2./cv_N2;             % Ratio of specific heats [-]
+mu_N2 = data.mu;  
 
 rho9 = rho_N2(find(T==round(T9)),find(abs(P - round(P9,1)) < 0.001));     % Density downstream the servovalve (ball valve approx) [kg/m^3]
 gamma9 = gamma_N2(find(T==round(T9)),find(abs(P - round(P9,1)) < 0.001)); % Ratio of specific heats the servovalve (ball valve approx)  [-]
@@ -333,7 +385,7 @@ while err > 1e-6
 
     iter = iter + 1;
     g_M10 = (1 - M10^2)/(gamma10*M10^2) + ((gamma10 + 1)/(2*gamma10))*log(((gamma10 + 1)*M10^2)/(2 + (gamma10 - 1)*M10^2) );
-    L = 1;
+    L = 0.5;
     g_M11 = g_M10 - lambda*(L/d_p_int);
 
     y = @(x) g_M11 - (1 - x^2)/(gamma11*x^2) + ((gamma11 + 1)/(2*gamma11))*log(((gamma11 + 1)*x^2)/(2 + (gamma11 - 1)*x^2) );
@@ -351,13 +403,15 @@ while err > 1e-6
     c11 = sqrt(gamma11*R*T11);
     v11 = c11*M11;
 
-    gamma11_new = gamma_N2(find(T==round(T10)),find(abs(P - round(P11,1)) < 0.001));
+    gamma11_new = gamma_N2(find(T==round(T11)),find(abs(P - round(P11,1)) < 0.001));
 
-    err = gamma11 - gamma11_new;
+    err = abs(gamma11 - gamma11_new);
 
     gamma11 = gamma11_new;
 
 end
+
+clear gamma11_new
 
 %% Injector pressure loss
 
