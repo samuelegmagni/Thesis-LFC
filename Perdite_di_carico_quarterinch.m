@@ -22,7 +22,7 @@ T1 = 298;                                       % Temperature downstream the pre
 P_reg = 60;                                     % Pressure downstream the pressure regulator [bar]
 
 T = (floor(T1)-3):0.5:(ceil(T1));
-P = (floor(P_reg)-10):0.05:(ceil(P_reg));
+P = (floor(P_reg)-10):0.1:(ceil(P_reg));
 data = nistdata('N2',T,P);
 
 rho_N2 = data.Rho*data.Mw;           % Density of Nitrogen [kg/m^3] 
@@ -64,7 +64,7 @@ end
 iter = 0;
 err = 1;
 
-while err > 1e-6
+while err > 1e-3
 
     iter = iter + 1;
 
@@ -102,7 +102,7 @@ P3 = 1e-5*(P2*1e5 - 0.1*rho2*v2^2);                % Pressure drop related to th
 T3 = T2;
 
 T = (floor(T3)-4):0.5:(ceil(T3));
-P = (floor(P3)-9):0.05:(ceil(P3));
+P = (floor(P3)-9):0.1:(ceil(P3));
 data = nistdata('N2',T,P);
 
 rho_N2 = data.Rho*data.Mw;           % Density of Nitrogen [kg/m^3] 
@@ -135,7 +135,7 @@ end
 iter = 0;
 err = 1;
 
-while err > 1e-6
+while err > 1e-3
 
     iter = iter + 1;
 
@@ -171,14 +171,14 @@ clear gamma4_new
 G_g = rho4/1000;                      % Nitrogen specific gravity [-]
 q_N2 = (m_dot_N2/rho4)*1000;           % Nitrogen volumetric flow rate [L/s]
 % q_N2_std = (P4*q_N2*T4*60)/(1*273.15); % Nitrogen volumetric flow rate at std conditions [std L/min]
-C_V = 1.4;
+C_V = 1.7;
 
 P5 = P4 - (G_g*(q_N2*60)^2)/(14.42*C_V)^2;
 T5 = T4;
 
 %% After second manual ball valve (point 5) and before MFM (point 6) 
 T = (floor(T5)-3):0.5:(ceil(T5));
-P = (floor(P5)-9):0.05:(ceil(P5));
+P = (floor(P5)-9):0.1:(ceil(P5));
 data = nistdata('N2',T,P);
 
 rho_N2 = data.Rho*data.Mw;           % Density of Nitrogen [kg/m^3] 
@@ -211,7 +211,7 @@ end
 iter = 0;
 err = 1;
 
-while err > 1e-6
+while err > 1e-3
 
     iter = iter + 1;
 
@@ -254,7 +254,7 @@ T7 = T6;                                                                        
 
 %% After MFM (point 7) and before servo valve (point 8)
 T = (floor(T7)-12):0.5:(ceil(T7));
-P = (floor(P7)-12):0.05:(ceil(P7));
+P = (floor(P7)-12):0.1:(ceil(P7));
 data = nistdata('N2',T,P);
 
 rho_N2 = data.Rho*data.Mw;           % Density of Nitrogen [kg/m^3] 
@@ -287,7 +287,7 @@ end
 iter = 0;
 err = 1;
 
-while err > 1e-6
+while err > 1e-3
 
     iter = iter + 1;
     
@@ -322,7 +322,7 @@ clear gamma8_new
 G_g = rho8/1000;                      % Nitrogen specific gravity [-]
 q_N2 = (m_dot_N2/rho8)*1000;           % Nitrogen volumetric flow rate [L/s]
 % q_N2_std = (P8*q_N2*T8*60)/(1*273.15); % Nitrogen volumetric flow rate at std conditions [std L/min]
-C_V = 1.4;                             % Flow coefficient ball valve
+C_V = 1.7;                             % Flow coefficient ball valve
 
 P9 = P8 - (G_g*(q_N2*60)^2)/(14.42*C_V)^2;                                                                   % Pressure downstream the servovalve (ball valve approx) [bar]
 T9 = T8;                                                                              % Temperature downstream the servovalve (ball valve approx) [K]
@@ -330,7 +330,7 @@ T9 = T8;                                                                        
 %% Before check valve (point 9) and after check valve (point 10)
 
 T = (floor(T9)-3):0.5:(ceil(T9));
-P = (floor(P9)-2):0.05:(ceil(P9));
+P = (floor(P9)-2):0.1:(ceil(P9));
 data = nistdata('N2',T,P);
 
 rho_N2 = data.Rho*data.Mw;           % Density of Nitrogen [kg/m^3] 
@@ -357,6 +357,16 @@ P10 = P9 - (G_g*(q_N2*60)^2)/(14.42*C_V)^2;                                     
 T10 = T9;
 
 %% After check valve (point 10) and before injector (point 11)
+
+T = (floor(T10)-3):0.5:(ceil(T10));
+P = (floor(P10)-10):0.1:(ceil(P10));
+data = nistdata('N2',T,P);
+
+rho_N2 = data.Rho*data.Mw;           % Density of Nitrogen [kg/m^3] 
+cp_N2 = data.Cp/data.Mw;             % Specific heat at constant pressure of Nitrogen [J/kgK]
+cv_N2 = data.Cv/data.Mw;             % Specific heat at constant volume of Nitrogen [J/kgK]
+gamma_N2 = cp_N2./cv_N2;             % Ratio of specific heats [-]
+mu_N2 = data.mu; 
 
 rho10 = rho_N2(find(T==round(T10)),find(abs(P - round(P10,1)) < 0.001));     % Density downstream the check valve [kg/m^3]
 gamma10 = gamma_N2(find(T==round(T10)),find(abs(P - round(P10,1)) < 0.001)); % Ratio of specific heats the check valve  [-]
