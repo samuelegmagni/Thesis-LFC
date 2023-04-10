@@ -11,7 +11,7 @@ set(0,'DefaultTextInterpreter','Latex');
 set(0,'DefaultLegendFontSize',12);
 
 d_p_ext = 19.05*1e-3;                   % Pipe external diameter [m]
-t = 0.9*1e-3;                        % Thickness of the tube  [m]
+t = 1.5*1e-3;                        % Thickness of the tube  [m]
 d_p_int = d_p_ext - 2*t;             % Pipe internal diameter [m]
 A_int = pi*(d_p_int/2)^2;            % Internal cross sectional area [m^2]
 

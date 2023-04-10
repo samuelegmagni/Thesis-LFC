@@ -11,7 +11,7 @@ set(0,'DefaultTextInterpreter','Latex');
 set(0,'DefaultLegendFontSize',12);
 
 d_p_ext = 12.7*1e-3;                   % Pipe external diameter [m]
-t = 0.9*1e-3;                        % Thickness of the tube  [m]
+t = 1.5*1e-3;                        % Thickness of the tube  [m]
 d_p_int = d_p_ext - 2*t;             % Pipe internal diameter [m]
 A_int = pi*(d_p_int/2)^2;            % Internal cross sectional area [m^2]
 
@@ -101,7 +101,7 @@ clear gamma2_new
 P3 = 1e-5*(P2*1e5 - 0.1*rho2*v2^2);                % Pressure drop related to the T fitting (dump line)  [bar]
 T3 = T2;
 
-T = (floor(T3)-4):0.5:(ceil(T3));
+T = (floor(T3)-10):0.5:(ceil(T3));
 P = (floor(P3)-9):0.1:(ceil(P3));
 data = nistdata('N2',T,P);
 
@@ -177,7 +177,7 @@ P5 = P4 - (G_g*(q_N2*60)^2)/(14.42*C_V)^2;
 T5 = T4;
 
 %% After second manual ball valve (point 5) and before MFM (point 6) 
-T = (floor(T5)-3):0.5:(ceil(T5));
+T = (floor(T5)-10):0.5:(ceil(T5));
 P = (floor(P5)-9):0.1:(ceil(P5));
 data = nistdata('N2',T,P);
 
@@ -358,7 +358,7 @@ T10 = T9;
 
 %% After check valve (point 10) and before injector (point 11)
 
-T = (floor(T10)-3):0.5:(ceil(T10));
+T = (floor(T10)-20):0.5:(ceil(T10));
 P = (floor(P10)-10):0.1:(ceil(P10));
 data = nistdata('N2',T,P);
 
