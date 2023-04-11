@@ -424,18 +424,13 @@ end
 clear gamma11_new
 
 %% Injector pressure loss
-% C_d = 0.82;                             % Short tube with conical entrance 
-% d_inj = 1e-3;                           % Short tube with conical entrance
-% A_inj = 0.25*pi*d_inj^2;
-% delta_P_inj = 0.4*100*sqrt(10*P11*1e5); % Pressure drop across the injection plate [Pa] 
-% A_needed = m_dot_N2/(C_d*sqrt(2*delta_P_inj*rho11));
-% N_inj = A_needed/A_inj
+delta_P_inj = 0.4*100*sqrt(10*P11*1e5); % Pressure drop across the injection plate [Pa] 
+P12 = P11 - delta_P_inj*1e-5;           % Pressure in the test chamber [bar]
 
 N_inj = 8;
 C_d = 0.61;                              % Sharp-edged orifice with diameter greater than 2.5 mm
 A_needed = m_dot_N2/(C_d*sqrt(2*delta_P_inj*rho11));
 A_inj = A_needed/N_inj;
 d_inj = sqrt((4*A_inj)/pi);
-
- % delta_P_inj = 0.4*100*sqrt(10*P11*1e5); % Pressure drop across the injection plate [Pa] 
- % P12 = P11 - delta_P_inj*1e-5;           % Pressure in the test chamber [bar]
+v_inj=C_d*sqrt(2*delta_P_inj/rho11);
+A_slab = 30*30*10e-6;                    % Area of slab test facility [m^2]
