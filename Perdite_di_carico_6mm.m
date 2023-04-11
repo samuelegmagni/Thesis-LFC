@@ -19,7 +19,7 @@ eps = 0.015*1e-3;                    % Absolute roughness of stainless steel [m]
 eps_rel = eps/d_p_ext;               % Relative roughness of stainless steel [-]
 
 T1 = 298;                                       % Temperature downstream the pressure regulator [K]
-P_reg = 68;                                     % Pressure downstream the pressure regulator [bar]
+P_reg = 75;                                     % Pressure downstream the pressure regulator [bar]
 
 T = (floor(T1)-3):0.5:(ceil(T1));
 P = (floor(P_reg)-10):0.1:(ceil(P_reg));
@@ -437,4 +437,4 @@ A_slab = 30*30*10e-6;                    % Area of slab test facility [m^2]
 
 
 %% Total pressure drop
-delta_P_tot=P12-P1;
+delta_P_tot=P1-P12;
