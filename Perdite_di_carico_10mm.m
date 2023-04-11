@@ -424,9 +424,40 @@ end
 clear gamma11_new
 
 %% Injector pressure loss
+A_inj = m_dot_N2/(rho11*v11);
+d_inj = sqrt((4*A_inj)/pi);
+beta = d_inj/d_p_int;
+C_inf = 0.5959 + 0.0312*beta^2.1 - 0.184*beta^6;
+b = 91.71*beta^2.5;
+mu11 = mu_N2(find(T==round(T11)),find(abs(P - round(P11,1)) < 0.001));
+Re11 = (rho11*v11*d_p_int)/mu11;
+C_d = C_inf + b/Re11^0.75;
 
- delta_P_inj = 0.4*100*sqrt(10*P11*1e5); % Pressure drop across the injection plate [Pa] 
- P12 = P11 - delta_P_inj*1e-5;           % Pressure in the test chamber [bar]
+% If C_d = 0.61 (Space propulsion slides for diameter above 2.5 mm), the
+% pressure drop is slightly above 2 bar. Using the method hereabove, we
+% obtain almost 5 bar of pressure drop.
+
+delta_P_inj = (0.5/rho11)*(m_dot_N2/(A_inj*C_d))^2
+
+% err = 1;
+% iter = 0;
+% C_d = 2.6;
+% delta_P_inj = 0.4*100*sqrt(10*P11*1e5);
+
+% while err > 1e-3
+% 
+%     C_d = m_dot_N2/(A_inj*sqrt(2*delta_P_inj*rho11));
+% 
+%     delta_P_inj_new = (0.5/rho11)*(m_dot_N2/(A_inj*C_d))^2;
+% 
+%     err = abs(delta_P_inj - delta_P_inj_new);
+% 
+%     delta_P_inj = delta_P_inj_new;
+% 
+% end
+
+ % delta_P_inj = 0.4*100*sqrt(10*P11*1e5); % Pressure drop across the injection plate [Pa] 
+ % P12 = P11 - delta_P_inj*1e-5;           % Pressure in the test chamber [bar]
 
 % d_inj = 0.5*1e-3;                    % Injector diameter (conical entrance) [m]
 % C_d = 0.7;                           % Discharge coefficient
