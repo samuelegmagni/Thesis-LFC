@@ -434,3 +434,6 @@ A_inj = A_needed/N_inj;
 d_inj = sqrt((4*A_inj)/pi);
 v_inj=C_d*sqrt(2*delta_P_inj/rho11);
 A_slab = 30*30*10e-6;                    % Area of slab test facility [m^2]
+
+%% Total pressure drop
+delta_P_tot=P12-P1;
