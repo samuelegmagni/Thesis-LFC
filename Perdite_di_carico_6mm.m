@@ -372,8 +372,8 @@ rho10 = rho_N2(find(T==round(T10)),find(abs(P - round(P10,1)) < 0.001));     % D
 gamma10 = gamma_N2(find(T==round(T10)),find(abs(P - round(P10,1)) < 0.001)); % Ratio of specific heats the check valve  [-]
 gamma11 = gamma_N2(find(T==round(T10)),find(abs(P - round(P10,1)) < 0.001));
 mu10 = mu_N2(find(T==round(T10)),find(abs(P - round(P10,1)) < 0.001));      % Viscosity downstream the check valve [Pa*s]
-v10 = m_dot_N2/(A_int*rho9);                       % Gas velocity downstream the check valve [m/s]
-c10 = (gamma9*R*T9)^0.5;                           % Sound speed downstream the check valve [m/s]
+v10 = m_dot_N2/(A_int*rho10);                      % Gas velocity downstream the check valve [m/s]
+c10 = (gamma10*R*T10)^0.5;                         % Sound speed downstream the check valve [m/s]
 M10 = v10/c10;                                     % Mach number downstream the check valve [-]
 Re10 = (rho10*v10*d_p_int)/mu10;                   % Reynolds number downstream the check valve [-]
 
