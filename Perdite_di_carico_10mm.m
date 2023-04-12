@@ -427,7 +427,7 @@ clear gamma11_new
 delta_P_inj = 0.4*100*sqrt(10*P11*1e5); % Pressure drop across the injection plate [Pa] 
 P12 = P11 - delta_P_inj*1e-5;           % Pressure in the test chamber [bar]
 
-N_inj = [10 15 20 25 30 35];
+N_inj = [2 4 6 8 10];
 C_d = 0.61;                              % Sharp-edged orifice with diameter greater than 2.5 mm
 A_needed = m_dot_N2/(C_d*sqrt(2*delta_P_inj*rho11));
 A_inj = A_needed./N_inj;
@@ -436,4 +436,40 @@ v_inj=C_d*sqrt(2*delta_P_inj/rho11);
 A_slab = 30*30*10e-6;                    % Area of slab test facility [m^2]
 
 %% Total pressure drop
-delta_P_tot=P1-P12;
+delta_P_tot = P_reg - P12;  % 25.6732 bar
+
+%% Figures
+
+P_vect = [P_reg P1 P2 P3 P4 P5 P6 P7 P8 P9 P10 P11 P12];
+x = [0 0 0.4 0.4 0.8 0.8 1.2 1.2 1.7 1.7 1.7 2.2 2.2];
+
+figure()
+plot(x,P_vect,'ro','linewidth',1.5)
+grid on
+xlabel('Length of the line, L [m]')
+ylabel('Pressure, $P_i$ [bar]')
+title('Pressure evolution: 10 mm diameter pipes')
+
+figure()
+plot(N_inj,d_inj*1e3,'ro','linewidth',1.5)
+grid on
+xlabel('Number of injectors, $N_{inj}$ [-]')
+ylabel('Injector diameter, $d_{inj}$ [mm]')
+title('Number of injectors vs diameter of injectors')
+
+tubes = [6 6.35 10 12 12.7 19.05];
+deltaP = [69.5916 59.7904 25.6732 16.081 14.7660 5.1600];
+
+figure()
+plot(tubes(1),deltaP(1),'bo','LineWidth',1.5)
+grid on 
+hold on
+plot(tubes(2),deltaP(2),'ro','LineWidth',1.5)
+plot(tubes(3),deltaP(3),'go','LineWidth',1.5)
+plot(tubes(4),deltaP(4),'ko','LineWidth',1.5)
+plot(tubes(5),deltaP(5),'co','LineWidth',1.5)
+plot(tubes(6),deltaP(6),'mo','LineWidth',1.5)
+legend('6 mm','1/4 inch','10 mm','12 mm','1/2 inch','3/4 inch')
+xlabel('Diameter of the pipe, D [mm]')
+ylabel('Pressure drop, $\Delta P$ [bar]')
+title('Pressure drop across the line vs diameter of the pipes')

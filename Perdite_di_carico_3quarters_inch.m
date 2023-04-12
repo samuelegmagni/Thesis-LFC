@@ -102,7 +102,7 @@ P3 = 1e-5*(P2*1e5 - 0.1*rho2*v2^2);                % Pressure drop related to th
 T3 = T2;
 
 T = (floor(T3)-4):0.5:(ceil(T3));
-P = (floor(P3)-9):0.1:(ceil(P3));
+P = (floor(P3)-6):0.1:(ceil(P3));
 data = nistdata('N2',T,P);
 
 rho_N2 = data.Rho*data.Mw;           % Density of Nitrogen [kg/m^3] 
@@ -178,7 +178,7 @@ T5 = T4;
 
 %% After second manual ball valve (point 5) and before MFM (point 6) 
 T = (floor(T5)-3):0.5:(ceil(T5));
-P = (floor(P5)-9):0.1:(ceil(P5));
+P = (floor(P5)-6):0.1:(ceil(P5));
 data = nistdata('N2',T,P);
 
 rho_N2 = data.Rho*data.Mw;           % Density of Nitrogen [kg/m^3] 
@@ -253,8 +253,8 @@ P7 = P6 - (G_g*(q_N2*60)^2)/(14.42*C_V)^2;                                      
 T7 = T6;                                                                              % Temperature downstream the mass flow meter (needle valve approx) [K]
 
 %% After MFM (point 7) and before servo valve (point 8)
-T = (floor(T7)-12):0.5:(ceil(T7));
-P = (floor(P7)-12):0.1:(ceil(P7));
+T = (floor(T7)-9):0.5:(ceil(T7));
+P = (floor(P7)-6):0.1:(ceil(P7));
 data = nistdata('N2',T,P);
 
 rho_N2 = data.Rho*data.Mw;           % Density of Nitrogen [kg/m^3] 
@@ -358,8 +358,8 @@ T10 = T9;
 
 %% After check valve (point 10) and before injector (point 11)
 
-T = (floor(T10)-3):0.5:(ceil(T10));
-P = (floor(P10)-10):0.1:(ceil(P10));
+T = (floor(T10)-10):0.5:(ceil(T10));
+P = (floor(P10)-5):0.1:(ceil(P10));
 data = nistdata('N2',T,P);
 
 rho_N2 = data.Rho*data.Mw;           % Density of Nitrogen [kg/m^3] 
@@ -427,7 +427,7 @@ clear gamma11_new
 delta_P_inj = 0.4*100*sqrt(10*P11*1e5); % Pressure drop across the injection plate [Pa] 
 P12 = P11 - delta_P_inj*1e-5;           % Pressure in the test chamber [bar]
 
-N_inj = [10 15 20 25 30 35];
+N_inj = [2 4 6 8 10];
 C_d = 0.61;                              % Sharp-edged orifice with diameter greater than 2.5 mm
 A_needed = m_dot_N2/(C_d*sqrt(2*delta_P_inj*rho11));
 A_inj = A_needed./N_inj;
@@ -436,4 +436,22 @@ v_inj=C_d*sqrt(2*delta_P_inj/rho11);
 A_slab = 30*30*10e-6;                    % Area of slab test facility [m^2]
 
 %% Total pressure drop
-delta_P_tot=P1-P12;
+delta_P_tot = P_reg - P12;     % 5.1600
+
+%% Figures
+
+P_vect = [P_reg P1 P2 P3 P4 P5 P6 P7 P8 P9 P10 P11 P12];
+x = [0 0 0.4 0.4 0.8 0.8 1.2 1.2 1.7 1.7 1.7 2.2 2.2];
+figure()
+plot(x,P_vect,'ro','linewidth',1.5)
+grid on
+xlabel('Length of the line, L [m]')
+ylabel('Pressure, $P_i$ [bar]')
+title('Pressure evolution: 3/4 inch diameter pipes')
+
+figure()
+plot(N_inj,d_inj*1e3,'ro','linewidth',1.5)
+grid on
+xlabel('Number of injectors, $N_{inj}$ [-]')
+ylabel('Injector diameter, $d_{inj}$ [mm]')
+title('Number of injectors vs diameter of injectors')
