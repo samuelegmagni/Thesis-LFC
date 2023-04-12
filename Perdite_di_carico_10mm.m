@@ -40,7 +40,7 @@ L = 0.4;                             % Length of the tube [m]
 
 rho_reg = rho_N2(find(T==round(T1)),find(abs(P - round(P_reg,1)) < 0.001)); % Density downstream the pressure regulator [kg/m^3]
 v_reg = m_dot_N2/(A_int*rho_reg);                                             % Velocity downstream the pressure regulator [m/s]
-P1 = 1e-5*(P_reg*1e5 - 1.3*rho_reg*v_reg^2);                                  % Pressure downstream the pipe bending after the pressure regulator [bar]
+P1 = 1e-5*(P_reg*1e5 - 1.2*rho_reg*v_reg^2);                                  % Pressure downstream the pipe bending after the pressure regulator [bar]
 rho1 = rho_N2(find(T==round(T1)),find(abs(P - round(P1,1)) < 0.001));       % Density downstream the pipe bending after the pressure regulator [kg/m^3]
 gamma1 = gamma_N2(find(T==round(T1)),find(abs(P - round(P1,1)) < 0.001));   % Ratio of specific heats downstream the pipe bending after the pressure regulator [-]
 gamma2 = gamma_N2(find(T==round(T1)),find(abs(P - round(P1,1)) < 0.001));
