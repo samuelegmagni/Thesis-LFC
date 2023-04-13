@@ -273,6 +273,8 @@ c7 = (gamma7*R*T7)^0.5;                           % Sound speed downstream the m
 M7 = v7/c7;                                       % Mach number downstream the mass flow meter (needle valve approx) [-]
 Re7 = (rho7*v7*d_p_int)/mu7;                      % Reynolds number downstream the mass flow meter (needle valve approx) [-]
 
+L = 0.5;
+
 if Re7 < 2300
 
         lambda = 64/Re7;
@@ -292,7 +294,6 @@ while err > 1e-3
     iter = iter + 1;
     
     g_M7 = (1 - M7^2)/(gamma7*M7^2) + ((gamma7 + 1)/(2*gamma7))*log(((gamma7 + 1)*M7^2)/(2 + (gamma7 - 1)*M7^2) );
-    L = 0.5;
     g_M8 = g_M7 - lambda*(L/d_p_int);
     y = @(x) g_M8 - (1 - x^2)/(gamma8*x^2) + ((gamma8 + 1)/(2*gamma8))*log(((gamma8 + 1)*x^2)/(2 + (gamma8 - 1)*x^2) );
     M8 = fsolve(y,0.006);
@@ -395,11 +396,17 @@ while err > 1e-3
 
     iter = iter + 1;
     g_M10 = (1 - M10^2)/(gamma10*M10^2) + ((gamma10 + 1)/(2*gamma10))*log(((gamma10 + 1)*M10^2)/(2 + (gamma10 - 1)*M10^2) );
-    L = 0.5;
     g_M11 = g_M10 - lambda*(L/d_p_int);
 
-    y = @(x) g_M11 - (1 - x^2)/(gamma11*x^2) + ((gamma11 + 1)/(2*gamma11))*log(((gamma11 + 1)*x^2)/(2 + (gamma11 - 1)*x^2) );
-    M11 = fsolve(y,0.006);
+    if g_M11 < 0
+
+        M11 = 1;
+    else
+
+        y = @(x) g_M11 - (1 - x^2)/(gamma11*x^2) + ((gamma11 + 1)/(2*gamma11))*log(((gamma11 + 1)*x^2)/(2 + (gamma11 - 1)*x^2) );
+        M11 = fsolve(y,0.006);
+
+    end
 
     T_star = T10/(0.5*(gamma10 + 1)/(1 + (gamma10 - 1)*0.5*M10^2));
     T11 = T_star*(0.5*(gamma11 + 1)/(1 + (gamma11 - 1)*0.5*M11^2));
@@ -445,7 +452,7 @@ x = [0 0 0.4 0.4 0.8 0.8 1.2 1.2 1.7 1.7 1.7 2.2 2.2];
 figure()
 plot(x,P_vect,'ro','linewidth',1.5)
 grid on
-xlabel('Length of the line, L [m]')
+xlabel('Position on the line, $L_i$ [m]')
 ylabel('Pressure, $P_i$ [bar]')
 title('Pressure evolution: 12 mm diameter pipes')
 
