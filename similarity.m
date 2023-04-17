@@ -11,8 +11,8 @@ set(0,'DefaultTextInterpreter','Latex');
 set(0,'DefaultLegendFontSize',12);
 
 %%
-T_vect = [298:5:850];
-P_vect = [1:5:210];
+T_vect = [280:5:600];
+P_vect = [1:0.5:3];
 
 data = nistdata('N2',T_vect,P_vect);
 
@@ -150,7 +150,7 @@ c.Label.String = 'q_{N_2} [kW/m^2]';
 %% Small scale test facility
 
 T_small = [298:5:600];
-P_small = [1:0.2:8];
+P_small = [1:0.5:3];
 
 data = nistdata('N2',T_small,P_small);
 
