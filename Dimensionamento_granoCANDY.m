@@ -4,10 +4,10 @@ clc
 m_dot_N2 = 60*1e-3;          % kg/s
 T_fin = 1.2*650;             % K
 T_amb = 298.15;              % K
-cp_N2 = 1050;                % J/kgK
-cp_N2_fin = 1117.4;          % J/kgK
-cp_g = 3830.4;                 % J/kgK
-T_fl = 0.7*1635.62;             % K
+cp_N2 = 1052.08;             % J/kgK
+cp_N2_fin = 1119.02;         % J/kgK
+cp_g = 3830.4;               % J/kgK
+T_fl = 0.7*1635.62;          % K
 
 f = @(x) m_dot_N2*cp_N2*T_amb + x*cp_g*(T_fl) - (m_dot_N2 + x) * ( (cp_N2_fin*m_dot_N2 + cp_g*x)/(m_dot_N2 + x) )*(T_fin);
 m_dot_p = fzero(f,0.5) 
@@ -34,8 +34,6 @@ m_prop=A_b*thickness*1e-9*rho_mix
 
 %%
 
-clear
-clc
 set(0,'DefaultTextFontSize',12);              % Settings for the plot
 set(0,'DefaultAxesFontSize',12);
 set(0,'DefaultLegendInterpreter','Latex');
@@ -69,9 +67,6 @@ for i = 1 : length(T)
 
     for m = 1 : length(P)
 
-        f = @(x) m_dot_N2(i,m)*cp_N2(i,m)*(T(i) - T_amb) + x*cp_g*(T_fl) - (m_dot_N2(i,m) + x) * ( (cp_N2(i,m)*m_dot_N2(i,m))/(m_dot_N2(i,m) + x) + (cp_g*x)/(m_dot_N2(i,m) + x) )*(T(i));
-        z = fsolve(f,0.05) ;
-
         f = @(x) m_dot_N2(i,m)*cp_N2(1,m)*T_amb + x*cp_g*(T_fl) - (m_dot_N2(i,m) + x) * ( (cp_N2(end,m)*m_dot_N2(i,m) + (cp_g*x))/(m_dot_N2(i,m) + x) )*(T(i));
         z = fzero(f,0.05) ;
 
@@ -99,6 +94,11 @@ c = colorbar;
 c.Label.Interpreter = 'latex';
 c.Label.String = 'Propellant mass flow rate $\dot{m}_{prop}$ [g/s]';
 
+A_b = (m_dot_p/(r_b*rho_mix))*1e6;    % mm^2
+d_b = 2*sqrt(A_b/pi)                 % mm
+
+thickness = r_b*t_b*1e3              % mm
+m_prop=A_b*thickness*1e-9*rho_mix
 
 figure()
 contourf(data.P*1e-5,data.T,d_b); 
