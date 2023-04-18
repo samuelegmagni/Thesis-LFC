@@ -7,17 +7,17 @@ mdot_N2=60*1e-3;
 mdot_SRP=24*1e-3;
 
 % Define pressures and temperatures
-T = [550:5:610];
+T = [273:5:300];
 P = [1:0.2:13];
 data = nistdata('N2',T,P);
-Tmix=600;
+Tamb=293.15;
 Pgf=12*1e5;                               % pressure before injector [Pa]
 Pgi=12;                                   % pressure in tank [bar]
 Pburst=4*Pgi*1e5;
 
 % Define densities
 rho_N2 = data.Rho*data.Mw; 
-rho_N2_mix= rho_N2(find(T==round(Tmix)),find(abs(P - round(Pgi,1)) < 0.001)); 
+rho_N2_mix= rho_N2(find(T==round(Tamb)),find(abs(P - round(Pgi,1)) < 0.001)); 
 rho_SRP_mix=1893.3;
 
 % Define volumetric mass flow rate
@@ -36,6 +36,6 @@ sigma_snerv=215*1e6;
 htank=30*1e-2;
 rtank=sqrt(Vtank/(pi*htank));
 t_des=Pburst*rtank/sigma_snerv;
-t_ASME= Pburst*rtank/(sigma_ult-0.6*Pburst);
+t-ASME=Pburst*rtank/(sigma_ult-0.6*Pburst);
 Vtank_int=pi*(rtank-t_des)^2*htank;
-mtank=(Vtank-Vtank_int)*rho_steel;
+m-tank=Vtank*rho_steel-
