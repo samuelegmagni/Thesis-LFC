@@ -10,19 +10,18 @@ mdot_SRP=24*1e-3;
 T = [550:5:610];
 P = [1:0.2:13];
 data = nistdata('N2',T,P);
-Tmix=600;
-Pgf=12*1e5;                               % pressure before injector [Pa]
-Pgi=12;                                   % pressure in tank [bar]
+Tmix=600;                              % pressure before injector [Pa]
+Ptank=12;                                   % pressure in tank [bar]
 Pburst=4*Pgi*1e5;
 
 % Define densities
 rho_N2 = data.Rho*data.Mw; 
 rho_N2_mix= rho_N2(find(T==round(Tmix)),find(abs(P - round(Pgi,1)) < 0.001)); 
-rho_SRP_mix=1893.3;
+rho_SRP_gas=3.2980;                      % density from NASA CEA [kg/m^3]
 
 % Define volumetric mass flow rate
 qvol_N2=mdot_N2/rho_N2_mix;
-qvol_SRP=mdot_SRP/rho_SRP_mix;
+qvol_SRP=mdot_SRP/rho_SRP_gas;
 
 % Define volume of mixing chamber in 1 s of flow
 V_N2=qvol_N2*1;
