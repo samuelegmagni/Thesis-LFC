@@ -42,4 +42,4 @@ mtank=(Vtank-Vtank_int)*rho_steel;
 % Von Mises stresses
 sigma_l=Pburst*rtank/(2*t_des);
 sigma_h=Pburst*rtank/t_des;
-sigma_vm=(1/sqrt(2))*sqrt((sigma_h-sigma_l)^2+sigma_l^2+sigma_h^2);
+sigma_vm=(1/sqrt(2))*sqrt((sigma_h-sigma_l)^2)

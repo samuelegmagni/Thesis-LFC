@@ -8,8 +8,8 @@ T_fin = 1.2*650;             % K
 T_amb = 298.15;              % K
 cp_N2 = 1052.08;             % J/kgK
 cp_N2_fin = 1119.02;         % J/kgK
-cp_g = 3830.4;               % J/kgK
-T_fl = 0.7*1635.62;          % K
+cp_g = 3625.4;               % J/kgK
+T_fl = 0.7*1645.89;          % K
 
 f = @(x) m_dot_N2*cp_N2*T_amb + x*cp_g*(T_fl) - (m_dot_N2 + x) * ( (cp_N2_fin*m_dot_N2 + cp_g*x)/(m_dot_N2 + x) )*(T_fin);
 m_dot_p = fzero(f,0.5);
