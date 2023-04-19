@@ -1,6 +1,8 @@
 clear
 clc
 
+
+% NASA CEA data assumed at 10 bar 
 m_dot_N2 = 60*1e-3;          % kg/s
 T_fin = 1.2*650;             % K
 T_amb = 298.15;              % K
