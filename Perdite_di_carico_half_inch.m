@@ -434,8 +434,8 @@ clear gamma11_new
 delta_P_inj = 0.4*100*sqrt(10*P11*1e5); % Pressure drop across the injection plate [Pa] 
 P12 = P11 - delta_P_inj*1e-5;           % Pressure in the test chamber [bar]
 
-N_inj = [2 4 6 8 10];
-C_d = 0.61;                              % Sharp-edged orifice with diameter greater than 2.5 mm
+N_inj = [10 15 20 25 30 35];
+C_d = 0.65;                                 % Sharp-edged orifice with diameter smaller than 2.5 mm
 A_needed = m_dot_N2/(C_d*sqrt(2*delta_P_inj*rho11));
 A_inj = A_needed./N_inj;
 d_inj = sqrt((4*A_inj)/pi);
