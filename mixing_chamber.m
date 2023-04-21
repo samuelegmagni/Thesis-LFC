@@ -4,7 +4,7 @@ clc
 
 % Define mass flow rates
 mdot_N2 = 60*1e-3;
-mdot_SRP = 24*1e-3;
+mdot_SRP = 17.8*1e-3;  
 
 % Define pressures and temperatures
 T = [590:2:600];
