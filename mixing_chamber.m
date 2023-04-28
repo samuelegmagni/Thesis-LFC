@@ -27,7 +27,7 @@ qvol_SRP = mdot_SRP/rho_SRP_gas;
 % Define volume of mixing chamber in 1 s of flow
 V_N2 = qvol_N2*1;
 V_SRP = qvol_SRP*1;
-Vtank = 1.5*(V_N2+V_SRP);
+Vtank = 1.05*(V_N2+V_SRP);
 
 % Size mixing chamber
 rho_steel = 8000;
