@@ -8,10 +8,10 @@ mdot_N2 = 60*1e-3;
 mdot_SRP = 17.8*1e-3;  
 
 % Define pressures and temperatures
-T = [590:2:600];
+T = [280:2:600];
 P = [1:0.2:13];
 data = nistdata('N2',T,P);
-Tmix = 600;                             
+Tmix = 280;                             
 Ptank = 12;                                   % pressure in tank [bar]
 Pburst = 4*Ptank*1e5;                         % [Pa]
 
@@ -25,8 +25,8 @@ qvol_N2 = mdot_N2/rho_N2_mix;
 qvol_SRP = mdot_SRP/rho_SRP_gas;
 
 % Define volume of mixing chamber in 1 s of flow
-V_N2 = qvol_N2*1;
-V_SRP = qvol_SRP*1;
+V_N2 = qvol_N2*0.25;
+V_SRP = qvol_SRP*0.25;
 Vtank = 1.05*(V_N2+V_SRP);
 
 % Size mixing chamber
