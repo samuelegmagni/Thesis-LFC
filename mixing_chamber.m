@@ -25,15 +25,15 @@ qvol_N2 = mdot_N2/rho_N2_mix;
 qvol_SRP = mdot_SRP/rho_SRP_gas;
 
 % Define volume of mixing chamber in 1 s of flow
-V_N2 = qvol_N2*0.25;
-V_SRP = qvol_SRP*0.25;
+V_N2 = qvol_N2*0.1;
+V_SRP = qvol_SRP*0.1;
 Vtank = 1.05*(V_N2+V_SRP);
 
 % Size mixing chamber
 rho_steel = 8000;
 sigma_ult = 505*1e6;
 sigma_snerv = 215*1e6;
-htank = 30*1e-2;
+htank = 20*1e-2;
 rtank = sqrt(Vtank/(pi*htank));
 t_des = Pburst*rtank/sigma_snerv;
 t_ASME = Pburst*rtank/(0.8*sigma_ult-0.6*Pburst);
