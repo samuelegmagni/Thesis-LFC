@@ -25,22 +25,31 @@ qvol_N2 = mdot_N2/rho_N2_mix;
 qvol_SRP = mdot_SRP/rho_SRP_gas;
 
 % Define volume of mixing chamber in 1 s of flow
-V_N2 = qvol_N2*0.1;
-V_SRP = qvol_SRP*0.1;
+t_res=[0.05 0.1 0.15 0.2 0.25 0.3 0.35 0.4 0.45 0.5]
+V_N2 = qvol_N2.*t_res;
+V_SRP = qvol_SRP.*t_res;
 Vtank = 1.05*(V_N2+V_SRP);
 
 % Size mixing chamber
 rho_steel = 8000;
 sigma_ult = 505*1e6;
 sigma_snerv = 215*1e6;
-htank = 20*1e-2;
-rtank = sqrt(Vtank/(pi*htank));
-t_des = Pburst*rtank/sigma_snerv;
-t_ASME = Pburst*rtank/(0.8*sigma_ult-0.6*Pburst);
-Vtank_int = pi*(rtank-t_des)^2*htank;
-mtank = (Vtank-Vtank_int)*rho_steel;
+htank = 15*1e-2;
+rtank = sqrt(Vtank./(pi*htank));
+t_des = Pburst*rtank./sigma_snerv;
+t_ASME = Pburst*rtank./(0.8*sigma_ult-0.6*Pburst);
+Vtank_int = pi*(rtank-t_des).^2*htank;
+mtank = (Vtank-Vtank_int).*rho_steel;
 
 % Von Mises stresses
-sigma_l = Pburst*rtank/(2*t_des);
-sigma_h = Pburst*rtank/t_des;
+sigma_l = Pburst.*rtank/(2*t_des);
+sigma_h = Pburst.*rtank/t_des;
 sigma_vm = (1/sqrt(2))*sqrt((sigma_h-sigma_l)^2+sigma_l^2+sigma_h^2);
+
+%Plot 
+figure()
+plot(t_res,rtank*1e2,'ro','linewidth',1.5)
+grid on
+xlabel('Residence time [s]')
+ylabel('Tank radius [cm]')
+title('Tank radius vs residence time in chamber')
