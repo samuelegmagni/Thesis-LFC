@@ -16,7 +16,7 @@ d_p_int = d_p_ext - 2*t;             % Pipe internal diameter [m]
 A_int = pi*(d_p_int/2)^2;            % Internal cross sectional area [m^2]
 
 eps = 0.015*1e-3;                    % Absolute roughness of stainless steel [m]
-eps_rel = eps/d_p_ext;               % Relative roughness of stainless steel [-]
+eps_rel = eps/d_p_int;               % Relative roughness of stainless steel [-]
 
 T1 = 298;                                       % Temperature downstream the pressure regulator [K]
 P_reg = 25;                                     % Pressure downstream the pressure regulator [bar]
