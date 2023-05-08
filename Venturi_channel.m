@@ -79,8 +79,8 @@ t = 1.5*1e-3;                        % Thickness of the tube  [m]
 d1 = d_ext - 2*t;
 A1 = 0.25*pi*d1^2;
 m_dot_N2 = 200*1e-3;       % [g/s]
-P1 = 23;                   % [bar]
-T1 = 297;                  % [K]
+P1 = 56;                   % [bar]
+T1 = 295;                  % [K]
 R = 8314/28;               % [J/KgK]
 eps = 0.015*1e-3;                    % Absolute roughness of stainless steel [m]
 eps_rel = eps/d1;               % Relative roughness of stainless steel [-]
@@ -107,14 +107,20 @@ c1 = sqrt(gamma1*R*T1);
 M1 = v1/c1; 
 Re1 = (rho1*v1*d1)/mu1;              % Alto quindi effetti inerziali dominanti rispetto a quelli viscosi
 
-P2 = 17;
+d2 = 7.5*1e-3;                        % Throat diameter [m]
+A2 = 0.25*pi*d2^2;                  % Throat cross sectional area [m^2]
+beta = sqrt(A2/A1);
+C = 0.995;                          % Disharge coefficient
+k = gamma1;
+%%
+z = @(x) m_dot_N2 - sqrt( ((x/P1)^(2/k)) * (k/(k-1)) * ((1 - (x/P1)^((k-1)/k))/(1 - x/P1)) * ((1 - beta^4)/(1 - beta^4*((x/P1)^(2/k)))))*C*A2*sqrt(2*rho1*(P1 - x)/(1 - (d2/d1)^4));
+P2 = fsolve(z,0)
+%%
 T2 = T1;
 rho2 = rho_N2(find(T==round(T1)),find(abs(P - round(P2,1)) < 0.001));
 mu2 = mu_N2(find(T==round(T1)),find(abs(P - round(P2,1)) < 0.001));
 gamma2 = gamma_N2(find(T==round(T2)),find(abs(P - round(P2,1)) < 0.001));
 gamma3 = gamma_N2(find(T==round(T2)),find(abs(P - round(P2,1)) < 0.001));
-d2 = 7.5*1e-3;                        % Throat diameter [m]
-A2 = 0.25*pi*d2^2;                  % Throat cross sectional area [m^2]
 L = 0.05;                            % Length of the throat [m]
 v2 = m_dot_N2/(rho2*A2);
 c2 = sqrt(gamma1*R*T1);
