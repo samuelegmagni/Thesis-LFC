@@ -114,7 +114,7 @@ C = 0.995;                          % Disharge coefficient
 k = gamma1;
 %%
 z = @(x) m_dot_N2 - sqrt( ((x/P1)^(2/k)) * (k/(k-1)) * ((1 - (x/P1)^((k-1)/k))/(1 - x/P1)) * ((1 - beta^4)/(1 - beta^4*((x/P1)^(2/k)))))*C*A2*sqrt(2*rho1*(P1 - x)/(1 - (d2/d1)^4));
-P2 = fsolve(z,0)
+P2 = fsolve(z,28)
 %%
 T2 = T1;
 rho2 = rho_N2(find(T==round(T1)),find(abs(P - round(P2,1)) < 0.001));
