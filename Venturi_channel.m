@@ -112,12 +112,26 @@ A2 = 0.25*pi*d2^2;                  % Throat cross sectional area [m^2]
 beta = sqrt(A2/A1);
 C = 0.995;                          % Disharge coefficient
 k = gamma1;
-p1=56*1e5;
+
+
+%% System of equations from 1 to 2 
+
+
+% x is rho2, y is u2 and z is P2
+syms x y z;
+eqn1 = x*y*A2 == rho1*v1*A1;
+eqn2 = x*y^2*A2+ z*A2== rho1*v1^2*A1 +P1*1e5*A1;
+eqn3 = z/x^(gamma1)== P1*1e5/rho1^(gamma1);
+eqns = [eqn1 eqn2 eqn3];
+vars = [x y z];
+[solx, soly,solz] = solve(eqns,vars);
+
+
 %p2=55.14*1e5;                                
 %m_dot_N2_new = sqrt( ((p2/p1)^(2/k)) * (k/(k-1)) * ((1 - (p2/p1)^((k-1)/k))/(1 - p2/p1)) * ((1 - beta^4)/(1 - beta^4*((p2/p1)^(2/k)))))*C*A2*sqrt(2*rho1*(p1 - p2)/(1 - beta^4));
 
-z = @(x) m_dot_N2 - sqrt( ((x/P1)^(2/k)) * (k/(k-1)) * ((1 - (x/P1)^((k-1)/k))/(1 - x/P1)) * ((1 - beta^4)/(1 - beta^4*((x/P1)^(2/k)))))*C*A2*sqrt(2*rho1*(P1 - x)/(1 - (d2/d1)^4));
-P2 = fsolve(z,34)
+%z = @(x) m_dot_N2 - sqrt( ((x/P1)^(2/k)) * (k/(k-1)) * ((1 - (x/P1)^((k-1)/k))/(1 - x/P1)) * ((1 - beta^4)/(1 - beta^4*((x/P1)^(2/k)))))*C*A2*sqrt(2*rho1*(P1 - x)/(1 - (d2/d1)^4));
+%P2 = fsolve(z,34)
 
 %% Fanno flow from point 2 to 3 
 T2 = T1;
