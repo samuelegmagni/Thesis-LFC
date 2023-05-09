@@ -107,7 +107,7 @@ c1 = sqrt(gamma1*R*T1);
 M1 = v1/c1; 
 Re1 = (rho1*v1*d1)/mu1;              % Alto quindi effetti inerziali dominanti rispetto a quelli viscosi
 
-d2 = 3*1e-3;                        % Throat diameter chosen to be 1/3 of entrance diameter[m]
+d2 = 5*1e-3;                        % Throat diameter chosen to be 1/3 of entrance diameter[m]
 A2 = 0.25*pi*d2^2;                  % Throat cross sectional area [m^2]
 beta = sqrt(A2/A1);
 C = 0.995;                          % Disharge coefficient
@@ -116,12 +116,13 @@ k = gamma1;
 
 %% System of equations from 1 to 2 
 
-z= @(x) (rho1*A1*v1^2+P1*1e5*A1-(rho1^2*A1^2*v1^2)/(x*A2))-P1*1e5*((x/rho1)^(gamma1))*A2;
-rho2=fsolve(z,5)
+z= @(x) rho1*v1^2*A1+ P1*1e5*A1 - (rho1^2*A1^2*v1^2/(x*A2)) -(((gamma1/(gamma1-1))*P1*1e5/rho1)+0.5*v1^2-0.5*((rho1/x)^2)*((A1/A2)^2)*v1^2)*(x*A2*(gamma1-1)/gamma1);
+rho2=fsolve(z,56)
 
-P2= P1*1e5*(rho2/rho1)^gamma1;
-v2=(rho1*A1*v1)/(rho2*A2);
+v2= (rho1*A1*v1/(A2*rho2));
 
+p2=(((gamma1/(gamma1-1))*P1*1e5/rho1)+0.5*v1^2-0.5*((rho1/rho2)^2)*(A1/A2)^2*v1^2)*(rho2*(gamma1-1)/gamma1);
+P2=p2/1e5;
 
 %p2=55.14*1e5;                                
 %m_dot_N2_new = sqrt( ((p2/p1)^(2/k)) * (k/(k-1)) * ((1 - (p2/p1)^((k-1)/k))/(1 - p2/p1)) * ((1 - beta^4)/(1 - beta^4*((p2/p1)^(2/k)))))*C*A2*sqrt(2*rho1*(p1 - p2)/(1 - beta^4));
@@ -161,19 +162,19 @@ while err > 1e-3
 
     g_M2 = (1 - M2^2)/(gamma2*M2^2) + ((gamma2 + 1)/(2*gamma2))*log(((gamma2 + 1)*M2^2)/(2 + (gamma2 - 1)*M2^2) );
     g_M3 = g_M2 - lambda*(L/d2);
-    
+
     y = @(x) g_M3 - (1 - x^2)/(gamma3*x^2) + ((gamma3 + 1)/(2*gamma3))*log(((gamma3 + 1)*x^2)/(2 + (gamma3 - 1)*x^2) );
     M3 = fsolve(y,0.006);
-    
+
     T_star = T2/(0.5*(gamma2 + 1)/(1 + (gamma2 - 1)*0.5*M2^2));
     T3 = T_star*(0.5*(gamma3 + 1)/(1 + (gamma3 - 1)*0.5*M3^2));
-    
+
     P_star = P2/((1/M2)*sqrt(0.5*(gamma2 + 1)/(1 + (gamma2 - 1)*0.5*M2^2)));
     P3 = P_star*((1/M3)*sqrt(0.5*(gamma3 + 1)/(1 + (gamma3 - 1)*0.5*M3^2)));
-    
+
     rho_star = rho2/((1/M2)*sqrt( 2*(1 + (gamma2 - 1)*0.5*M2^2)/(gamma2 + 1)));
     rho3 = rho_star*((1/M3)*sqrt( 2*(1 + (gamma3 - 1)*0.5*M3^2)/(gamma3 + 1)));
-    
+
     c3 = sqrt(gamma3*R*T3);
     v3 = M3*c3;
 
