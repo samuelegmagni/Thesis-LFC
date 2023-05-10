@@ -216,3 +216,15 @@ gamma_N2 = cp_N2./cv_N2;             % Ratio of specific heats [-]
 mu_N2 = data.mu;     
 rho4 = rho_N2(find(T==round(T4)),find(abs(P - round(P4,1)) < 0.001));
 
+%% Venturi tube measurements
+d_conv=d1;
+d_div= d1;
+d_t=d2;
+alpha_conv=21;
+alpha_div=15;
+l_conv1= cotd(alpha_conv)*d_conv;
+l_conv2= cotd(alpha_conv)*d_t;
+l_conv=l_conv1-l_conv2;
+l_div1= cotd(alpha_div)*d_conv;
+l_div2= cotd(alpha_div)*d_t;
+l_div=l_div1-l_div2;
