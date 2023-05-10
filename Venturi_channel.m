@@ -107,38 +107,52 @@ c1 = sqrt(gamma1*R*T1);
 M1 = v1/c1; 
 Re1 = (rho1*v1*d1)/mu1;              % Alto quindi effetti inerziali dominanti rispetto a quelli viscosi
 
-d2 = 3*1e-3;                        % Throat diameter chosen to be 1/3 of entrance diameter[m]
+d2 = 7.5*1e-3;                        % Throat diameter chosen to be 1/3 of entrance diameter[m]
 A2 = 0.25*pi*d2^2;                  % Throat cross sectional area [m^2]
-beta = sqrt(A2/A1);
-C = 0.995;                          % Disharge coefficient
-k = gamma1;
+% beta = sqrt(A2/A1);
+% C = 0.995;                          % Disharge coefficient
+% k = gamma1;
 
+%% Convergent part
+T_tot = T1*(1 + ((gamma1 - 1)/2)*M1^2);
+P_tot = P1*(1 + ((gamma1 - 1)/2)*M1^2)^(gamma1/(gamma1 - 1));
+M2 = 1;
+T2 = T_tot/(1 + ((gamma1 - 1)/2));
+P2 = P_tot/(1 + ((gamma1 - 1)/2))^(gamma1/(gamma1 - 1));
+c2 = sqrt(gamma1*R*T2);
+v2 = c2;
+rho2 = (rho1*v1*A1)/(A2*v2);
 
-%% System of equations from 1 to 2 
+%%
+% z = @(x) m_dot_N2 - sqrt( ((x/P1)^(2/k)) * (k/(k-1)) * ((1 - (x/P1)^((k-1)/k))/(1 - x/P1)) * ((1 - beta^4)/(1 - beta^4*((x/P1)^(2/k)))))*C*A2*sqrt(2*rho1*(P1 - x)/(1 - (d2/d1)^4));
+% P2 = fzero(z,0)
+% 
+% F = @(x) [x(1)*x(2)*A2 - rho1*v1*A1;
+%           x(1)*A2*x(2)^2 + x(3)*A2 - rho1*A1*v1^2 - P1*A1;
+%           (gamma1/(gamma1 - 1))*x(3)/x(1) + 0.5*x(2)^2 - (gamma1/(gamma1 - 1))*P1/rho1 - 0.5*v1^2];
+%           %x(3)/x(1)^gamma1 - P1/rho1^gamma1];
+% 
+% x0 = [5; 200; 10*1e5];
+% x = fsolve(F,x0)
 
-z= @(x) (rho1*A1*v1^2+P1*1e5*A1-(rho1^2*A1^2*v1^2)/(x*A2))-P1*1e5*((x/rho1)^(gamma1))*A2;
-rho2=fsolve(z,5)
+% f = @(x) ((rho1*v1*A1)^2)/(x*A2) + P1*A2*(x/rho1)^gamma1 - rho1*A1*v1^2 - P1*A1;
+% rho2 = fsolve(f,20)
+%%
+T = (floor(T2)-20):0.5:(ceil(T2));
+P = (floor(P2)-12):0.1:(ceil(P2));
 
-P2= P1*1e5*(rho2/rho1)^gamma1;
-v2=(rho1*A1*v1)/(rho2*A2);
+data = nistdata('N2',T,P);
 
+rho_N2 = data.Rho*data.Mw;           % Density of Nitrogen [kg/m^3] 
+cp_N2 = data.Cp/data.Mw;             % Specific heat at constant pressure of Nitrogen [J/kgK]
+cv_N2 = data.Cv/data.Mw;             % Specific heat at constant volume of Nitrogen [J/kgK]
+gamma_N2 = cp_N2./cv_N2;             % Ratio of specific heats [-]
+mu_N2 = data.mu;                     % Viscosity of Nitrogen [Pa*s]
 
-%p2=55.14*1e5;                                
-%m_dot_N2_new = sqrt( ((p2/p1)^(2/k)) * (k/(k-1)) * ((1 - (p2/p1)^((k-1)/k))/(1 - p2/p1)) * ((1 - beta^4)/(1 - beta^4*((p2/p1)^(2/k)))))*C*A2*sqrt(2*rho1*(p1 - p2)/(1 - beta^4));
-
-%z = @(x) m_dot_N2 - sqrt( ((x/P1)^(2/k)) * (k/(k-1)) * ((1 - (x/P1)^((k-1)/k))/(1 - x/P1)) * ((1 - beta^4)/(1 - beta^4*((x/P1)^(2/k)))))*C*A2*sqrt(2*rho1*(P1 - x)/(1 - (d2/d1)^4));
-%P2 = fsolve(z,34)
-
-%% Fanno flow from point 2 to 3 
-T2 = T1;
-rho2 = rho_N2(find(T==round(T1)),find(abs(P - round(P2,1)) < 0.001));
-mu2 = mu_N2(find(T==round(T1)),find(abs(P - round(P2,1)) < 0.001));
+mu2 = mu_N2(find(T==round(T2)),find(abs(P - round(P2,1)) < 0.001));
 gamma2 = gamma_N2(find(T==round(T2)),find(abs(P - round(P2,1)) < 0.001));
 gamma3 = gamma_N2(find(T==round(T2)),find(abs(P - round(P2,1)) < 0.001));
 L = 0.05;                            % Length of the throat [m]
-v2 = m_dot_N2/(rho2*A2);
-c2 = sqrt(gamma1*R*T1);
-M2 = v2/c2;
 Re2 = (rho2*v2*d2)/mu2;
 
 if Re2 < 2300
@@ -160,7 +174,7 @@ while err > 1e-3
     iter = iter + 1;
 
     g_M2 = (1 - M2^2)/(gamma2*M2^2) + ((gamma2 + 1)/(2*gamma2))*log(((gamma2 + 1)*M2^2)/(2 + (gamma2 - 1)*M2^2) );
-    g_M3 = g_M2 - lambda*(L/d2);
+    g_M3 = abs(g_M2 - lambda*(L/d2));
     
     y = @(x) g_M3 - (1 - x^2)/(gamma3*x^2) + ((gamma3 + 1)/(2*gamma3))*log(((gamma3 + 1)*x^2)/(2 + (gamma3 - 1)*x^2) );
     M3 = fsolve(y,0.006);
