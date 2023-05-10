@@ -138,7 +138,7 @@ v2 = (rho1*A1*v1/(A2*rho2));
 mu2 = mu_N2(find(T==round(T2)),find(abs(P - round(P2,1)) < 0.001));
 gamma2 = gamma_N2(find(T==round(T2)),find(abs(P - round(P2,1)) < 0.001));
 gamma3 = gamma_N2(find(T==round(T2)),find(abs(P - round(P2,1)) < 0.001));
-L = 0.02;                            % Length of the throat [m]
+L = 0.01;                            % Length of the throat [m]
 Re2 = (rho2*v2*d2)/mu2;
 
 if Re2 < 2300
@@ -194,25 +194,25 @@ clear gamma3_new
 A3 = A2;
 A4 = 10;
 
-z = @(x) A4/A3 - (M3/x)*sqrt( ((1 + 0.5*(gamma3 - 1)*x^2)/(1 + 0.5*(gamma3 - 1)*M3^2))^((gamma3 + 1)/(gamma3 - 1)) );
-M4 = fsolve(z,0.8);
-
-P4 = P_tot3/(1 + ((gamma3 - 1)/2)*M4^2)^(gamma3/(gamma3 - 1));
-
-%%
-% P4 = 36;
-% 
-% z = @(x) P4 - P_tot3/(1 + ((gamma3 - 1)/2)*x^2)^(gamma3/(gamma3 - 1));
-% 
+% z = @(x) A4/A3 - (M3/x)*sqrt( ((1 + 0.5*(gamma3 - 1)*x^2)/(1 + 0.5*(gamma3 - 1)*M3^2))^((gamma3 + 1)/(gamma3 - 1)) );
 % M4 = fsolve(z,0.8);
+% 
+% P4 = P_tot3/(1 + ((gamma3 - 1)/2)*M4^2)^(gamma3/(gamma3 - 1));
+
+
+P4 = 50;
+ 
+z = @(x) P4 - P_tot3/(1 + ((gamma3 - 1)/2)*x^2)^(gamma3/(gamma3 - 1));
+
+M4 = fsolve(z,0.8);
 
 T4 = T_tot/(1 + ((gamma3 - 1)/2)*M4^2);
 
 c4 = sqrt(gamma3*R*T4);
 v4 = M4*c4;
 
-T = (floor(T3)):0.5:(ceil(T3)+15);
-P = (floor(P3)):0.1:(ceil(P3)+5);
+T = (floor(T3)):0.5:(ceil(T3)+50);
+P = (floor(P3)):0.1:(ceil(P3)+50);
 
 data = nistdata('N2',T,P);
 
@@ -237,3 +237,45 @@ l_conv=l_conv1-l_conv2;
 l_div1= cotd(alpha_div)*d_conv;
 l_div2= cotd(alpha_div)*d_t;
 l_div=l_div1-l_div2;
+
+
+%Plot
+d1=0;
+d2=l_conv*1e2;
+d3=(l_conv+L)*1e2;
+d4=(l_conv+L+l_div)*1e2;
+d_vect=[d1 d2 d3 d4];
+v_vect=[v1 v2 v3 v4];
+P_vect=[P1 P2 P3 P4];
+T_vect=[T1 T2 T3 T4];
+rho_vect=[rho1 rho2 rho3 rho4];
+
+figure()
+plot(d_vect,v_vect,'ro','linewidth',1.5)
+grid on
+xlabel('Position [cm]')
+ylabel('Velocity [m/s]')
+title('Velocity vs position in venturi channel')
+
+
+figure()
+plot(d_vect,P_vect,'ro','linewidth',1.5)
+grid on
+xlabel('Position [cm]')
+ylabel('Pressure [bar]')
+title('Pressure vs position in venturi channel')
+
+
+figure()
+plot(d_vect,T_vect,'ro','linewidth',1.5)
+grid on
+xlabel('Position [cm]')
+ylabel('Temperature [K]')
+title('Temperature vs position in venturi channel')
+
+figure()
+plot(d_vect,rho_vect,'ro','linewidth',1.5)
+grid on
+xlabel('Position [cm]')
+ylabel('Density [kg/m3]')
+title('Density vs position in venturi channel')
