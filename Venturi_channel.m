@@ -243,11 +243,11 @@ l_div=l_div1-l_div2;
 
 %% Plots
 
-d1=0;
-d2=l_conv*1e2;
-d3=(l_conv+L)*1e2;
-d4=(l_conv+L+l_div)*1e2;
-d_vect=[d1 d2 d3 d4];
+d11=0;
+d22=l_conv*1e2;
+d33=(l_conv+L)*1e2;
+d44=(l_conv+L+l_div)*1e2;
+d_vect=[d11 d22 d33 d44];
 v_vect=[v1 v2 v3 v4];
 P_vect=[P1 P2 P3 P4];
 T_vect=[T1 T2 T3 T4];
