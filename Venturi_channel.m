@@ -70,7 +70,7 @@ c = colorbar;
 c.Label.Interpreter = 'latex';
 c.Label.String = '$\dot{q}_{N_2}$ [kW]';
 
-%%
+%% Before convergent
 clear
 clc
 
@@ -120,7 +120,7 @@ A2 = A1*M1/sqrt( ((1 + 0.5*(gamma1 - 1)*M1^2)/(0.5*(gamma1 + 1)))^((gamma1 + 1)/
 d2 = sqrt((4*A2)/pi);
 rho2 = (rho1*v1*A1)/(A2*v2);
 
-%%
+%% Throat with Fanno flow
 
 T = (floor(T2)-5):0.5:(ceil(T2)+25);
 P = (floor(P2)-5):0.1:(ceil(P2)+5);
@@ -191,6 +191,8 @@ end
 
 clear gamma3_new
 
+
+%% Divergent part
 A3 = A2;
 A4 = 10;
 
@@ -239,7 +241,8 @@ l_div2= cotd(alpha_div)*d_t;
 l_div=l_div1-l_div2;
 
 
-%Plot
+%% Plots
+
 d1=0;
 d2=l_conv*1e2;
 d3=(l_conv+L)*1e2;
