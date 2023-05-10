@@ -25,11 +25,8 @@ qvol_N2 = mdot_N2/rho_N2_mix;
 qvol_SRP = mdot_SRP/rho_SRP_gas;
 
 % Define volume of mixing chamber in 1 s of flow
-<<<<<<< HEAD
-t_res = 0.1;
-=======
-t_res=[ 0.02 0.025 0.03 0.035 0.04]
->>>>>>> 04f69233ced55fb5a4310db7ce588eb7287a3edb
+
+t_res = [0.02 0.025 0.03 0.035 0.04];
 V_N2 = qvol_N2.*t_res;
 V_SRP = qvol_SRP.*t_res;
 Vtank = 1.05*(V_N2+V_SRP);
