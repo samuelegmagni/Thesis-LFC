@@ -70,7 +70,7 @@ c = colorbar;
 c.Label.Interpreter = 'latex';
 c.Label.String = '$\dot{q}_{N_2}$ [kW]';
 
-%% Convergent section from 1 to 2
+%%
 clear
 clc
 
@@ -82,7 +82,7 @@ m_dot_N2 = 200*1e-3;       % [g/s]
 P1 = 56;                   % [bar]
 T1 = 295;                  % [K]
 R = 8314/28;               % [J/KgK]
-eps = 0.015*1e-3;                    % Absolute roughness of stainless steel [m]
+eps = 0.015*1e-3;               % Absolute roughness of stainless steel [m]
 eps_rel = eps/d1;               % Relative roughness of stainless steel [-]
 
 
@@ -107,44 +107,24 @@ c1 = sqrt(gamma1*R*T1);
 M1 = v1/c1; 
 Re1 = (rho1*v1*d1)/mu1;              % Alto quindi effetti inerziali dominanti rispetto a quelli viscosi
 
-<<<<<<< HEAD
-d2 = 7.5*1e-3;                        % Throat diameter chosen to be 1/3 of entrance diameter[m]
-=======
-d2 = 5*1e-3;                        % Throat diameter chosen to be 1/3 of entrance diameter[m]
->>>>>>> 04f69233ced55fb5a4310db7ce588eb7287a3edb
+d2 = 7.5*1e-3;                      % Throat diameter chosen to be 1/3 of entrance diameter[m]
 A2 = 0.25*pi*d2^2;                  % Throat cross sectional area [m^2]
-% beta = sqrt(A2/A1);
-% C = 0.995;                          % Disharge coefficient
-% k = gamma1;
 
 %% Convergent part
+
 T_tot = T1*(1 + ((gamma1 - 1)/2)*M1^2);
-P_tot = P1*(1 + ((gamma1 - 1)/2)*M1^2)^(gamma1/(gamma1 - 1));
+P_tot2 = P1*(1 + ((gamma1 - 1)/2)*M1^2)^(gamma1/(gamma1 - 1));
 M2 = 1;
 T2 = T_tot/(1 + ((gamma1 - 1)/2));
-P2 = P_tot/(1 + ((gamma1 - 1)/2))^(gamma1/(gamma1 - 1));
+P2 = P_tot2/(1 + ((gamma1 - 1)/2))^(gamma1/(gamma1 - 1));
 c2 = sqrt(gamma1*R*T2);
 v2 = c2;
 rho2 = (rho1*v1*A1)/(A2*v2);
 
 %%
-% z = @(x) m_dot_N2 - sqrt( ((x/P1)^(2/k)) * (k/(k-1)) * ((1 - (x/P1)^((k-1)/k))/(1 - x/P1)) * ((1 - beta^4)/(1 - beta^4*((x/P1)^(2/k)))))*C*A2*sqrt(2*rho1*(P1 - x)/(1 - (d2/d1)^4));
-% P2 = fzero(z,0)
-% 
-% F = @(x) [x(1)*x(2)*A2 - rho1*v1*A1;
-%           x(1)*A2*x(2)^2 + x(3)*A2 - rho1*A1*v1^2 - P1*A1;
-%           (gamma1/(gamma1 - 1))*x(3)/x(1) + 0.5*x(2)^2 - (gamma1/(gamma1 - 1))*P1/rho1 - 0.5*v1^2];
-%           %x(3)/x(1)^gamma1 - P1/rho1^gamma1];
-% 
-% x0 = [5; 200; 10*1e5];
-% x = fsolve(F,x0)
 
-<<<<<<< HEAD
-% f = @(x) ((rho1*v1*A1)^2)/(x*A2) + P1*A2*(x/rho1)^gamma1 - rho1*A1*v1^2 - P1*A1;
-% rho2 = fsolve(f,20)
-%%
-T = (floor(T2)-20):0.5:(ceil(T2));
-P = (floor(P2)-12):0.1:(ceil(P2));
+T = (floor(T2)-20):0.5:(ceil(T2)+5);
+P = (floor(P2)-12):0.1:(ceil(P2)+5);
 
 data = nistdata('N2',T,P);
 
@@ -153,20 +133,13 @@ cp_N2 = data.Cp/data.Mw;             % Specific heat at constant pressure of Nit
 cv_N2 = data.Cv/data.Mw;             % Specific heat at constant volume of Nitrogen [J/kgK]
 gamma_N2 = cp_N2./cv_N2;             % Ratio of specific heats [-]
 mu_N2 = data.mu;                     % Viscosity of Nitrogen [Pa*s]
-=======
-z= @(x) rho1*v1^2*A1+ P1*1e5*A1 - (rho1^2*A1^2*v1^2/(x*A2)) -(((gamma1/(gamma1-1))*P1*1e5/rho1)+0.5*v1^2-0.5*((rho1/x)^2)*((A1/A2)^2)*v1^2)*(x*A2*(gamma1-1)/gamma1);
-rho2=fsolve(z,56)
 
-v2= (rho1*A1*v1/(A2*rho2));
-
-p2=(((gamma1/(gamma1-1))*P1*1e5/rho1)+0.5*v1^2-0.5*((rho1/rho2)^2)*(A1/A2)^2*v1^2)*(rho2*(gamma1-1)/gamma1);
-P2=p2/1e5;
->>>>>>> 04f69233ced55fb5a4310db7ce588eb7287a3edb
+v2 = (rho1*A1*v1/(A2*rho2));
 
 mu2 = mu_N2(find(T==round(T2)),find(abs(P - round(P2,1)) < 0.001));
 gamma2 = gamma_N2(find(T==round(T2)),find(abs(P - round(P2,1)) < 0.001));
 gamma3 = gamma_N2(find(T==round(T2)),find(abs(P - round(P2,1)) < 0.001));
-L = 0.05;                            % Length of the throat [m]
+L = 0.06;                            % Length of the throat [m]
 Re2 = (rho2*v2*d2)/mu2;
 
 if Re2 < 2300
@@ -188,13 +161,8 @@ while err > 1e-3
     iter = iter + 1;
 
     g_M2 = (1 - M2^2)/(gamma2*M2^2) + ((gamma2 + 1)/(2*gamma2))*log(((gamma2 + 1)*M2^2)/(2 + (gamma2 - 1)*M2^2) );
-<<<<<<< HEAD
     g_M3 = abs(g_M2 - lambda*(L/d2));
-    
-=======
-    g_M3 = g_M2 - lambda*(L/d2);
 
->>>>>>> 04f69233ced55fb5a4310db7ce588eb7287a3edb
     y = @(x) g_M3 - (1 - x^2)/(gamma3*x^2) + ((gamma3 + 1)/(2*gamma3))*log(((gamma3 + 1)*x^2)/(2 + (gamma3 - 1)*x^2) );
     M3 = fsolve(y,0.006);
 
@@ -206,6 +174,10 @@ while err > 1e-3
 
     rho_star = rho2/((1/M2)*sqrt( 2*(1 + (gamma2 - 1)*0.5*M2^2)/(gamma2 + 1)));
     rho3 = rho_star*((1/M3)*sqrt( 2*(1 + (gamma3 - 1)*0.5*M3^2)/(gamma3 + 1)));
+
+
+    P_tot_star = P_tot2/( ((1 + 0.5*(gamma2 - 1))/(0.5*(gamma2 - 1)))^( (0.5*(gamma2 + 1))/(gamma2 - 1) ));
+    P_tot3 = (P_tot_star/M3)*( ((1 + 0.5*(gamma3 - 1)*M3^2)/(0.5*(gamma3 - 1)))^( (0.5*(gamma3 + 1))/(gamma3 - 1) ));
 
     c3 = sqrt(gamma3*R*T3);
     v3 = M3*c3;
@@ -220,3 +192,16 @@ end
 
 clear gamma3_new
 
+P4 = 36;
+
+z = @(x) P4 - P_tot3/(1 + ((gamma3 - 1)/2)*x^2)^(gamma3/(gamma3 - 1));
+
+M4 = fsolve(z,0.8);
+
+T4 = T_tot/(1 + ((gamma3 - 1)/2)*M4^2);
+
+c4 = sqrt(gamma3*R*T4);
+v4 = M4*c4;
+A3 = A2;
+A4 = A1;
+rho4 = (rho3*A3*v3)/(v4*A4);
