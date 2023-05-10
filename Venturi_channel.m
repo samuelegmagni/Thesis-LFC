@@ -107,9 +107,6 @@ c1 = sqrt(gamma1*R*T1);
 M1 = v1/c1; 
 Re1 = (rho1*v1*d1)/mu1;              % Alto quindi effetti inerziali dominanti rispetto a quelli viscosi
 
-d2 = 7.5*1e-3;                      % Throat diameter chosen to be 1/3 of entrance diameter[m]
-A2 = 0.25*pi*d2^2;                  % Throat cross sectional area [m^2]
-
 %% Convergent part
 
 T_tot = T1*(1 + ((gamma1 - 1)/2)*M1^2);
@@ -119,12 +116,14 @@ T2 = T_tot/(1 + ((gamma1 - 1)/2));
 P2 = P_tot2/(1 + ((gamma1 - 1)/2))^(gamma1/(gamma1 - 1));
 c2 = sqrt(gamma1*R*T2);
 v2 = c2;
+A2 = A1*M1/sqrt( ((1 + 0.5*(gamma1 - 1)*M1^2)/(0.5*(gamma1 + 1)))^((gamma1 + 1)/(gamma1 - 1)) );
+d2 = sqrt((4*A2)/pi);
 rho2 = (rho1*v1*A1)/(A2*v2);
 
 %%
 
-T = (floor(T2)-20):0.5:(ceil(T2)+5);
-P = (floor(P2)-12):0.1:(ceil(P2)+5);
+T = (floor(T2)-5):0.5:(ceil(T2)+25);
+P = (floor(P2)-5):0.1:(ceil(P2)+5);
 
 data = nistdata('N2',T,P);
 
@@ -204,4 +203,16 @@ c4 = sqrt(gamma3*R*T4);
 v4 = M4*c4;
 A3 = A2;
 A4 = A1;
-rho4 = (rho3*A3*v3)/(v4*A4);
+
+T = (floor(T3)):0.5:(ceil(T3)+15);
+P = (floor(P3)):0.1:(ceil(P3)+5);
+
+data = nistdata('N2',T,P);
+
+rho_N2 = data.Rho*data.Mw;           % Density of Nitrogen [kg/m^3] 
+cp_N2 = data.Cp/data.Mw;             % Specific heat at constant pressure of Nitrogen [J/kgK]
+cv_N2 = data.Cv/data.Mw;             % Specific heat at constant volume of Nitrogen [J/kgK]
+gamma_N2 = cp_N2./cv_N2;             % Ratio of specific heats [-]
+mu_N2 = data.mu;     
+rho4 = rho_N2(find(T==round(T4)),find(abs(P - round(P4,1)) < 0.001));
+
