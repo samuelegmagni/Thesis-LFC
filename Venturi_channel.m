@@ -121,7 +121,6 @@ d2 = sqrt((4*A2)/pi);
 rho2 = (rho1*v1*A1)/(A2*v2);
 
 %%
-
 T = (floor(T2)-5):0.5:(ceil(T2)+25);
 P = (floor(P2)-5):0.1:(ceil(P2)+5);
 
@@ -138,7 +137,6 @@ v2 = (rho1*A1*v1/(A2*rho2));
 mu2 = mu_N2(find(T==round(T2)),find(abs(P - round(P2,1)) < 0.001));
 gamma2 = gamma_N2(find(T==round(T2)),find(abs(P - round(P2,1)) < 0.001));
 gamma3 = gamma_N2(find(T==round(T2)),find(abs(P - round(P2,1)) < 0.001));
-L = 0.02;                            % Length of the throat [m]
 Re2 = (rho2*v2*d2)/mu2;
 
 if Re2 < 2300
@@ -152,6 +150,22 @@ if Re2 < 2300
 
 end
 
+%%
+P4 = 36;
+M4 = 0.3;
+gamma3 = 1.495;
+A3 = A2;
+A4 = A1;
+z = @(x) x - ((A4/A3)*M4)/sqrt( ((1 + 0.5*(gamma3 - 1)*M4^2)/(1 + 0.5*(gamma3 - 1)*x^2))^((gamma3 + 1)/(gamma3 - 1)) );
+
+M3 = fsolve(z,0.8);
+
+g_M3 = (1 - M3^2)/(gamma3*M3^2) + ((gamma3 + 1)/(2*gamma3))*log(((gamma3 + 1)*M3^2)/(2 + (gamma3 - 1)*M3^2) );
+
+L = (d2/lambda)*g_M3
+
+%%
+L = 0.09;
 iter = 0;
 err = 1;
 
@@ -192,7 +206,7 @@ end
 clear gamma3_new
 
 A3 = A2;
-A4 = 10;
+A4 = A1;
 
 z = @(x) A4/A3 - (M3/x)*sqrt( ((1 + 0.5*(gamma3 - 1)*x^2)/(1 + 0.5*(gamma3 - 1)*M3^2))^((gamma3 + 1)/(gamma3 - 1)) );
 M4 = fsolve(z,0.8);
