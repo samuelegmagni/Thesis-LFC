@@ -20,7 +20,7 @@ eps = 0.015*1e-3;                    % Absolute roughness of stainless steel [m]
 eps_rel = eps/d_p_int;               % Relative roughness of stainless steel [-]
 
 T1 = 298;                                       % Temperature downstream the pressure regulator [K]
-P_reg = 50;                                     % Pressure downstream the pressure regulator [bar]
+P_reg = 52;                                     % Pressure downstream the pressure regulator [bar]
 
 T = (floor(T1)-3):0.5:(ceil(T1));
 P = (floor(P_reg)-10):0.1:(ceil(P_reg));
@@ -361,7 +361,7 @@ T10 = T9;
 %% After check valve (point 10) and before injector (point 11)
 
 T = (floor(T10)-100):0.5:(ceil(T10));
-P = (floor(P10)-6):0.1:(ceil(P10));
+P = (floor(P10)-5):0.1:(ceil(P10));
 data = nistdata('N2',T,P);
 
 rho_N2 = data.Rho*data.Mw;           % Density of Nitrogen [kg/m^3] 

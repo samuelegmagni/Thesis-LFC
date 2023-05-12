@@ -79,7 +79,7 @@ t = 1.5*1e-3;                        % Thickness of the tube  [m]
 d1 = d_ext - 2*t;
 A1 = 0.25*pi*d1^2;
 m_dot_N2 = 140*1e-3;       % [g/s]
-P1 = 40;                   % [bar]
+P1 = 39;                   % [bar]
 T1 = 295;                  % [K]
 R = 8314/28;               % [J/KgK]
 eps = 0.015*1e-3;               % Absolute roughness of stainless steel [m]
@@ -190,7 +190,7 @@ end
 
 clear gamma3_new
 
-%%
+%% Divergent part
 A3 = A2;
 A4 = A1;
 
