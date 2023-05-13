@@ -195,7 +195,6 @@ while err > 1e-3
     rho_star = rho2/((1/M2)*sqrt( 2*(1 + (gamma2 - 1)*0.5*M2^2)/(gamma2 + 1)));
     rho3 = rho_star*((1/M3)*sqrt( 2*(1 + (gamma3 - 1)*0.5*M3^2)/(gamma3 + 1)));
 
-
     P_tot_star = P_tot2/( ((1 + 0.5*(gamma2 - 1))/(0.5*(gamma2 - 1)))^( (0.5*(gamma2 + 1))/(gamma2 - 1) ));
     P_tot3 = (P_tot_star/M3)*( ((1 + 0.5*(gamma3 - 1)*M3^2)/(0.5*(gamma3 - 1)))^( (0.5*(gamma3 + 1))/(gamma3 - 1) ));
 
