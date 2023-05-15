@@ -55,7 +55,7 @@ M2 = fsolve(z,0.8);
 T2 = T_tot/(1 + ((gamma1 - 1)/2)*M2^2);
 P2 = P_tot2/(1 + ((gamma1 - 1)/2)*M2^2)^(gamma1/(gamma1 - 1));
 c2 = sqrt(gamma1*R*T2);
-v2 = c2;
+v2 = c2*M2;
 rho2 = (rho1*v1*A1)/(A2*v2);
 
 %%
@@ -69,8 +69,6 @@ cp_N2 = data.Cp/data.Mw;             % Specific heat at constant pressure of Nit
 cv_N2 = data.Cv/data.Mw;             % Specific heat at constant volume of Nitrogen [J/kgK]
 gamma_N2 = cp_N2./cv_N2;             % Ratio of specific heats [-]
 mu_N2 = data.mu;                     % Viscosity of Nitrogen [Pa*s]
-
-v2 = (rho1*A1*v1/(A2*rho2));
 
 mu2 = mu_N2(find(T==round(T2)),find(abs(P - round(P2,1)) < 0.001));
 gamma2 = gamma_N2(find(T==round(T2)),find(abs(P - round(P2,1)) < 0.001));
@@ -137,7 +135,7 @@ M4 = fsolve(z,0.8);
 
 P4 = P_tot3/(1 + ((gamma3 - 1)/2)*M4^2)^(gamma3/(gamma3 - 1));
 T4 = T_tot/(1 + ((gamma3 - 1)/2)*M4^2);
-c4 = sqrt(gamma3*R*T3);
+c4 = sqrt(gamma3*R*T4);
 v4 = M4*c4;
 rho4 = (rho3*v3*A3)/(A4*v4);
 

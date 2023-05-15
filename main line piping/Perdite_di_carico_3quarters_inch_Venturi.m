@@ -243,14 +243,91 @@ end
 
 clear gamma6_new
 
-%% Before MFM (point 6) and after MFM (point 7)
-G_g = rho6/1000;                       % Nitrogen specific gravity [-]
-q_N2 = (m_dot_N2/rho6)*1000;           % Nitrogen volumetric flow rate [L/s]
-% q_N2_std = (P6*q_N2*T6*60)/(1*273.15); % Nitrogen volumetric flow rate at std conditions [std L/min]
-C_V = 1.8;                             % Flow coefficient needle valve
+%% Before Venturi channel (point 6) and after Venturi channel (point 7)
+d_throat = 9*1e-3;
+A_throat = 0.25*pi*d_throat^2;
 
-P7 = P6 - (G_g*(q_N2*60)^2)/(14.42*C_V)^2;                                            % Pressure downstream the mass flow meter (needle valve approx) [bar]
-T7 = T6;                                                                              % Temperature downstream the mass flow meter (needle valve approx) [K]
+T_tot = T6*(1 + ((gamma6 - 1)/2)*M6^2);
+P_tot6 = P6*(1 + ((gamma6 - 1)/2)*M6^2)^(gamma6/(gamma6 - 1));
+
+z = @(x) A_throat/A_int - (M6/x)*sqrt( ((1 + 0.5*(gamma6 - 1)*x^2)/(1 + 0.5*(gamma6 - 1)*M6^2))^((gamma6 + 1)/(gamma6 - 1)) );
+M6_1 = fsolve(z,0.8);
+T6_1 = T_tot/(1 + ((gamma6 - 1)/2)*M6_1^2);
+P6_1 = P_tot6/(1 + ((gamma6 - 1)/2)*M6_1^2)^(gamma6/(gamma6 - 1));
+c6_1 = sqrt(gamma6*R*T6_1);
+v6_1 = c6_1*M6_1;
+rho6_1 = (rho6*v6*A_int)/(A_throat*v6_1);
+
+T = (floor(T6_1)-35):0.5:(ceil(T6_1));
+P = (floor(P6_1)-15):0.1:(ceil(P6_1));
+
+data = nistdata('N2',T,P);
+
+cp_N2 = data.Cp/data.Mw;             % Specific heat at constant pressure of Nitrogen [J/kgK]
+cv_N2 = data.Cv/data.Mw;             % Specific heat at constant volume of Nitrogen [J/kgK]
+gamma_N2 = cp_N2./cv_N2;             % Ratio of specific heats [-]
+mu_N2 = data.mu;                     % Viscosity of Nitrogen [Pa*s]
+
+mu6_1 = mu_N2(find(T==round(T6_1)),find(abs(P - round(P6_1,1)) < 0.001));
+gamma6_1 = gamma_N2(find(T==round(T6_1)),find(abs(P - round(P6_1,1)) < 0.001));
+gamma6_2 = gamma_N2(find(T==round(T6_1)),find(abs(P - round(P6_1,1)) < 0.001));
+Re6_1 = (rho6_1*v6_1*d_throat)/mu6_1;
+
+if Re6_1 < 2300
+
+        lambda = 64/Re6_1;
+
+    else 
+
+        z = @(x) 1/sqrt(x) + 2*log10(2.51/(Re6_1*sqrt(x)) + eps_rel/3.71);   % Colebrook-White correlation
+        lambda = fsolve(z,0.0004);
+
+end
+
+L_throat = 0.08;
+iter = 0;
+err = 1;
+
+while err > 1e-3
+
+    iter = iter + 1;
+
+    g_M6_1 = (1 - M6_1^2)/(gamma6_1*M6_1^2) + ((gamma6_1 + 1)/(2*gamma6_1))*log(((gamma6_1 + 1)*M6_1^2)/(2 + (gamma6_1 - 1)*M6_1^2) );
+    g_M6_2 = g_M6_1 - (lambda/d_throat)*L_throat;
+
+    y = @(x) g_M6_2 - (1 - x^2)/(gamma6_2*x^2) + ((gamma6_2 + 1)/(2*gamma6_2))*log(((gamma6_2 + 1)*x^2)/(2 + (gamma6_2 - 1)*x^2) );
+    M6_2 = fsolve(y,0.6);
+
+    T_star = T6_1/(0.5*(gamma6_1 + 1)/(1 + (gamma6_1 - 1)*0.5*M6_1^2));
+    T6_2 = T_star*(0.5*(gamma6_2 + 1)/(1 + (gamma6_2 - 1)*0.5*M6_2^2));
+
+    P_star = P6_1/((1/M6_1)*sqrt(0.5*(gamma6_1 + 1)/(1 + (gamma6_1 - 1)*0.5*M6_1^2)));
+    P6_2 = P_star*((1/M6_2)*sqrt(0.5*(gamma6_2 + 1)/(1 + (gamma6_2 - 1)*0.5*M6_2^2)));
+
+    P_tot_star = (M6_1*P_tot6)/( ((1 + 0.5*(gamma6_1 - 1)*M6_1^2)/(0.5*(gamma6_1 + 1)))^( (0.5*(gamma6_1 + 1))/(gamma6_1 - 1) ));
+    P_tot6_2 = (P_tot_star/M6_2)*( ((1 + 0.5*(gamma6_2 - 1)*M6_2^2)/(0.5*(gamma6_2 + 1)))^( (0.5*(gamma6_2 + 1))/(gamma6_2 - 1) ));
+
+    rho_star = rho6_1/((1/M6_1)*sqrt( 2*(1 + (gamma6_1 - 1)*0.5*M6_1^2)/(gamma6_1 + 1)));
+    rho6_2 = rho_star*((1/M6_2)*sqrt( 2*(1 + (gamma6_2 - 1)*0.5*M6_2^2)/(gamma6_2 + 1)));
+
+    c6_2 = sqrt(gamma6_2*R*T6_2);
+    v6_2 = M6_2*c6_2;
+
+    gamma6_2_new = gamma_N2(find(T==round(T6_2)),find(abs(P - round(P6_2,1)) < 0.001));
+
+    err = abs(gamma6_2 - gamma6_2_new);
+
+    gamma6_2 = gamma6_2_new;
+
+end
+
+clear gamma6_2_new
+
+z = @(x) A_int/A_throat - (M6_2/x)*sqrt( ((1 + 0.5*(gamma6_2 - 1)*x^2)/(1 + 0.5*(gamma6_2 - 1)*M6_2^2))^((gamma6_2 + 1)/(gamma6_2 - 1)) );
+M7 = fsolve(z,0.8);
+
+P7 = P_tot6_2/(1 + ((gamma6_2 - 1)/2)*M7^2)^(gamma6_2/(gamma6_2 - 1));
+T7 = T_tot/(1 + ((gamma6_2 - 1)/2)*M7^2);
 
 %% After MFM (point 7) and before servo valve (point 8)
 T = (floor(T7)-9):0.5:(ceil(T7));
