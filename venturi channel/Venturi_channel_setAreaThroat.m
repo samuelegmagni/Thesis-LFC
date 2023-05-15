@@ -1,6 +1,14 @@
 %% Before convergent
 clear
 clc
+format long
+
+set(0,'DefaultTextFontSize',12);              % Settings for the plot
+set(0,'DefaultAxesFontSize',12);
+set(0,'DefaultLegendInterpreter','Latex');
+set(0,'DefaultAxesTickLabelInterpreter','Latex');
+set(0,'DefaultTextInterpreter','Latex');
+set(0,'DefaultLegendFontSize',12);
 
 d_ext = 12*1e-3;
 t = 1.5*1e-3;                        % Thickness of the tube  [m]
@@ -132,3 +140,67 @@ T4 = T_tot/(1 + ((gamma3 - 1)/2)*M4^2);
 c4 = sqrt(gamma3*R*T3);
 v4 = M4*c4;
 rho4 = (rho3*v3*A3)/(A4*v4);
+
+%% Venturi tube's size
+
+d_conv = d1;
+d_div = d1;
+d_t = d2;
+alpha_conv = 21;
+alpha_div = 15;
+l_conv1 = cotd(alpha_conv)*d_conv;
+l_conv2 = cotd(alpha_conv)*d_t;
+l_conv = l_conv1-l_conv2;
+l_div1 = cotd(alpha_div)*d_conv;
+l_div2 = cotd(alpha_div)*d_t;
+l_div = l_div1 - l_div2;
+
+
+% Plots
+
+x1 = 0;
+x2 = l_conv*1e2;
+x3 = (l_conv+L)*1e2;
+x4 = (l_conv+L+l_div)*1e2;
+d_vect = [x1 x2 x3 x4];
+v_vect = [v1 v2 v3 v4];
+P_vect = [P1 P2 P3 P4];
+T_vect = [T1 T2 T3 T4];
+rho_vect = [rho1 rho2 rho3 rho4];
+M_vect = [M1 M2 M3 M4];
+
+figure()
+plot(d_vect,v_vect,'ro','linewidth',1.5)
+grid on
+xlabel('Position, $x_i$ $[cm]$')
+ylabel('Velocity, $v_i$ $[m/s]$')
+title('Velocity vs position in Venturi channel')
+
+figure()
+plot(d_vect,M_vect,'ro','linewidth',1.5)
+grid on
+xlabel('Position, $x_i$ $[cm]$')
+ylabel('Mach Number, $M_i$ $[m/s]$')
+title('Mach Number vs position in Venturi channel')
+
+figure()
+plot(d_vect,P_vect,'ro','linewidth',1.5)
+grid on
+xlabel('Position, $x_i$ $[cm]$')
+ylabel('Pressure, $P_i$ $[bar]$')
+title('Pressure vs position in Venturi channel')
+
+
+figure()
+plot(d_vect,T_vect,'ro','linewidth',1.5)
+grid on
+xlabel('Position, $x_i$ $[cm]$')
+ylabel('Temperature, $T_i$ $[K]$')
+title('Temperature vs position in Venturi channel')
+
+figure()
+plot(d_vect,rho_vect,'ro','linewidth',1.5)
+grid on
+xlabel('Position, $x_i$ $[cm]$')
+ylabel('Density, $\rho_i$ $[kg/m^3]$')
+title('Density vs position in Venturi channel')
