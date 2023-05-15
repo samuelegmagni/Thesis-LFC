@@ -6,8 +6,6 @@ d_ext = 12*1e-3;
 t = 1.5*1e-3;                        % Thickness of the tube  [m]
 d1 = d_ext - 2*t;
 A1 = 0.25*pi*d1^2;
-d2 = 4.8*1e-3;
-A2 = 0.25*pi*d2^2;
 m_dot_N2 = 140*1e-3;       % [g/s]
 P1 = 39;                   % [bar]
 T1 = 295;                  % [K]
@@ -41,9 +39,10 @@ Re1 = (rho1*v1*d1)/mu1;              % Alto quindi effetti inerziali dominanti r
 
 T_tot = T1*(1 + ((gamma1 - 1)/2)*M1^2);
 P_tot2 = P1*(1 + ((gamma1 - 1)/2)*M1^2)^(gamma1/(gamma1 - 1));
-
-z = @(x) A2/A1 - (M1/x)*sqrt( ((1 + 0.5*(gamma1 - 1)*x^2)/(1 + 0.5*(gamma1 - 1)*M1^2))^((gamma1 + 1)/(gamma1 - 1)) );
-M2 = fsolve(z,0.8);
+M2 = 1;
+z = @(x) x/A1 - (M1/M2)*sqrt( ((1 + 0.5*(gamma1 - 1)*M2^2)/(1 + 0.5*(gamma1 - 1)*M1^2))^((gamma1 + 1)/(gamma1 - 1)) );
+A2 = fsolve(z,0.8);
+d2 = sqrt((4*A2)/pi);
 T2 = T_tot/(1 + ((gamma1 - 1)/2)*M2^2);
 P2 = P_tot2/(1 + ((gamma1 - 1)/2)*M2^2)^(gamma1/(gamma1 - 1));
 c2 = sqrt(gamma1*R*T2);
@@ -51,8 +50,8 @@ v2 = c2;
 rho2 = (rho1*v1*A1)/(A2*v2);
 
 %%
-T = (floor(T2)-35):0.5:(ceil(T2));
-P = (floor(P2)-15):0.1:(ceil(P2));
+T = (floor(T2)):0.5:(ceil(T2)+15);
+P = (floor(P2)):0.1:(ceil(P2)+7);
 
 data = nistdata('N2',T,P);
 
@@ -80,18 +79,8 @@ if Re2 < 2300
 
 end
 
-% P4 = 30;
-% P_tot3 = 33;
-% z =  @(x) P_tot3/P4 - (1 + 0.5*(gamma2 - 1)*x^2)^(gamma2/(gamma2 - 1));
-% M4 = fsolve(z,0.8);
-% 
-% A4 = A1;
-% A3 = A2;
-% 
-% z = @(x) A4/A3 - (x/M4)*sqrt( ((1 + 0.5*(gamma2 - 1)*M4^2)/(1 + 0.5*(gamma2 - 1)*x^2))^((gamma2 + 1)/(gamma2 - 1)) );
-% M3 = fsolve(z,1.9);
-
 %%
+
 L = 0.08;
 iter = 0;
 err = 1;
@@ -101,17 +90,14 @@ while err > 1e-3
     iter = iter + 1;
 
     g_M2 = (1 - M2^2)/(gamma2*M2^2) + ((gamma2 + 1)/(2*gamma2))*log(((gamma2 + 1)*M2^2)/(2 + (gamma2 - 1)*M2^2) );
-    % g_M3 = (1 - M3^2)/(gamma3*M3^2) + ((gamma3 + 1)/(2*gamma3))*log(((gamma3 + 1)*M3^2)/(2 + (gamma3 - 1)*M3^2) );
-    % L = abs(g_M2 - g_M3)*(d2/lambda);
-    g_M3 = g_M2 - (lambda/d2)*L;
+    g_M3 = abs(g_M2 - (lambda/d2)*L);
 
     y = @(x) g_M3 - (1 - x^2)/(gamma3*x^2) + ((gamma3 + 1)/(2*gamma3))*log(((gamma3 + 1)*x^2)/(2 + (gamma3 - 1)*x^2) );
     M3 = fsolve(y,0.6);
 
     T_star = T2/(0.5*(gamma2 + 1)/(1 + (gamma2 - 1)*0.5*M2^2));
     T3 = T_star*(0.5*(gamma3 + 1)/(1 + (gamma3 - 1)*0.5*M3^2));
-    %T4 = T_tot/(1 + ((gamma3 - 1)/2)*M4^2);
-
+  
     P_star = P2/((1/M2)*sqrt(0.5*(gamma2 + 1)/(1 + (gamma2 - 1)*0.5*M2^2)));
     P3 = P_star*((1/M3)*sqrt(0.5*(gamma3 + 1)/(1 + (gamma3 - 1)*0.5*M3^2)));
 
@@ -145,7 +131,3 @@ T4 = T_tot/(1 + ((gamma3 - 1)/2)*M4^2);
 c4 = sqrt(gamma3*R*T3);
 v4 = M4*c4;
 rho4 = (rho3*v3*A3)/(A4*v4);
-
-% %%
-% P_tot_star = (P_tot2*M2)/( ((1 + 0.5*(gamma2 - 1)*M2^2)/(0.5*(gamma2 + 1)))^( (0.5*(gamma2 + 1))/(gamma2 - 1) ));
-% P_tot3_prova = (P_tot_star/M3)*( ((1 + 0.5*(gamma3 - 1)*M3^2)/(0.5*(gamma3 + 1)))^( (0.5*(gamma3 + 1))/(gamma3 - 1) ))
