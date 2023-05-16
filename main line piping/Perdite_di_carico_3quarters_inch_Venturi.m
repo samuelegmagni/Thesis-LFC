@@ -329,7 +329,7 @@ M7 = fsolve(z,0.8);
 P7 = P_tot6_2/(1 + ((gamma6_2 - 1)/2)*M7^2)^(gamma6_2/(gamma6_2 - 1));
 T7 = T_tot/(1 + ((gamma6_2 - 1)/2)*M7^2);
 
-%% After MFM (point 7) and before servo valve (point 8)
+%% After Venturi channel (point 7) and before servo valve (point 8)
 T = (floor(T7)-9):0.5:(ceil(T7));
 P = (floor(P7)-5):0.1:(ceil(P7));
 data = nistdata('N2',T,P);
@@ -508,16 +508,16 @@ end
 clear gamma11_new
 
 %% Injector pressure loss
-delta_P_inj = 0.4*100*sqrt(10*P11*1e5); % Pressure drop across the injection plate [Pa] 
-P12 = P11 - delta_P_inj*1e-5;           % Pressure in the test chamber [bar]
+P12 = 1;
+delta_P_inj = (P11 - P12)*1e5;
 
 N_inj = [10 15 20 25 30 35];
-C_d = 0.65;                               % Sharp-edged orifice with diameter smaller than 2.5 mm
+C_d = 0.65;                              % Sharp-edged orifice with diameter smaller than 2.5 mm
 A_needed = m_dot_N2/(C_d*sqrt(2*delta_P_inj*rho11));
 A_inj = A_needed./N_inj;
 d_inj = sqrt((4*A_inj)/pi);
 v_inj=C_d*sqrt(2*delta_P_inj/rho11);
-A_slab = 30*30*10e-6;                    % Area of slab test facility [m^2]
+A_slab = 30*30*10e-6;   
 
 %% Total pressure drop
 delta_P_tot = P_reg - P12;     % 5.1600

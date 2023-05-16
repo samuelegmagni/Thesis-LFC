@@ -1,5 +1,4 @@
-%% Pressure drops in N2 line with 12 mm diameter tubes
-
+%% Pressure drops in N2 line with 1/2 inch diameter tubes
 clc
 clear
 
@@ -11,7 +10,7 @@ set(groot,'DefaultAxesTickLabelInterpreter','Latex');
 set(0,'DefaultTextInterpreter','Latex');
 set(0,'DefaultLegendFontSize',12);
 
-d_p_ext = 12*1e-3;                   % Pipe external diameter [m]
+d_p_ext = 12.7*1e-3;                   % Pipe external diameter [m]
 t = 1.5*1e-3;                        % Thickness of the tube  [m]
 d_p_int = d_p_ext - 2*t;             % Pipe internal diameter [m]
 A_int = pi*(d_p_int/2)^2;            % Internal cross sectional area [m^2]
@@ -20,7 +19,7 @@ eps = 0.015*1e-3;                    % Absolute roughness of stainless steel [m]
 eps_rel = eps/d_p_int;               % Relative roughness of stainless steel [-]
 
 T1 = 298;                                       % Temperature downstream the pressure regulator [K]
-P_reg = 52;                                     % Pressure downstream the pressure regulator [bar]
+P_reg = 45;                                     % Pressure downstream the pressure regulator [bar]
 
 T = (floor(T1)-3):0.5:(ceil(T1));
 P = (floor(P_reg)-10):0.1:(ceil(P_reg));
@@ -31,7 +30,7 @@ cp_N2 = data.Cp/data.Mw;             % Specific heat at constant pressure of Nit
 cv_N2 = data.Cv/data.Mw;             % Specific heat at constant volume of Nitrogen [J/kgK]
 gamma_N2 = cp_N2./cv_N2;             % Ratio of specific heats [-]
 mu_N2 = data.mu;                     % Viscosity of Nitrogen [Pa*s]
-m_dot_N2 = 60*1e-3;                  % Nitrogen mass flow rate [kg/s]
+m_dot_N2 = 140*1e-3;                  % Nitrogen mass flow rate [kg/s]
 R = 8314/28;                         % Specific ideal gas constant [J/kgK]
 
 
@@ -172,7 +171,7 @@ clear gamma4_new
 G_g = rho4/1000;                      % Nitrogen specific gravity [-]
 q_N2 = (m_dot_N2/rho4)*1000;           % Nitrogen volumetric flow rate [L/s]
 % q_N2_std = (P4*q_N2*T4*60)/(1*273.15); % Nitrogen volumetric flow rate at std conditions [std L/min]
-C_V = 3.8;
+C_V = 4;
 
 P5 = P4 - (G_g*(q_N2*60)^2)/(14.42*C_V)^2;
 T5 = T4;
@@ -244,16 +243,94 @@ end
 
 clear gamma6_new
 
-%% Before MFM (point 6) and after MFM (point 7)
-G_g = rho6/1000;                       % Nitrogen specific gravity [-]
-q_N2 = (m_dot_N2/rho6)*1000;           % Nitrogen volumetric flow rate [L/s]
-% q_N2_std = (P6*q_N2*T6*60)/(1*273.15); % Nitrogen volumetric flow rate at std conditions [std L/min]
-C_V = 0.73;                             % Flow coefficient needle valve
+%% Before Venturi channel (point 6) and after Venturi channel (point 7)
+d_throat = 6*1e-3;
+A_throat = 0.25*pi*d_throat^2;
 
-P7 = P6 - (G_g*(q_N2*60)^2)/(14.42*C_V)^2;                                            % Pressure downstream the mass flow meter (needle valve approx) [bar]
-T7 = T6;                                                                              % Temperature downstream the mass flow meter (needle valve approx) [K]
+T_tot = T6*(1 + ((gamma6 - 1)/2)*M6^2);
+P_tot6 = P6*(1 + ((gamma6 - 1)/2)*M6^2)^(gamma6/(gamma6 - 1));
 
-%% After MFM (point 7) and before servo valve (point 8)
+z = @(x) A_throat/A_int - (M6/x)*sqrt( ((1 + 0.5*(gamma6 - 1)*x^2)/(1 + 0.5*(gamma6 - 1)*M6^2))^((gamma6 + 1)/(gamma6 - 1)) );
+M6_1 = fsolve(z,0.8);
+T6_1 = T_tot/(1 + ((gamma6 - 1)/2)*M6_1^2);
+P6_1 = P_tot6/(1 + ((gamma6 - 1)/2)*M6_1^2)^(gamma6/(gamma6 - 1));
+c6_1 = sqrt(gamma6*R*T6_1);
+v6_1 = c6_1*M6_1;
+rho6_1 = (rho6*v6*A_int)/(A_throat*v6_1);
+
+T = (floor(T6_1)-35):0.5:(ceil(T6_1));
+P = (floor(P6_1)-15):0.1:(ceil(P6_1));
+
+data = nistdata('N2',T,P);
+
+cp_N2 = data.Cp/data.Mw;             % Specific heat at constant pressure of Nitrogen [J/kgK]
+cv_N2 = data.Cv/data.Mw;             % Specific heat at constant volume of Nitrogen [J/kgK]
+gamma_N2 = cp_N2./cv_N2;             % Ratio of specific heats [-]
+mu_N2 = data.mu;                     % Viscosity of Nitrogen [Pa*s]
+
+mu6_1 = mu_N2(find(T==round(T6_1)),find(abs(P - round(P6_1,1)) < 0.001));
+gamma6_1 = gamma_N2(find(T==round(T6_1)),find(abs(P - round(P6_1,1)) < 0.001));
+gamma6_2 = gamma_N2(find(T==round(T6_1)),find(abs(P - round(P6_1,1)) < 0.001));
+Re6_1 = (rho6_1*v6_1*d_throat)/mu6_1;
+
+if Re6_1 < 2300
+
+        lambda = 64/Re6_1;
+
+    else 
+
+        z = @(x) 1/sqrt(x) + 2*log10(2.51/(Re6_1*sqrt(x)) + eps_rel/3.71);   % Colebrook-White correlation
+        lambda = fsolve(z,0.0004);
+
+end
+
+L_throat = 0.08;
+iter = 0;
+err = 1;
+
+while err > 1e-3
+
+    iter = iter + 1;
+
+    g_M6_1 = (1 - M6_1^2)/(gamma6_1*M6_1^2) + ((gamma6_1 + 1)/(2*gamma6_1))*log(((gamma6_1 + 1)*M6_1^2)/(2 + (gamma6_1 - 1)*M6_1^2) );
+    g_M6_2 = g_M6_1 - (lambda/d_throat)*L_throat;
+
+    y = @(x) g_M6_2 - (1 - x^2)/(gamma6_2*x^2) + ((gamma6_2 + 1)/(2*gamma6_2))*log(((gamma6_2 + 1)*x^2)/(2 + (gamma6_2 - 1)*x^2) );
+    M6_2 = fsolve(y,0.6);
+
+    T_star = T6_1/(0.5*(gamma6_1 + 1)/(1 + (gamma6_1 - 1)*0.5*M6_1^2));
+    T6_2 = T_star*(0.5*(gamma6_2 + 1)/(1 + (gamma6_2 - 1)*0.5*M6_2^2));
+
+    P_star = P6_1/((1/M6_1)*sqrt(0.5*(gamma6_1 + 1)/(1 + (gamma6_1 - 1)*0.5*M6_1^2)));
+    P6_2 = P_star*((1/M6_2)*sqrt(0.5*(gamma6_2 + 1)/(1 + (gamma6_2 - 1)*0.5*M6_2^2)));
+
+    P_tot_star = (M6_1*P_tot6)/( ((1 + 0.5*(gamma6_1 - 1)*M6_1^2)/(0.5*(gamma6_1 + 1)))^( (0.5*(gamma6_1 + 1))/(gamma6_1 - 1) ));
+    P_tot6_2 = (P_tot_star/M6_2)*( ((1 + 0.5*(gamma6_2 - 1)*M6_2^2)/(0.5*(gamma6_2 + 1)))^( (0.5*(gamma6_2 + 1))/(gamma6_2 - 1) ));
+
+    rho_star = rho6_1/((1/M6_1)*sqrt( 2*(1 + (gamma6_1 - 1)*0.5*M6_1^2)/(gamma6_1 + 1)));
+    rho6_2 = rho_star*((1/M6_2)*sqrt( 2*(1 + (gamma6_2 - 1)*0.5*M6_2^2)/(gamma6_2 + 1)));
+
+    c6_2 = sqrt(gamma6_2*R*T6_2);
+    v6_2 = M6_2*c6_2;
+
+    gamma6_2_new = gamma_N2(find(T==round(T6_2)),find(abs(P - round(P6_2,1)) < 0.001));
+
+    err = abs(gamma6_2 - gamma6_2_new);
+
+    gamma6_2 = gamma6_2_new;
+
+end
+
+clear gamma6_2_new
+
+z = @(x) A_int/A_throat - (M6_2/x)*sqrt( ((1 + 0.5*(gamma6_2 - 1)*x^2)/(1 + 0.5*(gamma6_2 - 1)*M6_2^2))^((gamma6_2 + 1)/(gamma6_2 - 1)) );
+M7 = fsolve(z,0.8);
+
+P7 = P_tot6_2/(1 + ((gamma6_2 - 1)/2)*M7^2)^(gamma6_2/(gamma6_2 - 1));
+T7 = T_tot/(1 + ((gamma6_2 - 1)/2)*M7^2);
+                                                                              % Temperature downstream the mass flow meter (needle valve approx) [K]
+
+%% After Venturi channel (point 7) and before servo valve (point 8)
 T = (floor(T7)-12):0.5:(ceil(T7));
 P = (floor(P7)-12):0.1:(ceil(P7));
 data = nistdata('N2',T,P);
@@ -324,7 +401,7 @@ clear gamma8_new
 G_g = rho8/1000;                      % Nitrogen specific gravity [-]
 q_N2 = (m_dot_N2/rho8)*1000;           % Nitrogen volumetric flow rate [L/s]
 % q_N2_std = (P8*q_N2*T8*60)/(1*273.15); % Nitrogen volumetric flow rate at std conditions [std L/min]
-C_V = 3.8;                             % Flow coefficient ball valve
+C_V = 4;                             % Flow coefficient ball valve
 
 P9 = P8 - (G_g*(q_N2*60)^2)/(14.42*C_V)^2;                                                                   % Pressure downstream the servovalve (ball valve approx) [bar]
 T9 = T8;                                                                              % Temperature downstream the servovalve (ball valve approx) [K]
@@ -360,15 +437,15 @@ T10 = T9;
 
 %% After check valve (point 10) and before injector (point 11)
 
-T = (floor(T10)-100):0.5:(ceil(T10));
-P = (floor(P10)-5):0.1:(ceil(P10));
+T = (floor(T10)-20):0.5:(ceil(T10));
+P = (floor(P10)-7):0.1:(ceil(P10));
 data = nistdata('N2',T,P);
 
 rho_N2 = data.Rho*data.Mw;           % Density of Nitrogen [kg/m^3] 
 cp_N2 = data.Cp/data.Mw;             % Specific heat at constant pressure of Nitrogen [J/kgK]
 cv_N2 = data.Cv/data.Mw;             % Specific heat at constant volume of Nitrogen [J/kgK]
 gamma_N2 = cp_N2./cv_N2;             % Ratio of specific heats [-]
-mu_N2 = data.mu;  
+mu_N2 = data.mu;
 
 rho10 = rho_N2(find(T==round(T10)),find(abs(P - round(P10,1)) < 0.001));     % Density downstream the check valve [kg/m^3]
 gamma10 = gamma_N2(find(T==round(T10)),find(abs(P - round(P10,1)) < 0.001)); % Ratio of specific heats the check valve  [-]
@@ -432,21 +509,8 @@ end
 clear gamma11_new
 
 %% Injector pressure loss
-% delta_P_inj = 0.4*100*sqrt(10*P11*1e5); % Pressure drop across the injection plate [Pa] 
-% P12 = P11 - delta_P_inj*1e-5;           % Pressure in the test chamber [bar]
-% 
-% N_inj = [10 15 20 25 30 35];
-% C_d = 0.65;                              % Sharp-edged orifice with diameter smaller than 2.5 mm
-% A_needed = m_dot_N2/(C_d*sqrt(2*delta_P_inj*rho11));
-% A_inj = A_needed./N_inj;
-% d_inj = sqrt((4*A_inj)/pi);
-% v_inj=C_d*sqrt(2*delta_P_inj/rho11);
-% A_slab = 30*30*10e-6;                    % Area of slab test facility [m^2]
-
-
-%% Injector pressure loss
-delta_P_inj= 4.8495*1e5;
-P12 = P11 - 4.8495;           % Pressure in the test chamber [bar]
+P12 = 1;
+delta_P_inj = (P11 - P12)*1e5;
 
 N_inj = [10 15 20 25 30 35];
 C_d = 0.65;                              % Sharp-edged orifice with diameter smaller than 2.5 mm
@@ -454,9 +518,10 @@ A_needed = m_dot_N2/(C_d*sqrt(2*delta_P_inj*rho11));
 A_inj = A_needed./N_inj;
 d_inj = sqrt((4*A_inj)/pi);
 v_inj=C_d*sqrt(2*delta_P_inj/rho11);
-A_slab = 30*30*10e-6;                    % Area of slab test facility [m^2]
+A_slab = 30*30*10e-6;   
+
 %% Total pressure drop
-delta_P_tot = P_reg - P12;     % 16.081
+delta_P_tot = P_reg - P12;      % 14.7660
 
 %% Figures
 
@@ -467,7 +532,7 @@ plot(x,P_vect,'ro','linewidth',1.5)
 grid on
 xlabel('Position on the line, $L_i$ [m]')
 ylabel('Pressure, $P_i$ [bar]')
-title('Pressure evolution: 12 mm diameter pipes')
+title('Pressure evolution: 1/2 inch diameter pipes')
 
 figure()
 plot(N_inj,d_inj*1e3,'ro','linewidth',1.5)
