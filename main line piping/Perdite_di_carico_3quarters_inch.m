@@ -1,4 +1,4 @@
-%% Pressure drops in N2 line with 12 mm diameter tubes
+%% Pressure drops in N2 line with 3/4 inch diameter tubes
 
 clc
 clear
@@ -11,7 +11,7 @@ set(groot,'DefaultAxesTickLabelInterpreter','Latex');
 set(0,'DefaultTextInterpreter','Latex');
 set(0,'DefaultLegendFontSize',12);
 
-d_p_ext = 12*1e-3;                   % Pipe external diameter [m]
+d_p_ext = 19.05*1e-3;                   % Pipe external diameter [m]
 t = 1.5*1e-3;                        % Thickness of the tube  [m]
 d_p_int = d_p_ext - 2*t;             % Pipe internal diameter [m]
 A_int = pi*(d_p_int/2)^2;            % Internal cross sectional area [m^2]
@@ -20,7 +20,7 @@ eps = 0.015*1e-3;                    % Absolute roughness of stainless steel [m]
 eps_rel = eps/d_p_int;               % Relative roughness of stainless steel [-]
 
 T1 = 298;                                       % Temperature downstream the pressure regulator [K]
-P_reg = 22.5;                                     % Pressure downstream the pressure regulator [bar]
+P_reg = 15.3;                                     % Pressure downstream the pressure regulator [bar]
 
 T = (floor(T1)-3):0.5:(ceil(T1));
 P = (floor(P_reg)-10):0.1:(ceil(P_reg));
@@ -255,7 +255,7 @@ T7 = T6;                                                                        
 
 %% After MFM (point 7) and before servo valve (point 8)
 T = (floor(T7)-12):0.5:(ceil(T7));
-P = (floor(P7)-6):0.1:(ceil(P7));
+P = (floor(P7)-4):0.1:(ceil(P7));
 data = nistdata('N2',T,P);
 
 rho_N2 = data.Rho*data.Mw;           % Density of Nitrogen [kg/m^3] 
@@ -361,7 +361,7 @@ T10 = T9;
 %% After check valve (point 10) and before injector (point 11)
 
 T = (floor(T10)-100):0.5:(ceil(T10));
-P = (floor(P10)-4):0.1:(ceil(P10));
+P = (floor(P10)-1):0.1:(ceil(P10));
 data = nistdata('N2',T,P);
 
 rho_N2 = data.Rho*data.Mw;           % Density of Nitrogen [kg/m^3] 
@@ -436,7 +436,7 @@ clear gamma11_new
 P12 = 1;
 delta_P_inj = (P11 - P12)*1e5;
 
-N_inj = [30 35 40 45];             % Change it to have smaller diameters
+N_inj = [10 15 20 25 30 35];
 C_d = 0.65;                              % Sharp-edged orifice with diameter smaller than 2.5 mm
 A_needed = m_dot_N2/(C_d*sqrt(2*delta_P_inj*rho11));
 A_inj = A_needed./N_inj;
