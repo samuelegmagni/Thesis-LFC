@@ -20,7 +20,7 @@ eps = 0.015*1e-3;                    % Absolute roughness of stainless steel [m]
 eps_rel = eps/d_p_int;               % Relative roughness of stainless steel [-]
 
 T1 = 298;                                       % Temperature downstream the pressure regulator [K]
-P_reg = 52;                                     % Pressure downstream the pressure regulator [bar]
+P_reg = 22.5;                                     % Pressure downstream the pressure regulator [bar]
 
 T = (floor(T1)-3):0.5:(ceil(T1));
 P = (floor(P_reg)-10):0.1:(ceil(P_reg));
@@ -255,7 +255,7 @@ T7 = T6;                                                                        
 
 %% After MFM (point 7) and before servo valve (point 8)
 T = (floor(T7)-12):0.5:(ceil(T7));
-P = (floor(P7)-12):0.1:(ceil(P7));
+P = (floor(P7)-6):0.1:(ceil(P7));
 data = nistdata('N2',T,P);
 
 rho_N2 = data.Rho*data.Mw;           % Density of Nitrogen [kg/m^3] 
@@ -361,7 +361,7 @@ T10 = T9;
 %% After check valve (point 10) and before injector (point 11)
 
 T = (floor(T10)-100):0.5:(ceil(T10));
-P = (floor(P10)-5):0.1:(ceil(P10));
+P = (floor(P10)-4):0.1:(ceil(P10));
 data = nistdata('N2',T,P);
 
 rho_N2 = data.Rho*data.Mw;           % Density of Nitrogen [kg/m^3] 
@@ -431,22 +431,10 @@ end
 
 clear gamma11_new
 
-%% Injector pressure loss
-% delta_P_inj = 0.4*100*sqrt(10*P11*1e5); % Pressure drop across the injection plate [Pa] 
-% P12 = P11 - delta_P_inj*1e-5;           % Pressure in the test chamber [bar]
-% 
-% N_inj = [10 15 20 25 30 35];
-% C_d = 0.65;                              % Sharp-edged orifice with diameter smaller than 2.5 mm
-% A_needed = m_dot_N2/(C_d*sqrt(2*delta_P_inj*rho11));
-% A_inj = A_needed./N_inj;
-% d_inj = sqrt((4*A_inj)/pi);
-% v_inj=C_d*sqrt(2*delta_P_inj/rho11);
-% A_slab = 30*30*10e-6;                    % Area of slab test facility [m^2]
-
 
 %% Injector pressure loss
-delta_P_inj= 4.8495*1e5;
-P12 = P11 - 4.8495;           % Pressure in the test chamber [bar]
+P12 = 1;
+delta_P_inj = (P11 - P12)*1e5;
 
 N_inj = [10 15 20 25 30 35];
 C_d = 0.65;                              % Sharp-edged orifice with diameter smaller than 2.5 mm
