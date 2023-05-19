@@ -514,7 +514,7 @@ clear gamma11_new
 P12 = 1;
 delta_P_inj = (P11 - P12)*1e5;
 
-N_inj = [10 15 20 25 30 35];
+N_inj = [15 20 25 30 35 40 45 50 55 60];
 C_d = 0.65;                              % Sharp-edged orifice with diameter smaller than 2.5 mm
 A_needed = m_dot_N2/(C_d*sqrt(2*delta_P_inj*rho11));
 A_inj = A_needed./N_inj;
