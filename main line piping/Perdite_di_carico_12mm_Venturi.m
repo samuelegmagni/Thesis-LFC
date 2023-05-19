@@ -352,6 +352,56 @@ c7 = (gamma7*R*T7)^0.5;                           % Sound speed downstream the m
 M7 = v7/c7;                                       % Mach number downstream the mass flow meter (needle valve approx) [-]
 Re7 = (rho7*v7*d_p_int)/mu7;                      % Reynolds number downstream the mass flow meter (needle valve approx) [-]
 
+%% Venturi channel plots
+x1 = 0;
+x2 = 0.78;
+x3 = 0.78+8;
+x4 = 0.78+8+1.1;
+d_vect = [x1 x2 x3 x4];
+v_vect = [v6 v6_1 v6_2 v7];
+P_vect = [P6 P6_1 P6_2 P7];
+T_vect = [T6 T6_1 T6_2 T7];
+rho_vect = [rho6 rho6_1 rho6_2 rho7];
+M_vect = [M6 M6_1 M6_2 M7];
+
+figure()
+plot(d_vect,v_vect,'ro','linewidth',1.5)
+grid on
+xlabel('Position, $x_i$ $[cm]$')
+ylabel('Velocity, $v_i$ $[m/s]$')
+title('Velocity evolution - Venturi channel 12 mm diameter tube')
+
+figure()
+plot(d_vect,M_vect,'ro','linewidth',1.5)
+grid on
+xlabel('Position, $x_i$ $[cm]$')
+ylabel('Mach Number, $M_i$ $[m/s]$')
+title('Mach evolution - Venturi channel 12 mm diameter tube')
+
+figure()
+plot(d_vect,P_vect,'ro','linewidth',1.5)
+grid on
+xlabel('Position, $x_i$ $[cm]$')
+ylabel('Pressure, $P_i$ $[bar]$')
+title('Pressure evolution - Venturi channel 12 mm diameter tube')
+
+
+figure()
+plot(d_vect,T_vect,'ro','linewidth',1.5)
+grid on
+xlabel('Position, $x_i$ $[cm]$')
+ylabel('Temperature, $T_i$ $[K]$')
+title('Temperature evolution - Venturi channel 12 mm diameter tube')
+
+figure()
+plot(d_vect,rho_vect,'ro','linewidth',1.5)
+grid on
+xlabel('Position, $x_i$ $[cm]$')
+ylabel('Density, $\rho_i$ $[kg/m^3]$')
+title('Density evolution - Venturi channel 12 mm diameter tube')
+
+%%
+
 L = 0.5;
 
 if Re7 < 2300
