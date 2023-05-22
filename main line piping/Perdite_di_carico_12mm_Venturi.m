@@ -354,9 +354,9 @@ Re7 = (rho7*v7*d_p_int)/mu7;                      % Reynolds number downstream t
 
 %% Venturi channel plots
 x1 = 0;
-x2 = 0.78;
-x3 = 0.78+8;
-x4 = 0.78+8+1.1;
+x2 = 2.4;
+x3 = x2 + 8;
+x4 = x3 + 3.4;
 d_vect = [x1 x2 x3 x4];
 v_vect = [v6 v6_1 v6_2 v7];
 P_vect = [P6 P6_1 P6_2 P7];
