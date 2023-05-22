@@ -369,21 +369,21 @@ plot(d_vect,v_vect,'ro','linewidth',1.5)
 grid on
 xlabel('Position, $x_i$ $[cm]$')
 ylabel('Velocity, $v_i$ $[m/s]$')
-title('Velocity evolution - Venturi channel 12 mm diameter tube')
+title('Velocity evolution - Venturi channel 12 mm diameter line')
 
 figure()
 plot(d_vect,M_vect,'ro','linewidth',1.5)
 grid on
 xlabel('Position, $x_i$ $[cm]$')
 ylabel('Mach Number, $M_i$ $[m/s]$')
-title('Mach evolution - Venturi channel 12 mm diameter tube')
+title('Mach evolution - Venturi channel 12 mm diameter line')
 
 figure()
 plot(d_vect,P_vect,'ro','linewidth',1.5)
 grid on
 xlabel('Position, $x_i$ $[cm]$')
 ylabel('Pressure, $P_i$ $[bar]$')
-title('Pressure evolution - Venturi channel 12 mm diameter tube')
+title('Pressure evolution - Venturi channel 12 mm diameter line')
 
 
 figure()
@@ -391,14 +391,14 @@ plot(d_vect,T_vect,'ro','linewidth',1.5)
 grid on
 xlabel('Position, $x_i$ $[cm]$')
 ylabel('Temperature, $T_i$ $[K]$')
-title('Temperature evolution - Venturi channel 12 mm diameter tube')
+title('Temperature evolution - Venturi channel 12 mm diameter line')
 
 figure()
 plot(d_vect,rho_vect,'ro','linewidth',1.5)
 grid on
 xlabel('Position, $x_i$ $[cm]$')
 ylabel('Density, $\rho_i$ $[kg/m^3]$')
-title('Density evolution - Venturi channel 12 mm diameter tube')
+title('Density evolution - Venturi channel 12 mm diameter line')
 
 %%
 
