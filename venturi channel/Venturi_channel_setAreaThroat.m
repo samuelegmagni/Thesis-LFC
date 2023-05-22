@@ -14,10 +14,10 @@ d_ext = 12*1e-3;
 t = 1.5*1e-3;                        % Thickness of the tube  [m]
 d1 = d_ext - 2*t;
 A1 = 0.25*pi*d1^2;
-d2 = 4.8*1e-3;
+d2 = 6*1e-3;
 A2 = 0.25*pi*d2^2;
 m_dot_N2 = 140*1e-3;            % [g/s]
-P1 = 39;                        % [bar]
+P1 = 34;                        % [bar]
 T1 = 295;                       % [K]
 R = 8314/28;                    % [J/KgK]
 eps = 0.015*1e-3;               % Absolute roughness of stainless steel [m]
@@ -140,12 +140,13 @@ v4 = M4*c4;
 rho4 = (rho3*v3*A3)/(A4*v4);
 
 %% Venturi tube's size
-
+d1=16.05*1e-3;
+d2=9*1e-3;
 d_conv = d1;
 d_div = d1;
 d_t = d2;
-alpha_conv = 21;
-alpha_div = 15;
+alpha_conv = 7;
+alpha_div = 5;
 l_conv1 = cotd(alpha_conv)*d_conv;
 l_conv2 = cotd(alpha_conv)*d_t;
 l_conv = l_conv1-l_conv2;
