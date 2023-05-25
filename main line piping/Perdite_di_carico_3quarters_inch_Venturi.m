@@ -259,7 +259,7 @@ v6_1 = c6_1*M6_1;
 rho6_1 = (rho6*v6*A_int)/(A_throat*v6_1);
 
 T = (floor(T6_1)-35):0.5:(ceil(T6_1));
-P = (floor(P6_1)-15):0.1:(ceil(P6_1));
+P = (floor(P6_1)-10):0.1:(ceil(P6_1));
 
 data = nistdata('N2',T,P);
 

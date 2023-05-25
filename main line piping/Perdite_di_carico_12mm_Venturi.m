@@ -20,7 +20,7 @@ eps = 0.015*1e-3;                    % Absolute roughness of stainless steel [m]
 eps_rel = eps/d_p_int;               % Relative roughness of stainless steel [-]
 
 T1 = 298;                                       % Temperature downstream the pressure regulator [K]
-P_reg = 40;                                     % Pressure downstream the pressure regulator [bar]
+P_reg = 42;                                     % Pressure downstream the pressure regulator [bar]
 
 T = (floor(T1)-3):0.5:(ceil(T1));
 P = (floor(P_reg)-10):0.1:(ceil(P_reg));
@@ -246,7 +246,7 @@ clear gamma6_new
 
 %% Before Venturi channel (point 6) and after Venturi channel (point 7)
 
-d_throat = 5*1e-3;
+d_throat = 5.5*1e-3;
 A_throat = 0.25*pi*d_throat^2;
 
 T_tot = T6*(1 + ((gamma6 - 1)/2)*M6^2);
@@ -261,7 +261,7 @@ v6_1 = c6_1*M6_1;
 rho6_1 = (rho6*v6*A_int)/(A_throat*v6_1);
 
 T = (floor(T6_1)-35):0.5:(ceil(T6_1));
-P = (floor(P6_1)-15):0.1:(ceil(P6_1));
+P = (floor(P6_1)-10):0.1:(ceil(P6_1));
 
 data = nistdata('N2',T,P);
 
@@ -563,15 +563,12 @@ P12 = 1;
 delta_P_inj = (P11 - P12)*1e5;
 
 N_inj = 1;
-C_d = 0.65;                              % Sharp-edged orifice with diameter smaller than 2.5 mm
+C_d = 0.61;                              % Sharp-edged orifice with diameter bigger than 2.5 mm
 A_needed = m_dot_N2/(C_d*sqrt(2*delta_P_inj*rho11));
 A_inj = A_needed./N_inj;
 d_inj = sqrt((4*A_inj)/pi);
 v_inj=C_d*sqrt(2*delta_P_inj/rho11);
 A_slab = 30*30*10e-6;                    % Area of slab test facility [m^2]
-
-%% Total pressure drop
-delta_P_tot = P_reg - P12;     % 16.081
 
 %% Figures
 
