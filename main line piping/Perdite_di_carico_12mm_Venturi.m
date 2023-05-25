@@ -20,7 +20,7 @@ eps = 0.015*1e-3;                    % Absolute roughness of stainless steel [m]
 eps_rel = eps/d_p_int;               % Relative roughness of stainless steel [-]
 
 T1 = 298;                                       % Temperature downstream the pressure regulator [K]
-P_reg = 48;                                     % Pressure downstream the pressure regulator [bar]
+P_reg = 40;                                     % Pressure downstream the pressure regulator [bar]
 
 T = (floor(T1)-3):0.5:(ceil(T1));
 P = (floor(P_reg)-10):0.1:(ceil(P_reg));
@@ -245,7 +245,8 @@ end
 clear gamma6_new
 
 %% Before Venturi channel (point 6) and after Venturi channel (point 7)
-d_throat = 6*1e-3;
+
+d_throat = 5*1e-3;
 A_throat = 0.25*pi*d_throat^2;
 
 T_tot = T6*(1 + ((gamma6 - 1)/2)*M6^2);
@@ -285,7 +286,7 @@ if Re6_1 < 2300
 
 end
 
-L_throat = 0.08;
+M6_2 = 1;
 iter = 0;
 err = 1;
 
@@ -294,10 +295,7 @@ while err > 1e-3
     iter = iter + 1;
 
     g_M6_1 = (1 - M6_1^2)/(gamma6_1*M6_1^2) + ((gamma6_1 + 1)/(2*gamma6_1))*log(((gamma6_1 + 1)*M6_1^2)/(2 + (gamma6_1 - 1)*M6_1^2) );
-    g_M6_2 = g_M6_1 - (lambda/d_throat)*L_throat;
-
-    y = @(x) g_M6_2 - (1 - x^2)/(gamma6_2*x^2) + ((gamma6_2 + 1)/(2*gamma6_2))*log(((gamma6_2 + 1)*x^2)/(2 + (gamma6_2 - 1)*x^2) );
-    M6_2 = fsolve(y,0.6);
+    L_throat = 1000*(g_M6_1*d_throat)/lambda;
 
     T_star = T6_1/(0.5*(gamma6_1 + 1)/(1 + (gamma6_1 - 1)*0.5*M6_1^2));
     T6_2 = T_star*(0.5*(gamma6_2 + 1)/(1 + (gamma6_2 - 1)*0.5*M6_2^2));
@@ -564,7 +562,7 @@ clear gamma11_new
 P12 = 1;
 delta_P_inj = (P11 - P12)*1e5;
 
-N_inj = [15 20 25 30 35 40 45 50 55 60];
+N_inj = 1;
 C_d = 0.65;                              % Sharp-edged orifice with diameter smaller than 2.5 mm
 A_needed = m_dot_N2/(C_d*sqrt(2*delta_P_inj*rho11));
 A_inj = A_needed./N_inj;

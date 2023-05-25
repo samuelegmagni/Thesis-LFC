@@ -284,7 +284,7 @@ if Re6_1 < 2300
 
 end
 
-L_throat = 0.08;
+M6_2 = 1;
 iter = 0;
 err = 1;
 
@@ -293,10 +293,7 @@ while err > 1e-3
     iter = iter + 1;
 
     g_M6_1 = (1 - M6_1^2)/(gamma6_1*M6_1^2) + ((gamma6_1 + 1)/(2*gamma6_1))*log(((gamma6_1 + 1)*M6_1^2)/(2 + (gamma6_1 - 1)*M6_1^2) );
-    g_M6_2 = g_M6_1 - (lambda/d_throat)*L_throat;
-
-    y = @(x) g_M6_2 - (1 - x^2)/(gamma6_2*x^2) + ((gamma6_2 + 1)/(2*gamma6_2))*log(((gamma6_2 + 1)*x^2)/(2 + (gamma6_2 - 1)*x^2) );
-    M6_2 = fsolve(y,0.6);
+    L_throat = 1000*(g_M6_1*d_throat)/lambda; 
 
     T_star = T6_1/(0.5*(gamma6_1 + 1)/(1 + (gamma6_1 - 1)*0.5*M6_1^2));
     T6_2 = T_star*(0.5*(gamma6_2 + 1)/(1 + (gamma6_2 - 1)*0.5*M6_2^2));

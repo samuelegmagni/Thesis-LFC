@@ -14,7 +14,7 @@ d_ext = 12*1e-3;
 t = 1.5*1e-3;                        % Thickness of the tube  [m]
 d1 = d_ext - 2*t;
 A1 = 0.25*pi*d1^2;
-d2 = 6*1e-3;
+d2 = 5*1e-3;
 A2 = 0.25*pi*d2^2;
 m_dot_N2 = 140*1e-3;            % [g/s]
 P1 = 34;                        % [bar]
@@ -88,7 +88,7 @@ end
 
 %%
 
-L = 0.08;
+M3 = 1;
 iter = 0;
 err = 1;
 
@@ -97,10 +97,7 @@ while err > 1e-3
     iter = iter + 1;
 
     g_M2 = (1 - M2^2)/(gamma2*M2^2) + ((gamma2 + 1)/(2*gamma2))*log(((gamma2 + 1)*M2^2)/(2 + (gamma2 - 1)*M2^2) );
-    g_M3 = g_M2 - (lambda/d2)*L;
-
-    y = @(x) g_M3 - (1 - x^2)/(gamma3*x^2) + ((gamma3 + 1)/(2*gamma3))*log(((gamma3 + 1)*x^2)/(2 + (gamma3 - 1)*x^2) );
-    M3 = fsolve(y,0.6);
+    L = 1000*(g_M2*d2)/lambda;        % [mm]
 
     T_star = T2/(0.5*(gamma2 + 1)/(1 + (gamma2 - 1)*0.5*M2^2));
     T3 = T_star*(0.5*(gamma3 + 1)/(1 + (gamma3 - 1)*0.5*M3^2));
