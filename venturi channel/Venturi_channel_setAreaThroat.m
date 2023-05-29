@@ -137,8 +137,8 @@ v4 = M4*c4;
 rho4 = (rho3*v3*A3)/(A4*v4);
 
 %% Venturi tube's size
-d1=16.05*1e-3;
-d2=9*1e-3;
+d1 = 16.05*1e-3;
+d2 = 7*1e-3;
 d_conv = d1;
 d_div = d1;
 d_t = d2;

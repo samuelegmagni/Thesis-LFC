@@ -19,7 +19,7 @@ eps = 0.015*1e-3;                    % Absolute roughness of stainless steel [m]
 eps_rel = eps/d_p_int;               % Relative roughness of stainless steel [-]
 
 T1 = 298;                                       % Temperature downstream the pressure regulator [K]
-P_reg = 20.5;                                     % Pressure downstream the pressure regulator [bar]
+P_reg = 20;                                     % Pressure downstream the pressure regulator [bar]
 
 T = (floor(T1)-3):0.5:(ceil(T1));
 P = (floor(P_reg)-6):0.1:(ceil(P_reg));
@@ -34,7 +34,7 @@ m_dot_N2 = 140*1e-3;                  % Nitrogen mass flow rate [kg/s]
 R = 8314/28;                         % Specific ideal gas constant [J/kgK]
 
 
-L = 0.4;                             % Length of the tube [m]
+L1 = 0.4;                             % Length of the tube [m]
 
 %% After pressure regulator (point 1) and before first manual ball valve (point 2)
 
@@ -69,7 +69,7 @@ while err > 1e-3
     iter = iter + 1;
 
     g_M1 = (1 - M1^2)/(gamma1*M1^2) + ((gamma1 + 1)/(2*gamma1))*log(((gamma1 + 1)*M1^2)/(2 + (gamma1 - 1)*M1^2) );
-    g_M2 = g_M1 - lambda*(L/d_p_int);
+    g_M2 = g_M1 - lambda*(L1/d_p_int);
     
     y = @(x) g_M2 - (1 - x^2)/(gamma2*x^2) + ((gamma2 + 1)/(2*gamma2))*log(((gamma2 + 1)*x^2)/(2 + (gamma2 - 1)*x^2) );
     M2 = fsolve(y,0.006);
@@ -140,7 +140,7 @@ while err > 1e-3
     iter = iter + 1;
 
     g_M3 = (1 - M3^2)/(gamma3*M3^2) + ((gamma3 + 1)/(2*gamma3))*log(((gamma3 + 1)*M3^2)/(2 + (gamma3 - 1)*M3^2) );
-    g_M4 = g_M3 - lambda*(L/d_p_int);
+    g_M4 = g_M3 - lambda*(L1/d_p_int);
     
     y = @(x) g_M4 - (1 - x^2)/(gamma4*x^2) + ((gamma4 + 1)/(2*gamma4))*log(((gamma4 + 1)*x^2)/(2 + (gamma4 - 1)*x^2) );
     M4 = fsolve(y,0.006);
@@ -216,7 +216,7 @@ while err > 1e-3
     iter = iter + 1;
 
     g_M5 = (1 - M5^2)/(gamma5*M5^2) + ((gamma5 + 1)/(2*gamma5))*log(((gamma5 + 1)*M5^2)/(2 + (gamma5 - 1)*M5^2) );
-    g_M6 = g_M5 - lambda*(L/d_p_int);
+    g_M6 = g_M5 - lambda*(L1/d_p_int);
 
     y = @(x) g_M6 - (1 - x^2)/(gamma6*x^2) + ((gamma6 + 1)/(2*gamma6))*log(((gamma6 + 1)*x^2)/(2 + (gamma6 - 1)*x^2) );
     M6 = fsolve(y,0.006);
@@ -244,7 +244,7 @@ end
 clear gamma6_new
 
 %% Before Venturi channel (point 6) and after Venturi channel (point 7)
-d_throat = 9*1e-3;
+d_throat = 7*1e-3;
 A_throat = 0.25*pi*d_throat^2;
 
 T_tot = T6*(1 + ((gamma6 - 1)/2)*M6^2);
@@ -258,8 +258,8 @@ c6_1 = sqrt(gamma6*R*T6_1);
 v6_1 = c6_1*M6_1;
 rho6_1 = (rho6*v6*A_int)/(A_throat*v6_1);
 
-T = (floor(T6_1)-35):0.5:(ceil(T6_1));
-P = (floor(P6_1)-10):0.1:(ceil(P6_1));
+T = (floor(T6_1)-50):0.5:(ceil(T6_1));
+P = (floor(P6_1)-5):0.1:(ceil(P6_1));
 
 data = nistdata('N2',T,P);
 
@@ -293,7 +293,7 @@ while err > 1e-3
     iter = iter + 1;
 
     g_M6_1 = (1 - M6_1^2)/(gamma6_1*M6_1^2) + ((gamma6_1 + 1)/(2*gamma6_1))*log(((gamma6_1 + 1)*M6_1^2)/(2 + (gamma6_1 - 1)*M6_1^2) );
-    L_throat = 1000*(g_M6_1*d_throat)/lambda; 
+    L_throat = 1000*(g_M6_1*d_throat)/lambda;       % [mm]
 
     T_star = T6_1/(0.5*(gamma6_1 + 1)/(1 + (gamma6_1 - 1)*0.5*M6_1^2));
     T6_2 = T_star*(0.5*(gamma6_2 + 1)/(1 + (gamma6_2 - 1)*0.5*M6_2^2));
@@ -396,7 +396,7 @@ ylabel('Density, $\rho_i$ $[kg/m^3]$')
 title('Density evolution - Venturi channel 3/4 inch diameter line')
 
 %%
-L = 0.5;
+L2 = 0.5;
 
 if Re7 < 2300
 
@@ -417,7 +417,8 @@ while err > 1e-3
     iter = iter + 1;
     
     g_M7 = (1 - M7^2)/(gamma7*M7^2) + ((gamma7 + 1)/(2*gamma7))*log(((gamma7 + 1)*M7^2)/(2 + (gamma7 - 1)*M7^2) );
-    g_M8 = g_M7 - lambda*(L/d_p_int);
+    g_M8 = g_M7 - lambda*(L2/d_p_int);
+
     y = @(x) g_M8 - (1 - x^2)/(gamma8*x^2) + ((gamma8 + 1)/(2*gamma8))*log(((gamma8 + 1)*x^2)/(2 + (gamma8 - 1)*x^2) );
     M8 = fsolve(y,0.006);
 
@@ -519,7 +520,7 @@ while err > 1e-3
 
     iter = iter + 1;
     g_M10 = (1 - M10^2)/(gamma10*M10^2) + ((gamma10 + 1)/(2*gamma10))*log(((gamma10 + 1)*M10^2)/(2 + (gamma10 - 1)*M10^2) );
-    g_M11 = g_M10 - lambda*(L/d_p_int);
+    g_M11 = g_M10 - lambda*(L2/d_p_int);
 
     if g_M11 < 0
 
@@ -554,24 +555,48 @@ end
 clear gamma11_new
 
 %% Injector pressure loss
-P12 = 1;
+P12 = 1.5;
 delta_P_inj = (P11 - P12)*1e5;
 
-N_inj = [30 35 40 45 50 55 60];
-C_d = 0.65;                              % Sharp-edged orifice with diameter smaller than 2.5 mm
+N_inj = 1;
+C_d = 0.61;                              % Sharp-edged orifice with diameter bigger than 2.5 mm
 A_needed = m_dot_N2/(C_d*sqrt(2*delta_P_inj*rho11));
 A_inj = A_needed./N_inj;
 d_inj = sqrt((4*A_inj)/pi);
 v_inj=C_d*sqrt(2*delta_P_inj/rho11);
-A_slab = 30*30*10e-6;   
 
-%% Total pressure drop
-delta_P_tot = P_reg - P12;     % 5.1600
+%% Venturi tube's size
+
+d_conv = d_p_int;
+d_div = d_p_int;
+alpha_conv = 7;
+alpha_div = 5;
+l_conv1 = cotd(alpha_conv)*d_conv;
+l_conv2 = cotd(alpha_conv)*d_throat;
+L_conv = l_conv1-l_conv2;
+l_div1 = cotd(alpha_div)*d_conv;
+l_div2 = cotd(alpha_div)*d_throat;
+L_div = l_div1 - l_div2;
 
 %% Figures
 
-P_vect = [P_reg P1 P2 P3 P4 P5 P6 P7 P8 P9 P10 P11 P12];
-x = [0 0 0.4 0.4 0.8 0.8 1.2 1.2 1.7 1.7 1.7 2.2 2.2];
+P_vect = [P_reg P1 P2 P3 P4 P5 P6 P7 P8 P9 P10 P11];
+x_reg = 0;
+x1 = 0;
+x2 = x1 + L1;
+x3 = x1 + L1;
+x4 = x3 + L1;
+x5 = x3 + L1;
+x6 = x5 + L1;
+% x6_1 = x6 + L_conv;
+% x6_2 = x6_1 + L_throat/1000;
+x7 = x6 + L_conv + L_throat/1000 + L_div;
+x8 = x7 + L2;
+x9 = x7 + L2;
+x10 = x7 + L2;
+x11 = x10 + L2;
+x = [x_reg x1 x2 x3 x4 x5 x6 x7 x8 x9 x10 x11];
+
 figure()
 plot(x,P_vect,'ro','linewidth',1.5)
 grid on
