@@ -246,19 +246,19 @@ clear gamma6_new
 
 %% Before Venturi channel (point 6) and after Venturi channel (point 7)
 
-d_throat = 5.5*1e-3;
-A_throat = 0.25*pi*d_throat^2;
+d_throat_int = 5.5*1e-3;
+A_throat_int = 0.25*pi*d_throat_int^2;
 
 T_tot = T6*(1 + ((gamma6 - 1)/2)*M6^2);
 P_tot6 = P6*(1 + ((gamma6 - 1)/2)*M6^2)^(gamma6/(gamma6 - 1));
 
-z = @(x) A_throat/A_int - (M6/x)*sqrt( ((1 + 0.5*(gamma6 - 1)*x^2)/(1 + 0.5*(gamma6 - 1)*M6^2))^((gamma6 + 1)/(gamma6 - 1)) );
+z = @(x) A_throat_int/A_int - (M6/x)*sqrt( ((1 + 0.5*(gamma6 - 1)*x^2)/(1 + 0.5*(gamma6 - 1)*M6^2))^((gamma6 + 1)/(gamma6 - 1)) );
 M6_1 = fsolve(z,0.8);
 T6_1 = T_tot/(1 + ((gamma6 - 1)/2)*M6_1^2);
 P6_1 = P_tot6/(1 + ((gamma6 - 1)/2)*M6_1^2)^(gamma6/(gamma6 - 1));
 c6_1 = sqrt(gamma6*R*T6_1);
 v6_1 = c6_1*M6_1;
-rho6_1 = (rho6*v6*A_int)/(A_throat*v6_1);
+rho6_1 = (rho6*v6*A_int)/(A_throat_int*v6_1);
 
 T = (floor(T6_1)-35):0.5:(ceil(T6_1));
 P = (floor(P6_1)-10):0.1:(ceil(P6_1));
@@ -273,7 +273,7 @@ mu_N2 = data.mu;                     % Viscosity of Nitrogen [Pa*s]
 mu6_1 = mu_N2(find(T==round(T6_1)),find(abs(P - round(P6_1,1)) < 0.001));
 gamma6_1 = gamma_N2(find(T==round(T6_1)),find(abs(P - round(P6_1,1)) < 0.001));
 gamma6_2 = gamma_N2(find(T==round(T6_1)),find(abs(P - round(P6_1,1)) < 0.001));
-Re6_1 = (rho6_1*v6_1*d_throat)/mu6_1;
+Re6_1 = (rho6_1*v6_1*d_throat_int)/mu6_1;
 
 if Re6_1 < 2300
 
@@ -295,7 +295,7 @@ while err > 1e-3
     iter = iter + 1;
 
     g_M6_1 = (1 - M6_1^2)/(gamma6_1*M6_1^2) + ((gamma6_1 + 1)/(2*gamma6_1))*log(((gamma6_1 + 1)*M6_1^2)/(2 + (gamma6_1 - 1)*M6_1^2) );
-    L_throat = 1000*(g_M6_1*d_throat)/lambda;
+    L_throat = 1000*(g_M6_1*d_throat_int)/lambda;
 
     T_star = T6_1/(0.5*(gamma6_1 + 1)/(1 + (gamma6_1 - 1)*0.5*M6_1^2));
     T6_2 = T_star*(0.5*(gamma6_2 + 1)/(1 + (gamma6_2 - 1)*0.5*M6_2^2));
@@ -322,7 +322,7 @@ end
 
 clear gamma6_2_new
 
-z = @(x) A_int/A_throat - (M6_2/x)*sqrt( ((1 + 0.5*(gamma6_2 - 1)*x^2)/(1 + 0.5*(gamma6_2 - 1)*M6_2^2))^((gamma6_2 + 1)/(gamma6_2 - 1)) );
+z = @(x) A_int/A_throat_int - (M6_2/x)*sqrt( ((1 + 0.5*(gamma6_2 - 1)*x^2)/(1 + 0.5*(gamma6_2 - 1)*M6_2^2))^((gamma6_2 + 1)/(gamma6_2 - 1)) );
 M7 = fsolve(z,0.8);
 
 P7 = P_tot6_2/(1 + ((gamma6_2 - 1)/2)*M7^2)^(gamma6_2/(gamma6_2 - 1));
@@ -576,12 +576,8 @@ d_conv = d_p_int;
 d_div = d_p_int;
 alpha_conv = 7;
 alpha_div = 5;
-l_conv1 = cotd(alpha_conv)*d_conv;
-l_conv2 = cotd(alpha_conv)*d_throat;
-L_conv = l_conv1-l_conv2;
-l_div1 = cotd(alpha_div)*d_conv;
-l_div2 = cotd(alpha_div)*d_throat;
-L_div = l_div1 - l_div2;
+L_conv = (d_p_int - d_throat_int)/(2*tand(alpha_conv));
+L_div = (d_p_int - d_throat_int)/(2*tand(alpha_div));
 
 %% Figures
 
