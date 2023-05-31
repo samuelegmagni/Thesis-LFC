@@ -155,9 +155,9 @@ l_div = l_div1 - l_div2;
 % Plots
 
 x1 = 0;
-x2 = l_conv*1e2;
-x3 = (l_conv+L)*1e2;
-x4 = (l_conv+L+l_div)*1e2;
+x2 = l_conv *1e2;
+x3 = l_conv * 1e2 +L*1e-1;
+x4 = (l_conv+l_div)*1e2 +L*1e-1;
 d_vect = [x1 x2 x3 x4];
 v_vect = [v1 v2 v3 v4];
 P_vect = [P1 P2 P3 P4];
