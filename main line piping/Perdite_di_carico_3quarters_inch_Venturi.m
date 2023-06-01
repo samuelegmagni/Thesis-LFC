@@ -351,9 +351,9 @@ Re7 = (rho7*v7*d_p_int)/mu7;  % Reynolds number downstream the mass flow meter (
 
 %% Venturi channel plots
 x1 = 0;
-x2 = 5.7;
-x3 = x2 + 8;
-x4 = x3 + 8;
+x2 = 3.7;
+x3 = x2 + 4.7;
+x4 = x3 + 5.2;
 d_vect = [x1 x2 x3 x4];
 v_vect = [v6 v6_1 v6_2 v7];
 P_vect = [P6 P6_1 P6_2 P7];
@@ -560,11 +560,11 @@ clear gamma11_new
 P12 = 1.5;
 delta_P_inj = (P11 - P12)*1e5;
 
-N_inj = 1;
+N_inj = [1 2 3];
 C_d = 0.61;                              % Sharp-edged orifice with diameter bigger than 2.5 mm
 A_needed = m_dot_N2/(C_d*sqrt(2*delta_P_inj*rho11));
 A_inj = A_needed./N_inj;
-d_inj = sqrt((4*A_inj)/pi);
+d_inj = sqrt((4*A_inj)./pi);
 v_inj=C_d*sqrt(2*delta_P_inj/rho11);
 
 %% Venturi tube's size

@@ -137,6 +137,7 @@ v4 = M4*c4;
 rho4 = (rho3*v3*A3)/(A4*v4);
 
 %% Venturi tube's size
+L=8*1e-2;
 d1 = 16.05*1e-3;
 d2 = 7*1e-3;
 d_conv = d1;
@@ -144,11 +145,11 @@ d_div = d1;
 d_t = d2;
 alpha_conv = 7;
 alpha_div = 5;
-l_conv1 = cotd(alpha_conv)*d_conv;
-l_conv2 = cotd(alpha_conv)*d_t;
+l_conv1 = cotd(alpha_conv)*d_conv*0.5;
+l_conv2 = cotd(alpha_conv)*d_t*0.5;
 l_conv = l_conv1-l_conv2;
-l_div1 = cotd(alpha_div)*d_conv;
-l_div2 = cotd(alpha_div)*d_t;
+l_div1 = cotd(alpha_div)*d_conv*0.5;
+l_div2 = cotd(alpha_div)*d_t*0.5;
 l_div = l_div1 - l_div2;
 
 

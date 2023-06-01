@@ -352,9 +352,9 @@ Re7 = (rho7*v7*d_p_int)/mu7;                      % Reynolds number downstream t
 
 %% Venturi channel plots
 x1 = 0;
-x2 = 2.4;
-x3 = x2 + 8;
-x4 = x3 + 3.4;
+x2 = 1.4;
+x3 = x2 + 4.9;
+x4 = x3 + 2;
 d_vect = [x1 x2 x3 x4];
 v_vect = [v6 v6_1 v6_2 v7];
 P_vect = [P6 P6_1 P6_2 P7];
@@ -562,11 +562,11 @@ clear gamma11_new
 P12 = 1;
 delta_P_inj = (P11 - P12)*1e5;
 
-N_inj = 1;
+N_inj = [1 2 3];
 C_d = 0.61;                              % Sharp-edged orifice with diameter bigger than 2.5 mm
 A_needed = m_dot_N2/(C_d*sqrt(2*delta_P_inj*rho11));
 A_inj = A_needed./N_inj;
-d_inj = sqrt((4*A_inj)/pi);
+d_inj = sqrt((4*A_inj)./pi);
 v_inj=C_d*sqrt(2*delta_P_inj/rho11);
 A_slab = 30*30*10e-6;                    % Area of slab test facility [m^2]
 
@@ -582,7 +582,7 @@ L_div = (d_p_int - d_throat_int)/(2*tand(alpha_div));
 %% Figures
 
 
-P_vect = [P_reg P1 P2 P3 P4 P5 P6 P7 P8 P9 P10 P11 P12];
+P_vect = [P_reg P1 P2 P3 P4 P5 P6 P7 P8 P9 P10 P11];
 x_reg = 0;
 x1 = 0;
 x2 = x1 + L1;
@@ -597,7 +597,7 @@ x8 = x7 + L2;
 x9 = x7 + L2;
 x10 = x7 + L2;
 x11 = x10 + L_fin;
-x = [x1 x2 x3 x4 x5 x6 x7 x8 x9 x10 x11];
+x = [x_reg x1 x2 x3 x4 x5 x6 x7 x8 x9 x10 x11];
 
 figure()
 plot(x,P_vect,'ro','linewidth',1.5)
