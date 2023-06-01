@@ -176,7 +176,7 @@ C_V = 7.1;
 P5 = P4 - (G_g*(q_N2*60)^2)/(14.42*C_V)^2;
 T5 = T4;
 
-%% After second manual ball valve (point 5) and before MFM (point 6) 
+%% After second manual ball valve (point 5) and before Venturi channel (point 6) 
 T = (floor(T5)-3):0.5:(ceil(T5));
 P = (floor(P5)-6):0.1:(ceil(P5));
 data = nistdata('N2',T,P);
@@ -325,6 +325,8 @@ M7 = fsolve(z,0.8);
 
 P7 = P_tot6_2/(1 + ((gamma6_2 - 1)/2)*M7^2)^(gamma6_2/(gamma6_2 - 1));
 T7 = T_tot/(1 + ((gamma6_2 - 1)/2)*M7^2);
+
+
 
 %% After Venturi channel (point 7) and before servo valve (point 8)
 T = (floor(T7)-9):0.5:(ceil(T7));

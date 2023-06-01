@@ -177,7 +177,7 @@ C_V = 3.8;
 P5 = P4 - (G_g*(q_N2*60)^2)/(14.42*C_V)^2;
 T5 = T4;
 
-%% After second manual ball valve (point 5) and before MFM (point 6) 
+%% After second manual ball valve (point 5) and before Venturi channel (point 6) 
 T = (floor(T5)-10):0.5:(ceil(T5));
 P = (floor(P5)-9):0.1:(ceil(P5));
 data = nistdata('N2',T,P);
