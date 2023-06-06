@@ -16,18 +16,18 @@ P3=P2-0.5*rho2*v2^2;
 clc
 clear all
 mdot=60*1e-3;
-Atube=pi*(4.5*1e-3)^2;
+Atube=pi*(8*1e-3)^2;
 T = [290:5:600];
-P = [9:0.1:12];
+P = [1:0.1:5];
 data = nistdata('N2',T,P);
 Tmix = 295;                             
-Ptank = 12;                        
+Ptank = 4;                        
 rho_N2 = data.Rho*data.Mw; 
 rho1= rho_N2(find(T==round(Tmix)),find(abs(P - round(Ptank,1)) < 0.001)); 
 v1=mdot/(Atube*rho1);
-P1=12*1e5;
+P1=4*1e5;
 P2=P1-rho1*v1^2;
-Texit=550;
+Texit=600;
 rho2= rho_N2(find(T==round(Texit)),find(abs(P - round(P2*1e-5,1)) < 0.001)); 
 v2=mdot/(Atube*rho2);
 P3=P2-0.5*rho2*v2^2;
@@ -38,11 +38,12 @@ P3=P2-0.5*rho2*v2^2;
 clc
 clear all
 mdot=60*1e-3;
+Atube=pi*(8*1e-3)^2;
 T = [290:5:600];
-P = [9:0.1:12];
+P = [1:0.1:5];
 data = nistdata('N2',T,P);
 Tmix = 295;                             
-Ptank = 12;  
+Ptank = 4;  
 K1=1;
 cp_N2 = data.Cp/data.Mw;            
 cv_N2 = data.Cv/data.Mw; 
@@ -50,9 +51,9 @@ gamma_N2 = cp_N2./cv_N2;
 gamma1= gamma_N2(find(T==round(Tmix)),find(abs(P - round(Ptank,1)) < 0.001)); 
 MW=28;
 R = 8314/28;  
-P1=12*1e5;
+P1=4*1e5;
 z1= @(x) mdot-K1*Atube*P1*sqrt((2*MW)/(R*Tmix)*(gamma1/(gamma1-1))*((x/P1)^(2/gamma1)-(x/P1)^((gamma1+1)/gamma1)));
-P2=fsolve(z1,11*1e5);
+P2=fsolve(z1,4*1e5);
 
 K2=0.5;
 Texit=550;

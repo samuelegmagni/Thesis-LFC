@@ -20,7 +20,7 @@ eps = 0.015*1e-3;                    % Absolute roughness of stainless steel [m]
 eps_rel = eps/d_p_int;               % Relative roughness of stainless steel [-]
 
 T1 = 298;                                       % Temperature downstream the pressure regulator [K]
-P_reg = 15;                                     % Pressure downstream the pressure regulator [bar]
+P_reg = 17;                                     % Pressure downstream the pressure regulator [bar]
 
 T = (floor(T1)-3):0.5:(ceil(T1));
 P = (floor(P_reg)-10):0.1:(ceil(P_reg));
@@ -451,7 +451,8 @@ Ptank=P_entering*1e5-rho_mc_entrance*v_mc_entrance^2;   %[Pa]
 
 Texit=600;
 rho_mc_exit= rho_N2(find(T==round(Texit)),find(abs(P - round(Ptank*1e-5,1)) < 0.001)); 
-v_mc_exit=m_dot_N2/(A_mc_int*rho_mc_exit);
+m_dot_new=78*1e-3;
+v_mc_exit=m_dot_new/(A_mc_int*rho_mc_exit);
 P_exit=Ptank-0.5*rho_mc_exit*v_mc_exit^2;              %[Pa]
 P12= P_exit*1e-5;                                      %[bar]
 T12=Texit;
