@@ -433,7 +433,7 @@ clear gamma11_new
 
 %% Before mixing chamber (point 11) and after mixing chamber (point 12)
 
-A_mc_int=pi*(16*1e-3)^2;
+A_mc_int=pi*(8*1e-3)^2;
 T = [290:5:600];
 P = [1:0.1:8];
 data = nistdata('N2',T,P);
@@ -460,7 +460,7 @@ gamma12 = gamma_N2(find(T==round(T12)),find(abs(P - round(P12,1)) < 0.001));
 
 v12=v_mc_exit;
 T12=Texit;
-rho12= rho_N2(find(T==round(T12)),find(abs(P - round(P12*1e-5,1)) < 0.001)); 
+rho12= rho_N2(find(T==round(T12)),find(abs(P - round(P12,1)) < 0.001)); 
 c12 = (gamma12*R*T12)^0.5;
 M12 = v12/c12; 
 
