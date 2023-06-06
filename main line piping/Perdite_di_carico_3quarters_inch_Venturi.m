@@ -19,7 +19,7 @@ eps = 0.015*1e-3;                    % Absolute roughness of stainless steel [m]
 eps_rel = eps/d_p_int;               % Relative roughness of stainless steel [-]
 
 T1 = 298;                                       % Temperature downstream the pressure regulator [K]
-P_reg = 20;                                     % Pressure downstream the pressure regulator [bar]
+P_reg =17;                                     % Pressure downstream the pressure regulator [bar]
 
 T = (floor(T1)-3):0.5:(ceil(T1));
 P = (floor(P_reg)-6):0.1:(ceil(P_reg));
@@ -244,7 +244,7 @@ end
 clear gamma6_new
 
 %% Before Venturi channel (point 6) and after Venturi channel (point 7)
-d_throat_int = 7*1e-3;
+d_throat_int = 8*1e-3;
 A_throat_int = 0.25*pi*d_throat_int^2;
 
 T_tot = T6*(1 + ((gamma6 - 1)/2)*M6^2);
@@ -557,7 +557,7 @@ end
 clear gamma11_new
 
 %% Injector pressure loss
-P12 = 1.5;
+P12 = 1;
 delta_P_inj = (P11 - P12)*1e5;
 
 N_inj = [1 2 3];
@@ -578,7 +578,7 @@ L_div = (d_p_int - d_throat_int)/(2*tand(alpha_div));
 
 %% Figures
 
-P_vect = [P_reg P1 P2 P3 P4 P5 P6 P7 P8 P9 P10 P11];
+P_vect = [P_reg P1 P2 P3 P4 P5 P6 P7 P8 P9 P10 P11 P12];
 x_reg = 0;
 x1 = 0;
 x2 = x1 + L1;
@@ -593,7 +593,8 @@ x8 = x7 + L2;
 x9 = x7 + L2;
 x10 = x7 + L2;
 x11 = x10 + L2;
-x = [x_reg x1 x2 x3 x4 x5 x6 x7 x8 x9 x10 x11];
+x12= x11 +0.05;
+x = [x_reg x1 x2 x3 x4 x5 x6 x7 x8 x9 x10 x11 x12];
 
 figure()
 plot(x,P_vect,'ro','linewidth',1.5)

@@ -20,7 +20,7 @@ eps = 0.015*1e-3;                    % Absolute roughness of stainless steel [m]
 eps_rel = eps/d_p_int;               % Relative roughness of stainless steel [-]
 
 T1 = 298;                                       % Temperature downstream the pressure regulator [K]
-P_reg = 15.3;                                     % Pressure downstream the pressure regulator [bar]
+P_reg = 16.5;                                     % Pressure downstream the pressure regulator [bar]
 
 T = (floor(T1)-3):0.5:(ceil(T1));
 P = (floor(P_reg)-10):0.1:(ceil(P_reg));
@@ -358,7 +358,7 @@ C_V = 1.68;                             % Flow coefficient check valve
 P10 = P9 - (G_g*(q_N2*60)^2)/(14.42*C_V)^2;                                                                % Pressure downstream the check valve [bar]
 T10 = T9;
 
-%% After check valve (point 10) and before injector (point 11)
+%% After check valve (point 10) and before mixing chamber (point 11)
 
 T = (floor(T10)-100):0.5:(ceil(T10));
 P = (floor(P10)-1):0.1:(ceil(P10));
@@ -431,13 +431,45 @@ end
 
 clear gamma11_new
 
+%% Before mixing chamber (point 11) and after mixing chamber (point 12)
+
+A_mc_int=pi*(16*1e-3)^2;
+T = [290:5:600];
+P = [1:0.1:8];
+data = nistdata('N2',T,P);
+
+Tmix = 295;                             
+P_entering = P11;                                      %[bar]
+
+rho_N2 = data.Rho*data.Mw; 
+cp_N2 = data.Cp/data.Mw;             
+cv_N2 = data.Cv/data.Mw;            
+gamma_N2 = cp_N2./cv_N2; 
+
+rho_mc_entrance= rho_N2(find(T==round(Tmix)),find(abs(P - round(P_entering,1)) < 0.001)); 
+v_mc_entrance=m_dot_N2/(A_mc_int*rho_mc_entrance);
+Ptank=P_entering*1e5-rho_mc_entrance*v_mc_entrance^2;   %[Pa]
+
+Texit=600;
+rho_mc_exit= rho_N2(find(T==round(Texit)),find(abs(P - round(Ptank*1e-5,1)) < 0.001)); 
+v_mc_exit=m_dot_N2/(A_mc_int*rho_mc_exit);
+P_exit=Ptank-0.5*rho_mc_exit*v_mc_exit^2;              %[Pa]
+P12= P_exit*1e-5;                                      %[bar]
+T12=Texit;
+gamma12 = gamma_N2(find(T==round(T12)),find(abs(P - round(P12,1)) < 0.001));
+
+v12=v_mc_exit;
+T12=Texit;
+rho12= rho_N2(find(T==round(T12)),find(abs(P - round(P12*1e-5,1)) < 0.001)); 
+c12 = (gamma12*R*T12)^0.5;
+M12 = v12/c12; 
 
 %% Injector pressure loss
-P12 = 1;
-delta_P_inj = (P11 - P12)*1e5;
+P13 = 1;
+delta_P_inj = (P12 - P13)*1e5;
 
-N_inj = [10 15 20 25 30 35];
-C_d = 0.65;                              % Sharp-edged orifice with diameter smaller than 2.5 mm
+N_inj = [1 2 3];
+C_d = 0.61;                              % Sharp-edged orifice with diameter smaller than 2.5 mm
 A_needed = m_dot_N2/(C_d*sqrt(2*delta_P_inj*rho11));
 A_inj = A_needed./N_inj;
 d_inj = sqrt((4*A_inj)/pi);
@@ -448,7 +480,7 @@ delta_P_tot = P_reg - P12;     % 16.081
 
 %% Figures
 
-P_vect = [P_reg P1 P2 P3 P4 P5 P6 P7 P8 P9 P10 P11 P12];
+P_vect = [P_reg P1 P2 P3 P4 P5 P6 P7 P8 P9 P10 P11 P12 ];
 x = [0 0 0.4 0.4 0.8 0.8 1.2 1.2 1.7 1.7 1.7 2.2 2.2];
 figure()
 plot(x,P_vect,'ro','linewidth',1.5)
