@@ -1,16 +1,15 @@
 clear
 clc
 
-% T_clamping = F_bolt*D_bolt*K;                        % Clamping torque of a single bolt. K is a factor 
-D_bolt = 10*1e-3;                                      % that accounts for the material of the bolt, lubricants...
+D_bolt = 10*1e-3;               % K is a factor that accounts for the material of the bolt, lubricants...
 K = 0.2;
-T_clamping = 56.3;                                     % Grade 8.8: il numero dipende dai trattamenti termici effettuati sulla vite 
+T_clamping = 56.3;              % Grade 8.8: il numero dipende dai trattamenti termici effettuati 
 F_bolt = T_clamping/(D_bolt*K);
 
 n_bolt = 8;
 F_tot_bolt = F_bolt*n_bolt
 
-d_circ = 88;                                        % O-Ring diameter [mm]
+d_circ = 113.97;                                    % O-Ring internal diameter [mm]
 l_circ = pi*d_circ;
 F_max = ((35/2.205)*9.81)/25.4;                     % Force per unit length [N/mm]
 F_OR = F_max*l_circ;
