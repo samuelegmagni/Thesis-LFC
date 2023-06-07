@@ -20,7 +20,7 @@ eps = 0.015*1e-3;                    % Absolute roughness of stainless steel [m]
 eps_rel = eps/d_p_int;               % Relative roughness of stainless steel [-]
 
 T1 = 298;                                       % Temperature downstream the pressure regulator [K]
-P_reg = 17;                                     % Pressure downstream the pressure regulator [bar]
+P_reg = 16;                                     % Pressure downstream the pressure regulator [bar]
 
 T = (floor(T1)-3):0.5:(ceil(T1));
 P = (floor(P_reg)-10):0.1:(ceil(P_reg));
@@ -433,12 +433,11 @@ clear gamma11_new
 
 %% Before mixing chamber (point 11) and after mixing chamber (point 12)
 
-T = [290:5:600];
+T = [290:1:600];
 P = [1:0.1:8];
 data = nistdata('N2',T,P);
                            
 P_entering = P11;                                      %[bar]
-
 rho_N2 = data.Rho*data.Mw; 
 cp_N2 = data.Cp/data.Mw;             
 cv_N2 = data.Cv/data.Mw;            
@@ -479,14 +478,14 @@ delta_P_tot = P_reg - P12;     % 16.081
 
 %% Figures
 
-P_vect = [P_reg P1 P2 P3 P4 P5 P6 P7 P8 P9 P10 P11 P12 ];
-x = [0 0 0.4 0.4 0.8 0.8 1.2 1.2 1.7 1.7 1.7 2.2 2.2];
+P_vect = [P_reg P1 P2 P3 P4 P5 P6 P7 P8 P9 P10 P11 P12 P13];
+x = [0 0 0.4 0.4 0.8 0.8 1.2 1.2 1.7 1.7 1.7 2.2 2.2 2.25];
 figure()
 plot(x,P_vect,'ro','linewidth',1.5)
 grid on
 xlabel('Position on the line, $L_i$ [m]')
 ylabel('Pressure, $P_i$ [bar]')
-title('Pressure evolution: 12 mm diameter pipes')
+title('Pressure evolution: 3/4 inches diameter pipes')
 
 figure()
 plot(N_inj,d_inj*1e3,'ro','linewidth',1.5)
