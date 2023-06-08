@@ -20,10 +20,10 @@ eps = 0.015*1e-3;                    % Absolute roughness of stainless steel [m]
 eps_rel = eps/d_p_int;               % Relative roughness of stainless steel [-]
 
 T1 = 298;                                       % Temperature downstream the pressure regulator [K]
-P_reg = 16;                                     % Pressure downstream the pressure regulator [bar]
+P_reg = 17;                                     % Pressure downstream the pressure regulator [bar]
 
 T = (floor(T1)-3):0.5:(ceil(T1));
-P = (floor(P_reg)-10):0.1:(ceil(P_reg));
+P = (floor(P_reg)-12):0.1:(ceil(P_reg));
 data = nistdata('N2',T,P);
 
 rho_N2 = data.Rho*data.Mw;           % Density of Nitrogen [kg/m^3] 
@@ -103,7 +103,7 @@ P3 = 1e-5*(P2*1e5 - 0.1*rho2*v2^2);                % Pressure drop related to th
 T3 = T2;
 
 T = (floor(T3)-10):0.5:(ceil(T3));
-P = (floor(P3)-9):0.1:(ceil(P3));
+P = (floor(P3)-10):0.1:(ceil(P3));
 data = nistdata('N2',T,P);
 
 rho_N2 = data.Rho*data.Mw;           % Density of Nitrogen [kg/m^3] 
@@ -332,7 +332,7 @@ T9 = T8;                                                                        
 %% Before check valve (point 9) and after check valve (point 10)
 
 T = (floor(T9)-3):0.5:(ceil(T9));
-P = (floor(P9)-2):0.1:(ceil(P9));
+P = (floor(P9)-3):0.1:(ceil(P9));
 data = nistdata('N2',T,P);
 
 rho_N2 = data.Rho*data.Mw;           % Density of Nitrogen [kg/m^3] 
@@ -361,7 +361,7 @@ T10 = T9;
 %% After check valve (point 10) and before mixing chamber (point 11)
 
 T = (floor(T10)-100):0.5:(ceil(T10));
-P = (floor(P10)-1):0.1:(ceil(P10));
+P = (floor(P10)-3):0.1:(ceil(P10));
 data = nistdata('N2',T,P);
 
 rho_N2 = data.Rho*data.Mw;           % Density of Nitrogen [kg/m^3] 
@@ -463,7 +463,7 @@ c12 = (gamma12*R*T12)^0.5;
 M12 = v12/c12; 
 
 %% Injector pressure loss
-P13 = 1;
+P13 = 1.5;
 delta_P_inj = (P12 - P13)*1e5;
 
 N_inj = [1 2 3];
@@ -472,6 +472,8 @@ A_needed = m_dot_N2/(C_d*sqrt(2*delta_P_inj*rho11));
 A_inj = A_needed./N_inj;
 d_inj = sqrt((4*A_inj)/pi);
 v_inj=C_d*sqrt(2*delta_P_inj/rho11);
+c_inj=sqrt(gamma12*R*T12);
+M13=v_inj/c_inj;
 A_slab = 30*30*10e-6;                    % Area of slab test facility [m^2]
 %% Total pressure drop
 delta_P_tot = P_reg - P12;     % 16.081
