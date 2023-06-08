@@ -3,7 +3,7 @@ clc
 
 D_bolt = 6*1e-3;          
 K = 0.2;                         % K is a factor that accounts for the material of the bolt, lubricants...
-T_clamping = 4.55;               % Grade 8.8: il numero dipende dai trattamenti termici effettuati
+T_clamping = 4.55;               % Grade 4.8: il numero dipende dai trattamenti termici effettuati
 F_bolt = T_clamping/(D_bolt*K);
 
 n_bolt = 4;
