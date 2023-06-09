@@ -103,7 +103,7 @@ P3 = 1e-5*(P2*1e5 - 0.1*rho2*v2^2);                % Pressure drop related to th
 T3 = T2;
 
 T = (floor(T3)-10):0.5:(ceil(T3));
-P = (floor(P3)-9):0.1:(ceil(P3));
+P = (floor(P3)-7):0.1:(ceil(P3));
 data = nistdata('N2',T,P);
 
 rho_N2 = data.Rho*data.Mw;           % Density of Nitrogen [kg/m^3] 
@@ -179,7 +179,7 @@ T5 = T4;
 
 %% After second manual ball valve (point 5) and before MFM (point 6) 
 T = (floor(T5)-10):0.5:(ceil(T5));
-P = (floor(P5)-9):0.1:(ceil(P5));
+P = (floor(P5)-6):0.1:(ceil(P5));
 data = nistdata('N2',T,P);
 
 rho_N2 = data.Rho*data.Mw;           % Density of Nitrogen [kg/m^3] 
