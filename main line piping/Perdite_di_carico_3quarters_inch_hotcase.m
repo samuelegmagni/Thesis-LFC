@@ -349,8 +349,8 @@ c9 = (gamma9*R*T9)^0.5;                           % Sound speed downstream the s
 M9 = v9/c9;                                       % Mach number downstream the servovalve (ball valve approx) [-]
 Re9 = (rho9*v9*d_p_int)/mu9;                      % Reynolds number downstream the servovalve (ball valve approx) [-]
 
-G_g = rho9/1000;                      % Nitrogen specific gravity [-]
-q_N2 = (m_dot_N2/rho9)*1000;           % Nitrogen volumetric flow rate [L/s]
+G_g = rho9/1000;                        % Nitrogen specific gravity [-]
+q_N2 = (m_dot_N2/rho9)*1000;            % Nitrogen volumetric flow rate [L/s]
 %q_N2_std = (P9*q_N2*T9*60)/(1*273.15); % Nitrogen volumetric flow rate at std conditions [std L/min]
 C_V = 1.68;                             % Flow coefficient check valve
 
@@ -463,7 +463,6 @@ c12 = (gamma12*R*T12)^0.5;
 M12 = v12/c12; 
 
 %% Injector pressure loss
-<<<<<<< HEAD
 
 P_tot12 = P12*(1 + 0.5*(gamma12 - 1)*M12^2)^(gamma12/(gamma12 - 1));
 T_tot12 = T12*(1 + 0.5*(gamma12 - 1)*M12^2);
@@ -492,16 +491,13 @@ clear gamma13_new
 
 
 
-=======
 P13 = 1.5;
->>>>>>> 5c3a43f17b8403e4d4eaacc9967f9c06ff75fd3e
 delta_P_inj = (P12 - P13)*1e5;
 
 z = @(x) A_int/x - (M13/M12)*sqrt( ((1 + 0.5*(gamma12 - 1)*M12^2)/(1 + 0.5*(gamma13 - 1)*M13^2))^((gamma13 + 1)/(gamma13 - 1)) );
 
 A_inj = fsolve(z,A_int/10);
 d_inj = sqrt((4*A_inj)/pi);
-<<<<<<< HEAD
 v_inj = m_dot_new/(A_inj*rho13)
 c13 = sqrt(gamma13*R*T13);
 
@@ -513,12 +509,10 @@ c13 = sqrt(gamma13*R*T13);
 % v_inj = C_d*sqrt(2*delta_P_inj/rho13);
 % A_slab = 30*30*10e-6;                    % Area of slab test facility [m^2]
 
-=======
 v_inj=C_d*sqrt(2*delta_P_inj/rho11);
 c_inj=sqrt(gamma12*R*T12);
 M13=v_inj/c_inj;
 A_slab = 30*30*10e-6;                    % Area of slab test facility [m^2]
->>>>>>> 5c3a43f17b8403e4d4eaacc9967f9c06ff75fd3e
 %% Total pressure drop
 delta_P_tot = P_reg - P12;     % 16.081
 
