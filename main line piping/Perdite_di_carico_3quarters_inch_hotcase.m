@@ -432,8 +432,9 @@ end
 clear gamma11_new
 
 %% Before mixing chamber (point 11) and after mixing chamber (point 12)
+Texit = 680; 
 
-T = [290:1:600];
+T = [290:1:ceil(Texit)];
 P = [1:0.1:8];
 data = nistdata('N2',T,P);
                            
@@ -443,36 +444,70 @@ cp_N2 = data.Cp/data.Mw;
 cv_N2 = data.Cv/data.Mw;            
 gamma_N2 = cp_N2./cv_N2; 
 
-rho_mc_entrance= rho_N2(find(T==round(T11)),find(abs(P - round(P_entering,1)) < 0.001)); 
-v_mc_entrance=m_dot_N2/(A_int*rho_mc_entrance);
-Ptank=P_entering*1e5-rho_mc_entrance*v_mc_entrance^2;   %[Pa]
+rho_mc_entrance = rho_N2(find(T==round(T11)),find(abs(P - round(P_entering,1)) < 0.001)); 
+v_mc_entrance = m_dot_N2/(A_int*rho_mc_entrance);
+Ptank = P_entering*1e5 - rho_mc_entrance*v_mc_entrance^2;   %[Pa]
 
-Texit=600;
-rho_mc_exit= rho_N2(find(T==round(Texit)),find(abs(P - round(Ptank*1e-5,1)) < 0.001)); 
-m_dot_new=78*1e-3;
-v_mc_exit=m_dot_new/(A_int*rho_mc_exit);
-P_exit=Ptank-0.5*rho_mc_exit*v_mc_exit^2;              %[Pa]
-P12= P_exit*1e-5;                                      %[bar]
-T12=Texit;
+
+rho_mc_exit = rho_N2(find(T==round(Texit)),find(abs(P - round(Ptank*1e-5,1)) < 0.001)); 
+m_dot_new = 78*1e-3;
+v_mc_exit = m_dot_new/(A_int*rho_mc_exit);
+P_exit = Ptank - 0.5*rho_mc_exit*v_mc_exit^2;              %[Pa]
+P12 = P_exit*1e-5;                                      %[bar]
+T12 = Texit;
 gamma12 = gamma_N2(find(T==round(T12)),find(abs(P - round(P12,1)) < 0.001));
 
-v12=v_mc_exit;
-T12=Texit;
-rho12= rho_N2(find(T==round(T12)),find(abs(P - round(P12,1)) < 0.001)); 
+v12 = v_mc_exit;
+rho12 = rho_N2(find(T==round(T12)),find(abs(P - round(P12,1)) < 0.001)); 
 c12 = (gamma12*R*T12)^0.5;
 M12 = v12/c12; 
 
 %% Injector pressure loss
-P13 = 1;
+
+P_tot12 = P12*(1 + 0.5*(gamma12 - 1)*M12^2)^(gamma12/(gamma12 - 1));
+T_tot12 = T12*(1 + 0.5*(gamma12 - 1)*M12^2);
+M13 = 1;
+gamma13 = gamma_N2(find(T==round(T12)),find(abs(P - round(P12,1)) < 0.001));
+iter = 0;
+err = 1;
+
+while err > 1e-3
+
+    iter = iter + 1;
+    
+    P13 = P_tot12/((1 + 0.5*(gamma13 - 1)*M13^2)^(gamma13/(gamma13 - 1)));
+    T13 = T_tot12/(1 + 0.5*(gamma13 - 1)*M13^2);
+    rho13 = rho_N2(find(T==round(T13)),find(abs(P - round(P13,1)) < 0.001));
+
+    gamma13_new = gamma_N2(find(T==round(T13)),find(abs(P - round(P13,1)) < 0.001));
+
+    err = abs(gamma13 - gamma13_new);
+
+    gamma13 = gamma13_new;
+
+end
+
+clear gamma13_new
+
+
+
 delta_P_inj = (P12 - P13)*1e5;
 
-N_inj = [1 2 3];
-C_d = 0.61;                              % Sharp-edged orifice with diameter smaller than 2.5 mm
-A_needed = m_dot_N2/(C_d*sqrt(2*delta_P_inj*rho11));
-A_inj = A_needed./N_inj;
+z = @(x) A_int/x - (M13/M12)*sqrt( ((1 + 0.5*(gamma12 - 1)*M12^2)/(1 + 0.5*(gamma13 - 1)*M13^2))^((gamma13 + 1)/(gamma13 - 1)) );
+
+A_inj = fsolve(z,A_int/10);
 d_inj = sqrt((4*A_inj)/pi);
-v_inj=C_d*sqrt(2*delta_P_inj/rho11);
-A_slab = 30*30*10e-6;                    % Area of slab test facility [m^2]
+v_inj = m_dot_new/(A_inj*rho13)
+c13 = sqrt(gamma13*R*T13);
+
+
+% N_inj = 1;
+% C_d = 0.61;                              % Sharp-edged orifice with diameter smaller than 2.5 mm
+% A_inj = m_dot_new/(C_d*sqrt(2*delta_P_inj*rho13));
+% 
+% v_inj = C_d*sqrt(2*delta_P_inj/rho13);
+% A_slab = 30*30*10e-6;                    % Area of slab test facility [m^2]
+
 %% Total pressure drop
 delta_P_tot = P_reg - P12;     % 16.081
 
