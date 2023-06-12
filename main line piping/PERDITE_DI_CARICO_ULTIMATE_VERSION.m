@@ -520,3 +520,613 @@ clear gamma13_new
 
 P14 = 1e-5*(P13*1e5 - 1.3*rho13*v13^2);
 T14 = T13;
+
+
+%% After third T-fitting and before green fitting (point 14 and 15)
+
+d14_15_ext = 19.05*1e-3;
+t14_15 = 1.5*1e-3;
+d14_15_int = d14_15_ext - 2*t14_15;
+A14_15 = pi*(d14_15_int/2)^2;
+
+eps14_15_rel = eps/d14_15_int;               % Relative roughness of stainless steel [-]
+
+
+T = (floor(T12)-10):0.5:(ceil(T12));
+P = (floor(P12)-9):0.1:(ceil(P12));
+data = nistdata('N2',T,P);
+
+rho_N2 = data.Rho*data.Mw;           % Density of Nitrogen [kg/m^3] 
+cp_N2 = data.Cp/data.Mw;             % Specific heat at constant pressure of Nitrogen [J/kgK]
+cv_N2 = data.Cv/data.Mw;             % Specific heat at constant volume of Nitrogen [J/kgK]
+gamma_N2 = cp_N2./cv_N2;             % Ratio of specific heats [-]
+mu_N2 = data.mu;                     % Viscosity of Nitrogen [Pa*s]
+
+L14_15 = 5*1e-2;
+rho14 = rho_N2(find(T==round(T14)),find(abs(P - round(P14,1)) < 0.001));     % Density downstream the manual ball valve [kg/m^3]
+gamma14 = gamma_N2(find(T==round(T14)),find(abs(P - round(P14,1)) < 0.001)); % Ratio of specific heats downstream the manual ball valve  [-]
+gamma15 = gamma_N2(find(T==round(T14)),find(abs(P - round(P14,1)) < 0.001));
+mu14 = mu_N2(find(T==round(T14)),find(abs(P - round(P14,1)) < 0.001));       % Viscosity downstream the manual ball valve [Pa*s]
+v14 = m_dot_N2/(A14_15*rho14);                     % Gas velocity downstream the manual ball valve [m/s]
+c14 = (gamma12*R*T14)^0.5;                         % Sound speed downstream the manual ball valve [m/s]
+M14 = v14/c14;                                     % Mach number downstream the manual ball valve [-]
+Re14 = (rho14*v14*d14_15_int)/mu14;                    % Reynolds number downstream the manual ball valve [-]
+
+if Re14 < 2300
+
+        lambda = 64/Re14;
+
+    else 
+
+        z = @(x) 1/sqrt(x) + 2*log10(2.51/(Re14*sqrt(x)) + eps14_15_rel/3.71);   % Colebrook-White correlation
+        lambda = fsolve(z,0.0004);
+
+end
+
+iter = 0;
+err = 1;
+
+while err > 1e-3
+
+    iter = iter + 1;
+
+    g_M14 = (1 - M14^2)/(gamma14*M14^2) + ((gamma14 + 1)/(2*gamma14))*log(((gamma14 + 1)*M14^2)/(2 + (gamma14 - 1)*M14^2) );
+    g_M15 = g_M14 - lambda*(L14_15/d14_15_int);
+
+    y = @(x) g_M15 - (1 - x^2)/(gamma15*x^2) + ((gamma15 + 1)/(2*gamma15))*log(((gamma15 + 1)*x^2)/(2 + (gamma15 - 1)*x^2) );
+    M15 = fsolve(y,0.006);
+    
+    T_star = T14/(0.5*(gamma14 + 1)/(1 + (gamma14 - 1)*0.5*M14^2));
+    T15 = T_star*(0.5*(gamma15 + 1)/(1 + (gamma15 - 1)*0.5*M15^2));
+    
+    P_star = P14/((1/M14)*sqrt(0.5*(gamma14 + 1)/(1 + (gamma14 - 1)*0.5*M14^2)));
+    P15 = P_star*((1/M15)*sqrt(0.5*(gamma15 + 1)/(1 + (gamma15 - 1)*0.5*M15^2)));
+
+    rho_star = rho14/((1/M14)*sqrt( 2*(1 + (gamma14 - 1)*0.5*M14^2)/(gamma14 + 1)));
+    rho15 = rho_star*((1/M15)*sqrt( 2*(1 + (gamma15 - 1)*0.5*M15^2)/(gamma15 + 1)));
+    
+    c15 = sqrt(gamma15*R*T15);
+    v15 = c15*M15;
+
+    gamma15_new = gamma_N2(find(T==round(T15)),find(abs(P - round(P15,1)) < 0.001));
+
+    err = abs(gamma15 - gamma15_new);
+
+    gamma15 = gamma15_new;
+
+end
+
+clear gamma15_new
+
+
+%% After green fitting ( 3/4" -> 1/2'') (point 16)
+
+P16 = 1e-5*(P15*1e5 - 0.5*rho15*v15^2);
+T16 = T15;
+
+
+%% After green T-fitting and before pink fitting (point 16 and 17)
+
+d16_17_ext = 12.07*1e-3;
+t16_17 = 1.5*1e-3;
+d16_17_int = d16_17_ext - 2*t16_17;
+A16_17 = pi*(d16_17_int/2)^2;
+
+eps16_17_rel = eps/d16_17_int;               % Relative roughness of stainless steel [-]
+
+
+T = (floor(T12)-10):0.5:(ceil(T12));
+P = (floor(P12)-9):0.1:(ceil(P12));
+data = nistdata('N2',T,P);
+
+rho_N2 = data.Rho*data.Mw;           % Density of Nitrogen [kg/m^3] 
+cp_N2 = data.Cp/data.Mw;             % Specific heat at constant pressure of Nitrogen [J/kgK]
+cv_N2 = data.Cv/data.Mw;             % Specific heat at constant volume of Nitrogen [J/kgK]
+gamma_N2 = cp_N2./cv_N2;             % Ratio of specific heats [-]
+mu_N2 = data.mu;                     % Viscosity of Nitrogen [Pa*s]
+
+L16_17 = 5*1e-2;
+rho16 = rho_N2(find(T==round(T16)),find(abs(P - round(P16,1)) < 0.001));     % Density downstream the manual ball valve [kg/m^3]
+gamma16 = gamma_N2(find(T==round(T16)),find(abs(P - round(P16,1)) < 0.001)); % Ratio of specific heats downstream the manual ball valve  [-]
+gamma17 = gamma_N2(find(T==round(T16)),find(abs(P - round(P16,1)) < 0.001));
+mu16 = mu_N2(find(T==round(T16)),find(abs(P - round(P16,1)) < 0.001));       % Viscosity downstream the manual ball valve [Pa*s]
+v16 = m_dot_N2/(A16_17*rho16);                     % Gas velocity downstream the manual ball valve [m/s]
+c16 = (gamma16*R*T16)^0.5;                         % Sound speed downstream the manual ball valve [m/s]
+M16 = v16/c16;                                     % Mach number downstream the manual ball valve [-]
+Re16 = (rho16*v16*d16_17_int)/mu16;                    % Reynolds number downstream the manual ball valve [-]
+
+if Re16 < 2300
+
+        lambda = 64/Re16;
+
+    else 
+
+        z = @(x) 1/sqrt(x) + 2*log10(2.51/(Re16*sqrt(x)) + eps16_17_rel/3.71);   % Colebrook-White correlation
+        lambda = fsolve(z,0.0004);
+
+end
+
+iter = 0;
+err = 1;
+
+while err > 1e-3
+
+    iter = iter + 1;
+
+    g_M16 = (1 - M16^2)/(gamma16*M16^2) + ((gamma16 + 1)/(2*gamma16))*log(((gamma16 + 1)*M16^2)/(2 + (gamma16 - 1)*M16^2) );
+    g_M17 = g_M16 - lambda*(L16_17/d16_17_int);
+
+    y = @(x) g_M16 - (1 - x^2)/(gamma16*x^2) + ((gamma16 + 1)/(2*gamma16))*log(((gamma16 + 1)*x^2)/(2 + (gamma16 - 1)*x^2) );
+    M17 = fsolve(y,0.006);
+    
+    T_star = T16/(0.5*(gamma16 + 1)/(1 + (gamma16 - 1)*0.5*M16^2));
+    T17 = T_star*(0.5*(gamma17 + 1)/(1 + (gamma17 - 1)*0.5*M17^2));
+    
+    P_star = P16/((1/M16)*sqrt(0.5*(gamma16 + 1)/(1 + (gamma16 - 1)*0.5*M16^2)));
+    P17 = P_star*((1/M17)*sqrt(0.5*(gamma17 + 1)/(1 + (gamma17 - 1)*0.5*M17^2)));
+
+    rho_star = rho16/((1/M16)*sqrt( 2*(1 + (gamma16 - 1)*0.5*M16^2)/(gamma16 + 1)));
+    rho17 = rho_star*((1/M17)*sqrt( 2*(1 + (gamma17 - 1)*0.5*M17^2)/(gamma17 + 1)));
+    
+    c17 = sqrt(gamma17*R*T17);
+    v17 = c17*M17;
+
+    gamma17_new = gamma_N2(find(T==round(T17)),find(abs(P - round(P17,1)) < 0.001));
+
+    err = abs(gamma17 - gamma17_new);
+
+    gamma17 = gamma17_new;
+
+end
+
+clear gamma17_new
+
+
+%% After pink fitting ( 1/2" -> 12mm) (point 18)
+
+P18= 1e-5*(P17*1e5 - 0.5*rho17*v17^2);
+T18 = T17;
+
+
+rho18 = rho_N2(find(T==round(T18)),find(abs(P - round(P18,1)) < 0.001));       % Density downstream the pipe bending after the pressure regulator [kg/m^3]
+gamma18 = gamma_N2(find(T==round(T18)),find(abs(P - round(P18,1)) < 0.001));   % Ratio of specific heats downstream the pipe bending after the pressure regulator [-]
+mu18 = mu_N2(find(T==round(T18)),find(abs(P - round(P18,1)) < 0.001));         % Viscosity downstream the pipe bending after the pressure regulator [Pa*s]
+v18 = m_dot_N2/(A17_18*rho18);                     % Gas velocity downstream the pipe bending after pressure regulator [m/s]
+c18 = (gamma18*R*T18)^0.5;                         % Sound speed downstream the pipe bending after pressure regulator [m/s]
+M18 = v18/c18;    
+
+%% Before MFM (point 18) and after MFM (point 19)
+G_g = rho18/1000;                       % Nitrogen specific gravity [-]
+q_N2 = (m_dot_N2/rho18)*1000;           % Nitrogen volumetric flow rate [L/s]
+C_V = 0.73;                             % Flow coefficient needle valve
+
+P19 = P18 - (G_g*(q_N2*60)^2)/(14.42*C_V)^2;                                            % Pressure downstream the mass flow meter (needle valve approx) [bar]
+T19 = T18;     
+
+rho19 = rho_N2(find(T==round(T19)),find(abs(P - round(P19,1)) < 0.001));       % Density downstream the pipe bending after the pressure regulator [kg/m^3]
+gamma19 = gamma_N2(find(T==round(T19)),find(abs(P - round(P19,1)) < 0.001));   % Ratio of specific heats downstream the pipe bending after the pressure regulator [-]
+mu19 = mu_N2(find(T==round(T19)),find(abs(P - round(P19,1)) < 0.001));         % Viscosity downstream the pipe bending after the pressure regulator [Pa*s]
+v19 = m_dot_N2/(A17_18*rho19);                     % Gas velocity downstream the pipe bending after pressure regulator [m/s]
+c19 = (gamma19*R*T19)^0.5;                         % Sound speed downstream the pipe bending after pressure regulator [m/s]
+M19 = v19/c19;   
+
+%% After pink fitting ( 1/2" -> 12mm) (point 20)
+
+P20= 1e-5*(P19*1e5 - 1*rho19*v19^2);
+T20 = T19;
+
+
+%% After pink fitting and before green fitting (point 20 and 21)
+
+d20_21_ext = 12.07*1e-3;
+t20_21 = 1.5*1e-3;
+d20_21_int = d20_21_ext - 2*t20_21;
+A20_21 = pi*(d20_21_int/2)^2;
+
+eps20_21_rel = eps/d20_21_int;               % Relative roughness of stainless steel [-]
+
+
+T = (floor(T12)-10):0.5:(ceil(T12));
+P = (floor(P12)-9):0.1:(ceil(P12));
+data = nistdata('N2',T,P);
+
+rho_N2 = data.Rho*data.Mw;           % Density of Nitrogen [kg/m^3] 
+cp_N2 = data.Cp/data.Mw;             % Specific heat at constant pressure of Nitrogen [J/kgK]
+cv_N2 = data.Cv/data.Mw;             % Specific heat at constant volume of Nitrogen [J/kgK]
+gamma_N2 = cp_N2./cv_N2;             % Ratio of specific heats [-]
+mu_N2 = data.mu;                     % Viscosity of Nitrogen [Pa*s]
+
+L20_21 = 5*1e-2;
+rho20 = rho_N2(find(T==round(T20)),find(abs(P - round(P20,1)) < 0.001));       % Density downstream the pipe bending after the pressure regulator [kg/m^3]
+gamma20 = gamma_N2(find(T==round(T20)),find(abs(P - round(P20,1)) < 0.001));   % Ratio of specific heats downstream the pipe bending after the pressure regulator [-]
+gamma21 = gamma_N2(find(T==round(T20)),find(abs(P - round(P20,1)) < 0.001));
+mu20 = mu_N2(find(T==round(T20)),find(abs(P - round(P20,1)) < 0.001));         % Viscosity downstream the pipe bending after the pressure regulator [Pa*s]
+v20 = m_dot_N2/(A20_21*rho20);                     % Gas velocity downstream the pipe bending after pressure regulator [m/s]
+c20 = (gamma20*R*T20)^0.5;                         % Sound speed downstream the pipe bending after pressure regulator [m/s]
+M20 = v20/c20;           
+                  
+Re20 = (rho20*v20*d20_21_int)/mu20;                    % Reynolds number downstream the manual ball valve [-]
+
+if Re20 < 2300
+
+        lambda = 64/Re20;
+
+    else 
+
+        z = @(x) 1/sqrt(x) + 2*log10(2.51/(Re20*sqrt(x)) + eps20_21_rel/3.71);   % Colebrook-White correlation
+        lambda = fsolve(z,0.0004);
+
+end
+
+iter = 0;
+err = 1;
+
+while err > 1e-3
+
+    iter = iter + 1;
+
+    g_M20 = (1 - M20^2)/(gamma20*M20^2) + ((gamma20 + 1)/(2*gamma20))*log(((gamma20 + 1)*M20^2)/(2 + (gamma20 - 1)*M20^2) );
+    g_M20 = g_M20- lambda*(L20_21/d20_21_int);
+
+    y = @(x) g_M20 - (1 - x^2)/(gamma20*x^2) + ((gamma20 + 1)/(2*gamma20))*log(((gamma20 + 1)*x^2)/(2 + (gamma20 - 1)*x^2) );
+    M21 = fsolve(y,0.006);
+    
+    T_star = T20/(0.5*(gamma20 + 1)/(1 + (gamma20 - 1)*0.5*M20^2));
+    T21= T_star*(0.5*(gamma21+ 1)/(1 + (gamma21 - 1)*0.5*M21^2));
+    
+    P_star = P20/((1/M20)*sqrt(0.5*(gamma20 + 1)/(1 + (gamma20 - 1)*0.5*M20^2)));
+    P21 = P_star*((1/M21)*sqrt(0.5*(gamma21 + 1)/(1 + (gamma21 - 1)*0.5*M21^2)));
+
+    rho_star = rho20/((1/M20)*sqrt( 2*(1 + (gamma20 - 1)*0.5*M20^2)/(gamma20 + 1)));
+    rho21 = rho_star*((1/M21)*sqrt( 2*(1 + (gamma21 - 1)*0.5*M21^2)/(gamma21 + 1)));
+    
+    c21 = sqrt(gamma21*R*T21);
+    v21 = c21*M21;
+
+    gamma21_new = gamma_N2(find(T==round(T21)),find(abs(P - round(P21,1)) < 0.001));
+
+    err = abs(gamma21- gamma21_new);
+
+    gamma21 = gamma21_new;
+
+end
+
+clear gamma21_new
+
+
+%% After green fitting ( 1/2"-> 3/4 ") (point 22)
+
+P22= 1e-5*(P21*1e5 - 1*rho21*v21^2);
+T21 = T20;
+
+
+%% After green fitting and before prenumatic valve (point 22 and 23)
+
+d22_23_ext = 19.05*1e-3;
+t22_23 = 1.5*1e-3;
+d22_23_int = d22_23_ext - 2*t22_23;
+A22_23 = pi*(d22_23_int/2)^2;
+
+eps22_23_rel = eps/d22_23_int;               % Relative roughness of stainless steel [-]
+
+
+T = (floor(T12)-10):0.5:(ceil(T12));
+P = (floor(P12)-9):0.1:(ceil(P12));
+data = nistdata('N2',T,P);
+
+rho_N2 = data.Rho*data.Mw;           % Density of Nitrogen [kg/m^3] 
+cp_N2 = data.Cp/data.Mw;             % Specific heat at constant pressure of Nitrogen [J/kgK]
+cv_N2 = data.Cv/data.Mw;             % Specific heat at constant volume of Nitrogen [J/kgK]
+gamma_N2 = cp_N2./cv_N2;             % Ratio of specific heats [-]
+mu_N2 = data.mu;                     % Viscosity of Nitrogen [Pa*s]
+
+L22_23 = 30*1e-2;
+rho22 = rho_N2(find(T==round(T22)),find(abs(P - round(P22,1)) < 0.001));       % Density downstream the pipe bending after the pressure regulator [kg/m^3]
+gamma22 = gamma_N2(find(T==round(T22)),find(abs(P - round(P22,1)) < 0.001));   % Ratio of specific heats downstream the pipe bending after the pressure regulator [-]
+gamma23 = gamma_N2(find(T==round(T22)),find(abs(P - round(P22,1)) < 0.001));
+mu22 = mu_N2(find(T==round(T22)),find(abs(P - round(P22,1)) < 0.001));         % Viscosity downstream the pipe bending after the pressure regulator [Pa*s]
+v22 = m_dot_N2/(A22_23*rho22);                     % Gas velocity downstream the pipe bending after pressure regulator [m/s]
+c22 = (gamma22*R*T22)^0.5;                         % Sound speed downstream the pipe bending after pressure regulator [m/s]
+M22 = v22/c22;           
+                  
+Re22 = (rho22*v22*d22_23_int)/mu22;                    % Reynolds number downstream the manual ball valve [-]
+
+if Re22< 2300
+
+        lambda = 64/Re22;
+
+    else 
+
+        z = @(x) 1/sqrt(x) + 2*log10(2.51/(Re22*sqrt(x)) + eps22_23_rel/3.71);   % Colebrook-White correlation
+        lambda = fsolve(z,0.0004);
+
+end
+
+iter = 0;
+err = 1;
+
+while err > 1e-3
+
+    iter = iter + 1;
+
+    g_M22 = (1 - M22^2)/(gamma22*M22^2) + ((gamma22 + 1)/(2*gamma22))*log(((gamma22 + 1)*M22^2)/(2 + (gamma22 - 1)*M22^2) );
+    g_M23 = g_M22- lambda*(L22_23/d22_23_int);
+
+    y = @(x) g_M22 - (1 - x^2)/(gamma22*x^2) + ((gamma22 + 1)/(2*gamma22))*log(((gamma22 + 1)*x^2)/(2 + (gamma22 - 1)*x^2) );
+    M23 = fsolve(y,0.006);
+    
+    T_star = T22/(0.5*(gamma22 + 1)/(1 + (gamma22 - 1)*0.5*M22^2));
+    T23= T_star*(0.5*(gamma23+ 1)/(1 + (gamma23 - 1)*0.5*M23^2));
+    
+    P_star = P22/((1/M22)*sqrt(0.5*(gamma22 + 1)/(1 + (gamma22 - 1)*0.5*M22^2)));
+    P23 = P_star*((1/M23)*sqrt(0.5*(gamma23 + 1)/(1 + (gamma23 - 1)*0.5*M23^2)));
+
+    rho_star = rho22/((1/M22)*sqrt( 2*(1 + (gamma22 - 1)*0.5*M22^2)/(gamma22 + 1)));
+    rho23 = rho_star*((1/M23)*sqrt( 2*(1 + (gamma23 - 1)*0.5*M23^2)/(gamma23 + 1)));
+    
+    c23 = sqrt(gamma23*R*T23);
+    v23 = c23*M23;
+
+    gamma23_new = gamma_N2(find(T==round(T23)),find(abs(P - round(P23,1)) < 0.001));
+
+    err = abs(gamma23- gamma23_new);
+
+    gamma23 = gamma23_new;
+
+end
+
+clear gamma23_new
+
+
+%% Before servovalve (point 23) and after servovalve (point 24)
+G_g = rho23/1000;                      % Nitrogen specific gravity [-]
+q_N2 = (m_dot_N2/rho23)*1000;           % Nitrogen volumetric flow rate [L/s]
+C_V = 3.8;                             % Flow coefficient ball valve
+
+P24 = P23 - (G_g*(q_N2*60)^2)/(14.42*C_V)^2;     % Pressure downstream the servovalve (ball valve approx) [bar]
+T24 = T23;                        % Temperature downstream the servovalve (ball valve approx) [K]
+
+%% After servovalve and before check valve (point 24 and 25)
+
+d24_25_ext = 19.05*1e-3;
+t24_25 = 1.5*1e-3;
+d24_25_int = d24_25_ext - 2*t24_25;
+A24_25 = pi*(d24_25_int/2)^2;
+
+eps24_25_rel = eps/d24_25_int;               % Relative roughness of stainless steel [-]
+
+
+T = (floor(T12)-10):0.5:(ceil(T12));
+P = (floor(P12)-9):0.1:(ceil(P12));
+data = nistdata('N2',T,P);
+
+rho_N2 = data.Rho*data.Mw;           % Density of Nitrogen [kg/m^3] 
+cp_N2 = data.Cp/data.Mw;             % Specific heat at constant pressure of Nitrogen [J/kgK]
+cv_N2 = data.Cv/data.Mw;             % Specific heat at constant volume of Nitrogen [J/kgK]
+gamma_N2 = cp_N2./cv_N2;             % Ratio of specific heats [-]
+mu_N2 = data.mu;                     % Viscosity of Nitrogen [Pa*s]
+
+L24_25 = 30*1e-2;
+rho24 = rho_N2(find(T==round(T24)),find(abs(P - round(P24,1)) < 0.001));       % Density downstream the pipe bending after the pressure regulator [kg/m^3]
+gamma24 = gamma_N2(find(T==round(T24)),find(abs(P - round(P24,1)) < 0.001));   % Ratio of specific heats downstream the pipe bending after the pressure regulator [-]
+gamma25 = gamma_N2(find(T==round(T24)),find(abs(P - round(P24,1)) < 0.001));
+mu24 = mu_N2(find(T==round(T24)),find(abs(P - round(P24,1)) < 0.001));         % Viscosity downstream the pipe bending after the pressure regulator [Pa*s]
+v24 = m_dot_N2/(A24_25*rho24);                     % Gas velocity downstream the pipe bending after pressure regulator [m/s]
+c24 = (gamma24*R*T24)^0.5;                         % Sound speed downstream the pipe bending after pressure regulator [m/s]
+M24 = v24/c24;           
+                  
+Re24 = (rho24*v24*d24_25_int)/mu24;                    % Reynolds number downstream the manual ball valve [-]
+
+if Re24< 2300
+
+        lambda = 64/Re24;
+
+    else 
+
+        z = @(x) 1/sqrt(x) + 2*log10(2.51/(Re24*sqrt(x)) + eps24_25_rel/3.71);   % Colebrook-White correlation
+        lambda = fsolve(z,0.0004);
+
+end
+
+iter = 0;
+err = 1;
+
+while err > 1e-3
+
+    iter = iter + 1;
+
+    g_M24 = (1 - M24^2)/(gamma24*M24^2) + ((gamma24 + 1)/(2*gamma24))*log(((gamma24 + 1)*M24^2)/(2 + (gamma24 - 1)*M24^2) );
+    g_M24 = g_M24- lambda*(L24_25/d24_25_int);
+
+    y = @(x) g_M24 - (1 - x^2)/(gamma24*x^2) + ((gamma24 + 1)/(2*gamma24))*log(((gamma24+ 1)*x^2)/(2 + (gamma24 - 1)*x^2) );
+    M24 = fsolve(y,0.006);
+    
+    T_star = T24/(0.5*(gamma24 + 1)/(1 + (gamma24 - 1)*0.5*M24^2));
+    T25= T_star*(0.5*(gamma25+ 1)/(1 + (gamma25 - 1)*0.5*M25^2));
+    
+    P_star = P24/((1/M24)*sqrt(0.5*(gamma24 + 1)/(1 + (gamma24 - 1)*0.5*M24^2)));
+    P25 = P_star*((1/M25)*sqrt(0.5*(gamma25 + 1)/(1 + (gamma25 - 1)*0.5*M25^2)));
+
+    rho_star = rho24/((1/M24)*sqrt( 2*(1 + (gamma24 - 1)*0.5*M24^2)/(gamma24 + 1)));
+    rho25 = rho_star*((1/M25)*sqrt( 2*(1 + (gamma25 - 1)*0.5*M25^2)/(gamma25 + 1)));
+    
+    c25 = sqrt(gamma25*R*T25);
+    v25 = c25*M25;
+
+    gamma25_new = gamma_N2(find(T==round(T25)),find(abs(P - round(P25,1)) < 0.001));
+
+    err = abs(gamma25- gamma25_new);
+
+    gamma25 = gamma25_new;
+
+end
+
+clear gamma25_new
+
+%% Before check valve (point 25) and after check valve (point 26)
+G_g = rho25/1000;                      % Nitrogen specific gravity [-]
+q_N2 = (m_dot_N2/rho25)*1000;           % Nitrogen volumetric flow rate [L/s]
+
+C_V = 1.68;                             % Flow coefficient check valve
+P26 = P25 - (G_g*(q_N2*60)^2)/(14.42*C_V)^2;         % Pressure downstream the check valve [bar]
+T26 = T25;
+
+
+%% After checkvalve and before cross fitting (point 26 and 27)
+
+d26_27_ext = 19.05*1e-3;
+t26_27 = 1.5*1e-3;
+d26_27_int = d26_27_ext - 2*t24_25;
+A26_27 = pi*(d26_27_int/2)^2;
+
+eps26_27_rel = eps/d26_27_int;               % Relative roughness of stainless steel [-]
+
+
+T = (floor(T12)-10):0.5:(ceil(T12));
+P = (floor(P12)-9):0.1:(ceil(P12));
+data = nistdata('N2',T,P);
+
+rho_N2 = data.Rho*data.Mw;           % Density of Nitrogen [kg/m^3] 
+cp_N2 = data.Cp/data.Mw;             % Specific heat at constant pressure of Nitrogen [J/kgK]
+cv_N2 = data.Cv/data.Mw;             % Specific heat at constant volume of Nitrogen [J/kgK]
+gamma_N2 = cp_N2./cv_N2;             % Ratio of specific heats [-]
+mu_N2 = data.mu;                     % Viscosity of Nitrogen [Pa*s]
+
+L26_27 = 30*1e-2;
+rho26 = rho_N2(find(T==round(T26)),find(abs(P - round(P26,1)) < 0.001));       % Density downstream the pipe bending after the pressure regulator [kg/m^3]
+gamma26 = gamma_N2(find(T==round(T26)),find(abs(P - round(P26,1)) < 0.001));   % Ratio of specific heats downstream the pipe bending after the pressure regulator [-]
+gamma27 =gamma_N2(find(T==round(T26)),find(abs(P - round(P26,1)) < 0.001));
+mu26 = mu_N2(find(T==round(T26)),find(abs(P - round(P26,1)) < 0.001));         % Viscosity downstream the pipe bending after the pressure regulator [Pa*s]
+v26 = m_dot_N2/(A26_27*rho26);                     % Gas velocity downstream the pipe bending after pressure regulator [m/s]
+c26 = (gamma26*R*T26)^0.5;                         % Sound speed downstream the pipe bending after pressure regulator [m/s]
+M26 = v26/c26;           
+                  
+Re26 = (rho26*v26*d26_27_int)/mu26;                    % Reynolds number downstream the manual ball valve [-]
+
+if Re26< 2300
+
+        lambda = 64/Re26;
+
+    else 
+
+        z = @(x) 1/sqrt(x) + 2*log10(2.51/(Re26*sqrt(x)) + eps24_25_rel/3.71);   % Colebrook-White correlation
+        lambda = fsolve(z,0.0004);
+
+end
+
+iter = 0;
+err = 1;
+
+while err > 1e-3
+
+    iter = iter + 1;
+
+    g_M26 = (1 - M26^2)/(gamma26*M26^2) + ((gamma26 + 1)/(2*gamma26))*log(((gamma26 + 1)*M26^2)/(2 + (gamma26 - 1)*M26^2) );
+    g_M27 = g_M26- lambda*(L26_27/d26_27_int);
+
+    y = @(x) g_M26 - (1 - x^2)/(gamma26*x^2) + ((gamma26 + 1)/(2*gamma26))*log(((gamma26+ 1)*x^2)/(2 + (gamma26 - 1)*x^2) );
+    M27 = fsolve(y,0.006);
+    
+    T_star = T26/(0.5*(gamma26 + 1)/(1 + (gamma26 - 1)*0.5*M26^2));
+    T27= T_star*(0.5*(gamma27+ 1)/(1 + (gamma27 - 1)*0.5*M27^2));
+    
+    P_star = P26/((1/M26)*sqrt(0.5*(gamma26 + 1)/(1 + (gamma26 - 1)*0.5*M26^2)));
+    P27 = P_star*((1/M27)*sqrt(0.5*(gamma27+ 1)/(1 + (gamma27 - 1)*0.5*M27^2)));
+
+    rho_star = rho26/((1/M26)*sqrt( 2*(1 + (gamma26 - 1)*0.5*M26^2)/(gamma26 + 1)));
+    rho27 = rho_star*((1/M26)*sqrt( 2*(1 + (gamma26 - 1)*0.5*M26^2)/(gamma26 + 1)));
+    
+    c27 = sqrt(gamma27*R*T27);
+    v27 = c27*M27;
+
+    gamma27_new = gamma_N2(find(T==round(T27)),find(abs(P - round(P27,1)) < 0.001));
+
+    err = abs(gamma27- gamma27_new);
+
+    gamma27 = gamma27_new;
+
+end
+
+clear gamma27_new
+
+%% After cross fitting (point 28)
+
+P28 = 1e-5*(P28*1e5 - 2*rho28*v28^2);
+T28 = T27;
+
+%% After cross fitting and before injector (point 28 and 29)
+
+d28_29_ext = 19.05*1e-3;
+t28_29 = 1.5*1e-3;
+d28_29_int = d28_29_ext - 2*t28_29;
+A28_29 = pi*(d28_29_int/2)^2;
+
+eps28_29_rel = eps/d28_29_int;               % Relative roughness of stainless steel [-]
+
+
+T = (floor(T12)-10):0.5:(ceil(T12));
+P = (floor(P12)-9):0.1:(ceil(P12));
+data = nistdata('N2',T,P);
+
+rho_N2 = data.Rho*data.Mw;           % Density of Nitrogen [kg/m^3] 
+cp_N2 = data.Cp/data.Mw;             % Specific heat at constant pressure of Nitrogen [J/kgK]
+cv_N2 = data.Cv/data.Mw;             % Specific heat at constant volume of Nitrogen [J/kgK]
+gamma_N2 = cp_N2./cv_N2;             % Ratio of specific heats [-]
+mu_N2 = data.mu;                     % Viscosity of Nitrogen [Pa*s]
+
+L28_29 = 30*1e-2;
+rho28 = rho_N2(find(T==round(T28)),find(abs(P - round(P28,1)) < 0.001));       % Density downstream the pipe bending after the pressure regulator [kg/m^3]
+gamma28 = gamma_N2(find(T==round(T28)),find(abs(P - round(P28,1)) < 0.001));   % Ratio of specific heats downstream the pipe bending after the pressure regulator [-]
+gamma29 =gamma_N2(find(T==round(T28)),find(abs(P - round(P28,1)) < 0.001));
+mu28 = mu_N2(find(T==round(T28)),find(abs(P - round(P28,1)) < 0.001));         % Viscosity downstream the pipe bending after the pressure regulator [Pa*s]
+v28 = m_dot_N2/(A28_29*rho28);                     % Gas velocity downstream the pipe bending after pressure regulator [m/s]
+c28 = (gamma28*R*T28)^0.5;                         % Sound speed downstream the pipe bending after pressure regulator [m/s]
+M28 = v28/c28;           
+                  
+Re28 = (rho28*v28*d28_29_int)/mu28;                    % Reynolds number downstream the manual ball valve [-]
+
+if Re28< 2300
+
+        lambda = 64/Re28;
+
+    else 
+
+        z = @(x) 1/sqrt(x) + 2*log10(2.51/(Re28*sqrt(x)) + eps28_29_rel/3.71);   % Colebrook-White correlation
+        lambda = fsolve(z,0.0004);
+
+end
+
+iter = 0;
+err = 1;
+
+while err > 1e-3
+
+    iter = iter + 1;
+
+    g_M28 = (1 - M28^2)/(gamma28*M28^2) + ((gamma28 + 1)/(2*gamma28))*log(((gamma28 + 1)*M28^2)/(2 + (gamma28 - 1)*M28^2) );
+    g_M29 = g_M28- lambda*(L28_29/d28_29_int);
+
+    y = @(x) g_M28 - (1 - x^2)/(gamma28*x^2) + ((gamma28 + 1)/(2*gamma28))*log(((gamma28+ 1)*x^2)/(2 + (gamma28 - 1)*x^2) );
+    M29 = fsolve(y,0.006);
+    
+    T_star = T28/(0.5*(gamma28 + 1)/(1 + (gamma28 - 1)*0.5*M28^2));
+    T28= T_star*(0.5*(gamma28+ 1)/(1 + (gamma28 - 1)*0.5*M28^2));
+    
+    P_star = P28/((1/M28)*sqrt(0.5*(gamma28 + 1)/(1 + (gamma28 - 1)*0.5*M28^2)));
+    P29 = P_star*((1/M29)*sqrt(0.5*(gamma29+ 1)/(1 + (gamma29 - 1)*0.5*M29^2)));
+
+    rho_star = rho28/((1/M28)*sqrt( 2*(1 + (gamma28 - 1)*0.5*M28^2)/(gamma28 + 1)));
+    rho29 = rho_star*((1/M29)*sqrt( 2*(1 + (gamma29 - 1)*0.5*M29^2)/(gamma29 + 1)));
+    
+    c29 = sqrt(gamma29*R*T29);
+    v29 = c29*M29;
+
+    gamma29_new = gamma_N2(find(T==round(T29)),find(abs(P - round(P29,1)) < 0.001));
+
+    err = abs(gamma29- gamma29_new);
+
+    gamma29 = gamma29_new;
+
+end
+
+clear gamma29_new
