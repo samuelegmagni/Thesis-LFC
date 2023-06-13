@@ -709,7 +709,7 @@ P19 = P18 - (G_g*(q_N2*60)^2)/(14.42*C_V)^2;                                    
 T19 = T18;     
 
 T = (floor(T19)-5):0.5:(ceil(T19));
-P = (floor(P19)-10):0.1:(ceil(P19));
+P = (floor(P19)-4):0.1:(ceil(P19));
 data = nistdata('N2',T,P);
 
 rho_N2 = data.Rho*data.Mw;           % Density of Nitrogen [kg/m^3] 

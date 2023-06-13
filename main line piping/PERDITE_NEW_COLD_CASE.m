@@ -14,10 +14,10 @@ set(0,'DefaultLegendFontSize',12);
 %% After pressure regulator (point 1)
 
 T1 = 298;                                       % Temperature downstream the pressure regulator [K]
-P1 =12;  
+P1 =35.7;  
 
 T = (floor(T1)-10):0.5:(ceil(T1));
-P = (floor(P1)-8):0.1:(ceil(P1));
+P = (floor(P1)-12):0.1:(ceil(P1));
 data = nistdata('N2',T,P);
 
 rho_N2 = data.Rho*data.Mw;           % Density of Nitrogen [kg/m^3] 
@@ -25,7 +25,7 @@ cp_N2 = data.Cp/data.Mw;             % Specific heat at constant pressure of Nit
 cv_N2 = data.Cv/data.Mw;             % Specific heat at constant volume of Nitrogen [J/kgK]
 gamma_N2 = cp_N2./cv_N2;             % Ratio of specific heats [-]
 mu_N2 = data.mu;                     % Viscosity of Nitrogen [Pa*s]
-m_dot_N2 = 26*1e-3;                  % Nitrogen mass flow rate [kg/s]
+m_dot_N2 = 78*1e-3;                  % Nitrogen mass flow rate [kg/s]
 R = 8314/28;                         % Specific ideal gas constant [J/kgK]
 
 d1_ext = 6.35*1e-3;                   % Pipe external diameter [m]
@@ -616,7 +616,7 @@ eps16_17_rel = eps/d16_17_int;               % Relative roughness of stainless s
 
 
 T = (floor(T12)-10):0.5:(ceil(T12));
-P = (floor(P12)-3):0.1:(ceil(P12));
+P = (floor(P12)-12):0.1:(ceil(P12));
 data = nistdata('N2',T,P);
 
 rho_N2 = data.Rho*data.Mw;           % Density of Nitrogen [kg/m^3] 
@@ -732,7 +732,7 @@ eps20_21_rel = eps/d20_21_int;               % Relative roughness of stainless s
 
 
 T = (floor(T19)-10):0.5:(ceil(T19));
-P = (floor(P19)-3):0.1:(ceil(P19));
+P = (floor(P19)-5):0.1:(ceil(P19));
 data = nistdata('N2',T,P);
 
 rho_N2 = data.Rho*data.Mw;           % Density of Nitrogen [kg/m^3] 
@@ -816,7 +816,7 @@ eps22_23_rel = eps/d22_23_int;               % Relative roughness of stainless s
 
 
 T = (floor(T21)-20):0.5:(ceil(T21));
-P = (floor(P21)-2):0.1:(ceil(P21));
+P = (floor(P21)-4):0.1:(ceil(P21));
 data = nistdata('N2',T,P);
 
 rho_N2 = data.Rho*data.Mw;           % Density of Nitrogen [kg/m^3] 
@@ -988,7 +988,7 @@ eps26_27_rel = eps/d26_27_int;               % Relative roughness of stainless s
 
 
 T = (floor(T23)-10):0.5:(ceil(T23));
-P = (floor(P23)-3):0.1:(ceil(P23));
+P = (floor(P25)-5):0.1:(ceil(P25));
 data = nistdata('N2',T,P);
 
 rho_N2 = data.Rho*data.Mw;           % Density of Nitrogen [kg/m^3] 
@@ -1070,7 +1070,7 @@ eps28_29_rel = eps/d28_29_int;               % Relative roughness of stainless s
 
 
 T = (floor(T27)-10):0.5:(ceil(T27));
-P = (floor(P27)-2):0.1:(ceil(P27));
+P = (floor(P27)-1):0.1:(ceil(P27));
 data = nistdata('N2',T,P);
 
 rho_N2 = data.Rho*data.Mw;           % Density of Nitrogen [kg/m^3] 
