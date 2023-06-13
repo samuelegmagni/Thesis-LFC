@@ -17,7 +17,7 @@ T1 = 298;                                       % Temperature downstream the pre
 P1 = 30;  
 
 T = (floor(T1)-3):0.5:(ceil(T1));
-P = (floor(P1)-12):0.1:(ceil(P1));
+P = (floor(P1)-8):0.1:(ceil(P1));
 data = nistdata('N2',T,P);
 
 rho_N2 = data.Rho*data.Mw;           % Density of Nitrogen [kg/m^3] 
@@ -42,7 +42,7 @@ c1 = (gamma1*R*T1)^0.5;                         % Sound speed downstream the pip
 M1 = v1/c1;                                     % Mach number downstream the pipe bending after pressure regulator [-]
 Re1 = (rho1*v1*d1_int)/mu1; 
 
-%% 12 mm tube between blue and green fittings (point 3)
+%% 12 mm tube between blue and green fittings (point 2 and 3)
 d2_3_ext = 12*1e-3;
 t2_3 = 1.5*1e-3;
 d2_3_int = d2_3_ext - 2*t2_3;
@@ -369,8 +369,8 @@ A10_11 = pi*(d10_11_int/2)^2;
 eps10_11_rel = eps/d10_11_int;               % Relative roughness of stainless steel [-]
 
 
-T = (floor(T10)-10):0.5:(ceil(T10));
-P = (floor(P10)-9):0.1:(ceil(P10));
+T = (floor(T10)-5):0.5:(ceil(T10));
+P = (floor(P10)-5):0.1:(ceil(P10));
 data = nistdata('N2',T,P);
 
 rho_N2 = data.Rho*data.Mw;           % Density of Nitrogen [kg/m^3] 
@@ -450,8 +450,8 @@ A12_13 = pi*(d12_13_int/2)^2;
 eps12_13_rel = eps/d12_13_int;               % Relative roughness of stainless steel [-]
 
 
-T = (floor(T12)-10):0.5:(ceil(T12));
-P = (floor(P12)-9):0.1:(ceil(P12));
+T = (floor(T12)-5):0.5:(ceil(T12));
+P = (floor(P12)-5):0.1:(ceil(P12));
 data = nistdata('N2',T,P);
 
 rho_N2 = data.Rho*data.Mw;           % Density of Nitrogen [kg/m^3] 
@@ -532,8 +532,8 @@ A14_15 = pi*(d14_15_int/2)^2;
 eps14_15_rel = eps/d14_15_int;               % Relative roughness of stainless steel [-]
 
 
-T = (floor(T12)-10):0.5:(ceil(T12));
-P = (floor(P12)-9):0.1:(ceil(P12));
+T = (floor(T14)-5):0.5:(ceil(T14));
+P = (floor(P14)-5):0.1:(ceil(P14));
 data = nistdata('N2',T,P);
 
 rho_N2 = data.Rho*data.Mw;           % Density of Nitrogen [kg/m^3] 
@@ -599,7 +599,7 @@ end
 clear gamma15_new
 
 
-%% After green fitting ( 3/4" -> 1/2'') (point 16)
+%% After green fitting (3/4" -> 1/2") (point 16)
 
 P16 = 1e-5*(P15*1e5 - 0.5*rho15*v15^2);
 T16 = T15;
@@ -615,8 +615,8 @@ A16_17 = pi*(d16_17_int/2)^2;
 eps16_17_rel = eps/d16_17_int;               % Relative roughness of stainless steel [-]
 
 
-T = (floor(T12)-10):0.5:(ceil(T12));
-P = (floor(P12)-15):0.1:(ceil(P12));
+T = (floor(T16)-5):0.5:(ceil(T16));
+P = (floor(P16)-5):0.1:(ceil(P16));
 data = nistdata('N2',T,P);
 
 rho_N2 = data.Rho*data.Mw;           % Density of Nitrogen [kg/m^3] 
@@ -684,7 +684,7 @@ clear gamma17_new
 
 %% After pink fitting ( 1/2" -> 12mm) (point 18)
 
-P18= 1e-5*(P17*1e5 - 0.5*rho17*v17^2);
+P18 = 1e-5*(P17*1e5 - 0.5*rho17*v17^2);
 T18 = T17;
 
 
@@ -708,6 +708,17 @@ C_V = 0.73;                             % Flow coefficient needle valve
 P19 = P18 - (G_g*(q_N2*60)^2)/(14.42*C_V)^2;                                            % Pressure downstream the mass flow meter (needle valve approx) [bar]
 T19 = T18;     
 
+T = (floor(T19)-5):0.5:(ceil(T19));
+P = (floor(P19)-10):0.1:(ceil(P19));
+data = nistdata('N2',T,P);
+
+rho_N2 = data.Rho*data.Mw;           % Density of Nitrogen [kg/m^3] 
+cp_N2 = data.Cp/data.Mw;             % Specific heat at constant pressure of Nitrogen [J/kgK]
+cv_N2 = data.Cv/data.Mw;             % Specific heat at constant volume of Nitrogen [J/kgK]
+gamma_N2 = cp_N2./cv_N2;             % Ratio of specific heats [-]
+mu_N2 = data.mu;                     % Viscosity of Nitrogen [Pa*s]
+
+
 rho19 = rho_N2(find(T==round(T19)),find(abs(P - round(P19,1)) < 0.001));       % Density downstream the pipe bending after the pressure regulator [kg/m^3]
 gamma19 = gamma_N2(find(T==round(T19)),find(abs(P - round(P19,1)) < 0.001));   % Ratio of specific heats downstream the pipe bending after the pressure regulator [-]
 mu19 = mu_N2(find(T==round(T19)),find(abs(P - round(P19,1)) < 0.001));         % Viscosity downstream the pipe bending after the pressure regulator [Pa*s]
@@ -717,7 +728,7 @@ M19 = v19/c19;
 
 %% After pink fitting ( 1/2" -> 12mm) (point 20)
 
-P20= 1e-5*(P19*1e5 - 1*rho19*v19^2);
+P20 = 1e-5*(P19*1e5 - 1*rho19*v19^2);
 T20 = T19;
 
 
@@ -731,8 +742,8 @@ A20_21 = pi*(d20_21_int/2)^2;
 eps20_21_rel = eps/d20_21_int;               % Relative roughness of stainless steel [-]
 
 
-T = (floor(T12)-10):0.5:(ceil(T12));
-P = (floor(P12)-9):0.1:(ceil(P12));
+T = (floor(T20)-5):0.5:(ceil(T20));
+P = (floor(P20)-5):0.1:(ceil(P20));
 data = nistdata('N2',T,P);
 
 rho_N2 = data.Rho*data.Mw;           % Density of Nitrogen [kg/m^3] 
@@ -801,7 +812,7 @@ clear gamma21_new
 
 %% After green fitting ( 1/2"-> 3/4 ") (point 22)
 
-P22= 1e-5*(P21*1e5 - 1*rho21*v21^2);
+P22 = 1e-5*(P21*1e5 - 1*rho21*v21^2);
 T22 = T21;
 
 
@@ -815,8 +826,8 @@ A22_23 = pi*(d22_23_int/2)^2;
 eps22_23_rel = eps/d22_23_int;               % Relative roughness of stainless steel [-]
 
 
-T = (floor(T12)-20):0.5:(ceil(T12));
-P = (floor(P12)-9):0.1:(ceil(P12));
+T = (floor(T22)-5):0.5:(ceil(T22));
+P = (floor(P22)-5):0.1:(ceil(P22));
 data = nistdata('N2',T,P);
 
 rho_N2 = data.Rho*data.Mw;           % Density of Nitrogen [kg/m^3] 
@@ -901,8 +912,8 @@ A24_25 = pi*(d24_25_int/2)^2;
 eps24_25_rel = eps/d24_25_int;               % Relative roughness of stainless steel [-]
 
 
-T = (floor(T12)-10):0.5:(ceil(T12));
-P = (floor(P12)-12):0.1:(ceil(P12));
+T = (floor(T24)-5):0.5:(ceil(T24));
+P = (floor(P24)-5):0.1:(ceil(P24));
 data = nistdata('N2',T,P);
 
 rho_N2 = data.Rho*data.Mw;           % Density of Nitrogen [kg/m^3] 
@@ -987,8 +998,8 @@ A26_27 = pi*(d26_27_int/2)^2;
 eps26_27_rel = eps/d26_27_int;               % Relative roughness of stainless steel [-]
 
 
-T = (floor(T12)-20):0.5:(ceil(T12));
-P = (floor(P12)-10):0.1:(ceil(P12));
+T = (floor(T26)-5):0.5:(ceil(T26));
+P = (floor(P26)-5):0.1:(ceil(P26));
 data = nistdata('N2',T,P);
 
 rho_N2 = data.Rho*data.Mw;           % Density of Nitrogen [kg/m^3] 
@@ -1057,24 +1068,24 @@ clear gamma27_new
 %% Before mixing chamber (point 27) and after mixing chamber (point 28)
 Texit = 680; 
 
-T = [290:1:ceil(Texit)];
-P = [1:0.1:8];
+rho_mc_entrance = rho_N2(find(T==round(T27)),find(abs(P - round(P27,1)) < 0.001)); 
+v_mc_entrance = m_dot_N2/(A26_27*rho_mc_entrance);
+Ptank = P27*1e5 - rho_mc_entrance*v_mc_entrance^2;   %[Pa]
+
+T = [floor(Texit):1:ceil(Texit)+5];
+P = [floor(P27)-5:0.1:ceil(P27)];
 data = nistdata('N2',T,P);
-                           
-P_entering = P27;                                      %[bar]
+                                      %[bar]
 rho_N2 = data.Rho*data.Mw; 
 cp_N2 = data.Cp/data.Mw;             
 cv_N2 = data.Cv/data.Mw;            
 gamma_N2 = cp_N2./cv_N2; 
 
-rho_mc_entrance = rho_N2(find(T==round(T27)),find(abs(P - round(P_entering,1)) < 0.001)); 
-v_mc_entrance = m_dot_N2/(A26_27*rho_mc_entrance);
-Ptank = P_entering*1e5 - rho_mc_entrance*v_mc_entrance^2;   %[Pa]
-
+m_dot_SRP = 18*1e-3;
 
 rho_mc_exit = rho_N2(find(T==round(Texit)),find(abs(P - round(Ptank*1e-5,1)) < 0.001)); 
-m_dot_new = 78*1e-3;
-v_mc_exit = m_dot_new/(A26_27*rho_mc_exit);
+m_dot_mix = m_dot_N2 + m_dot_SRP;
+v_mc_exit = m_dot_mix/(A26_27*rho_mc_exit);
 P_exit = Ptank - 0.5*rho_mc_exit*v_mc_exit^2;              %[Pa]
 P28 = P_exit*1e-5;                                      %[bar]
 T28 = Texit;
@@ -1101,8 +1112,8 @@ A29_30 = pi*(d29_30_int/2)^2;
 eps29_30_rel = eps/d29_30_int;               % Relative roughness of stainless steel [-]
 
 
-T = (floor(T12)-10):0.5:(ceil(T12));
-P = (floor(P12)-9):0.1:(ceil(P12));
+T = (floor(T29)-5):0.5:(ceil(T29));
+P = (floor(P29)-5):0.1:(ceil(P29));
 data = nistdata('N2',T,P);
 
 rho_N2 = data.Rho*data.Mw;           % Density of Nitrogen [kg/m^3] 
@@ -1166,4 +1177,14 @@ while err > 1e-3
 
 end
 
-clear gamma29_new
+clear gamma30_new
+
+%% Injector
+
+P_tot30 = P30*(1 + 0.5*(gamma30 - 1)*M30^2);
+M_throat = 1;
+
+z = @(x) x/A29_30 - (M6/M_throat)*sqrt( ((1 + 0.5*(gamma6 - 1)*M_throat^2)/(1 + 0.5*(gamma6 - 1)*M6^2))^((gamma6 + 1)/(gamma6 - 1)) );
+A_throat_int = fsolve(z,0.8)
+
+P_chamber = P_tot30/(1 + 0.5*(gamma30 - 1)*M_throat^2)
