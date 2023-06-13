@@ -225,7 +225,7 @@ if Re6 < 2300
 
     else 
 
-        z = @(x) 1/sqrt(x) + 2*log10(2.51/(Re6*sqrt(x)) + eps4_5_rel/3.71);   % Colebrook-White correlation
+        z = @(x) 1/sqrt(x) + 2*log10(2.51/(Re6*sqrt(x)) + eps6_7_rel/3.71);   % Colebrook-White correlation
         lambda = fsolve(z,0.0004);
 
 end
@@ -309,7 +309,7 @@ if Re8 < 2300
 
     else 
 
-        z = @(x) 1/sqrt(x) + 2*log10(2.51/(Re8*sqrt(x)) + eps4_5_rel/3.71);   % Colebrook-White correlation
+        z = @(x) 1/sqrt(x) + 2*log10(2.51/(Re8*sqrt(x)) + eps8_9_rel/3.71);   % Colebrook-White correlation
         lambda = fsolve(z,0.0004);
 
 end
@@ -616,7 +616,7 @@ eps16_17_rel = eps/d16_17_int;               % Relative roughness of stainless s
 
 
 T = (floor(T12)-10):0.5:(ceil(T12));
-P = (floor(P12)-9):0.1:(ceil(P12));
+P = (floor(P12)-15):0.1:(ceil(P12));
 data = nistdata('N2',T,P);
 
 rho_N2 = data.Rho*data.Mw;           % Density of Nitrogen [kg/m^3] 
@@ -691,11 +691,16 @@ T18 = T17;
 rho18 = rho_N2(find(T==round(T18)),find(abs(P - round(P18,1)) < 0.001));       % Density downstream the pipe bending after the pressure regulator [kg/m^3]
 gamma18 = gamma_N2(find(T==round(T18)),find(abs(P - round(P18,1)) < 0.001));   % Ratio of specific heats downstream the pipe bending after the pressure regulator [-]
 mu18 = mu_N2(find(T==round(T18)),find(abs(P - round(P18,1)) < 0.001));         % Viscosity downstream the pipe bending after the pressure regulator [Pa*s]
-v18 = m_dot_N2/(A17_18*rho18);                     % Gas velocity downstream the pipe bending after pressure regulator [m/s]
+v18 = m_dot_N2/(A16_17*rho18);                     % Gas velocity downstream the pipe bending after pressure regulator [m/s]
 c18 = (gamma18*R*T18)^0.5;                         % Sound speed downstream the pipe bending after pressure regulator [m/s]
 M18 = v18/c18;    
 
 %% Before MFM (point 18) and after MFM (point 19)
+d18_19_ext = 12*1e-3;
+t18_19 = 1.5*1e-3;
+d18_19_int = d18_19_ext - 2*t18_19;
+A18_19 = pi*(d18_19_int/2)^2;
+
 G_g = rho18/1000;                       % Nitrogen specific gravity [-]
 q_N2 = (m_dot_N2/rho18)*1000;           % Nitrogen volumetric flow rate [L/s]
 C_V = 0.73;                             % Flow coefficient needle valve
@@ -706,7 +711,7 @@ T19 = T18;
 rho19 = rho_N2(find(T==round(T19)),find(abs(P - round(P19,1)) < 0.001));       % Density downstream the pipe bending after the pressure regulator [kg/m^3]
 gamma19 = gamma_N2(find(T==round(T19)),find(abs(P - round(P19,1)) < 0.001));   % Ratio of specific heats downstream the pipe bending after the pressure regulator [-]
 mu19 = mu_N2(find(T==round(T19)),find(abs(P - round(P19,1)) < 0.001));         % Viscosity downstream the pipe bending after the pressure regulator [Pa*s]
-v19 = m_dot_N2/(A17_18*rho19);                     % Gas velocity downstream the pipe bending after pressure regulator [m/s]
+v19 = m_dot_N2/(A18_19*rho19);                     % Gas velocity downstream the pipe bending after pressure regulator [m/s]
 c19 = (gamma19*R*T19)^0.5;                         % Sound speed downstream the pipe bending after pressure regulator [m/s]
 M19 = v19/c19;   
 
@@ -766,9 +771,9 @@ while err > 1e-3
     iter = iter + 1;
 
     g_M20 = (1 - M20^2)/(gamma20*M20^2) + ((gamma20 + 1)/(2*gamma20))*log(((gamma20 + 1)*M20^2)/(2 + (gamma20 - 1)*M20^2) );
-    g_M20 = g_M20- lambda*(L20_21/d20_21_int);
+    g_M21 = g_M20- lambda*(L20_21/d20_21_int);
 
-    y = @(x) g_M20 - (1 - x^2)/(gamma20*x^2) + ((gamma20 + 1)/(2*gamma20))*log(((gamma20 + 1)*x^2)/(2 + (gamma20 - 1)*x^2) );
+    y = @(x) g_M21 - (1 - x^2)/(gamma21*x^2) + ((gamma21 + 1)/(2*gamma21))*log(((gamma21 + 1)*x^2)/(2 + (gamma21 - 1)*x^2) );
     M21 = fsolve(y,0.006);
     
     T_star = T20/(0.5*(gamma20 + 1)/(1 + (gamma20 - 1)*0.5*M20^2));
@@ -797,7 +802,7 @@ clear gamma21_new
 %% After green fitting ( 1/2"-> 3/4 ") (point 22)
 
 P22= 1e-5*(P21*1e5 - 1*rho21*v21^2);
-T21 = T20;
+T22 = T21;
 
 
 %% After green fitting and before prenumatic valve (point 22 and 23)
@@ -810,7 +815,7 @@ A22_23 = pi*(d22_23_int/2)^2;
 eps22_23_rel = eps/d22_23_int;               % Relative roughness of stainless steel [-]
 
 
-T = (floor(T12)-10):0.5:(ceil(T12));
+T = (floor(T12)-20):0.5:(ceil(T12));
 P = (floor(P12)-9):0.1:(ceil(P12));
 data = nistdata('N2',T,P);
 
@@ -852,7 +857,7 @@ while err > 1e-3
     g_M22 = (1 - M22^2)/(gamma22*M22^2) + ((gamma22 + 1)/(2*gamma22))*log(((gamma22 + 1)*M22^2)/(2 + (gamma22 - 1)*M22^2) );
     g_M23 = g_M22- lambda*(L22_23/d22_23_int);
 
-    y = @(x) g_M22 - (1 - x^2)/(gamma22*x^2) + ((gamma22 + 1)/(2*gamma22))*log(((gamma22 + 1)*x^2)/(2 + (gamma22 - 1)*x^2) );
+    y = @(x) g_M23 - (1 - x^2)/(gamma23*x^2) + ((gamma23 + 1)/(2*gamma23))*log(((gamma23 + 1)*x^2)/(2 + (gamma23 - 1)*x^2) );
     M23 = fsolve(y,0.006);
     
     T_star = T22/(0.5*(gamma22 + 1)/(1 + (gamma22 - 1)*0.5*M22^2));
@@ -897,7 +902,7 @@ eps24_25_rel = eps/d24_25_int;               % Relative roughness of stainless s
 
 
 T = (floor(T12)-10):0.5:(ceil(T12));
-P = (floor(P12)-9):0.1:(ceil(P12));
+P = (floor(P12)-12):0.1:(ceil(P12));
 data = nistdata('N2',T,P);
 
 rho_N2 = data.Rho*data.Mw;           % Density of Nitrogen [kg/m^3] 
@@ -936,10 +941,10 @@ while err > 1e-3
     iter = iter + 1;
 
     g_M24 = (1 - M24^2)/(gamma24*M24^2) + ((gamma24 + 1)/(2*gamma24))*log(((gamma24 + 1)*M24^2)/(2 + (gamma24 - 1)*M24^2) );
-    g_M24 = g_M24- lambda*(L24_25/d24_25_int);
+    g_M25 = g_M24- lambda*(L24_25/d24_25_int);
 
-    y = @(x) g_M24 - (1 - x^2)/(gamma24*x^2) + ((gamma24 + 1)/(2*gamma24))*log(((gamma24+ 1)*x^2)/(2 + (gamma24 - 1)*x^2) );
-    M24 = fsolve(y,0.006);
+    y = @(x) g_M25 - (1 - x^2)/(gamma25*x^2) + ((gamma25 + 1)/(2*gamma25))*log(((gamma25+ 1)*x^2)/(2 + (gamma25 - 1)*x^2) );
+    M25 = fsolve(y,0.006);
     
     T_star = T24/(0.5*(gamma24 + 1)/(1 + (gamma24 - 1)*0.5*M24^2));
     T25= T_star*(0.5*(gamma25+ 1)/(1 + (gamma25 - 1)*0.5*M25^2));
@@ -982,8 +987,8 @@ A26_27 = pi*(d26_27_int/2)^2;
 eps26_27_rel = eps/d26_27_int;               % Relative roughness of stainless steel [-]
 
 
-T = (floor(T12)-10):0.5:(ceil(T12));
-P = (floor(P12)-9):0.1:(ceil(P12));
+T = (floor(T12)-20):0.5:(ceil(T12));
+P = (floor(P12)-5):0.1:(ceil(P12));
 data = nistdata('N2',T,P);
 
 rho_N2 = data.Rho*data.Mw;           % Density of Nitrogen [kg/m^3] 
@@ -1009,7 +1014,7 @@ if Re26< 2300
 
     else 
 
-        z = @(x) 1/sqrt(x) + 2*log10(2.51/(Re26*sqrt(x)) + eps24_25_rel/3.71);   % Colebrook-White correlation
+        z = @(x) 1/sqrt(x) + 2*log10(2.51/(Re26*sqrt(x)) + eps26_27_rel/3.71);   % Colebrook-White correlation
         lambda = fsolve(z,0.0004);
 
 end
@@ -1024,7 +1029,7 @@ while err > 1e-3
     g_M26 = (1 - M26^2)/(gamma26*M26^2) + ((gamma26 + 1)/(2*gamma26))*log(((gamma26 + 1)*M26^2)/(2 + (gamma26 - 1)*M26^2) );
     g_M27 = g_M26- lambda*(L26_27/d26_27_int);
 
-    y = @(x) g_M26 - (1 - x^2)/(gamma26*x^2) + ((gamma26 + 1)/(2*gamma26))*log(((gamma26+ 1)*x^2)/(2 + (gamma26 - 1)*x^2) );
+    y = @(x) g_M27 - (1 - x^2)/(gamma27*x^2) + ((gamma27 + 1)/(2*gamma27))*log(((gamma27+ 1)*x^2)/(2 + (gamma27 - 1)*x^2) );
     M27 = fsolve(y,0.006);
     
     T_star = T26/(0.5*(gamma26 + 1)/(1 + (gamma26 - 1)*0.5*M26^2));
@@ -1034,7 +1039,7 @@ while err > 1e-3
     P27 = P_star*((1/M27)*sqrt(0.5*(gamma27+ 1)/(1 + (gamma27 - 1)*0.5*M27^2)));
 
     rho_star = rho26/((1/M26)*sqrt( 2*(1 + (gamma26 - 1)*0.5*M26^2)/(gamma26 + 1)));
-    rho27 = rho_star*((1/M26)*sqrt( 2*(1 + (gamma26 - 1)*0.5*M26^2)/(gamma26 + 1)));
+    rho27 = rho_star*((1/M27)*sqrt( 2*(1 + (gamma27 - 1)*0.5*M27^2)/(gamma27 + 1)));
     
     c27 = sqrt(gamma27*R*T27);
     v27 = c27*M27;
@@ -1051,7 +1056,7 @@ clear gamma27_new
 
 %% After cross fitting (point 28)
 
-P28 = 1e-5*(P28*1e5 - 2*rho28*v28^2);
+P28 = 1e-5*(P27*1e5 - 2*rho27*v27^2);
 T28 = T27;
 
 %% After cross fitting and before injector (point 28 and 29)
@@ -1106,11 +1111,11 @@ while err > 1e-3
     g_M28 = (1 - M28^2)/(gamma28*M28^2) + ((gamma28 + 1)/(2*gamma28))*log(((gamma28 + 1)*M28^2)/(2 + (gamma28 - 1)*M28^2) );
     g_M29 = g_M28- lambda*(L28_29/d28_29_int);
 
-    y = @(x) g_M28 - (1 - x^2)/(gamma28*x^2) + ((gamma28 + 1)/(2*gamma28))*log(((gamma28+ 1)*x^2)/(2 + (gamma28 - 1)*x^2) );
+    y = @(x) g_M29 - (1 - x^2)/(gamma29*x^2) + ((gamma29 + 1)/(2*gamma29))*log(((gamma29+ 1)*x^2)/(2 + (gamma29 - 1)*x^2) );
     M29 = fsolve(y,0.006);
     
     T_star = T28/(0.5*(gamma28 + 1)/(1 + (gamma28 - 1)*0.5*M28^2));
-    T28= T_star*(0.5*(gamma28+ 1)/(1 + (gamma28 - 1)*0.5*M28^2));
+    T29= T_star*(0.5*(gamma29+ 1)/(1 + (gamma29 - 1)*0.5*M29^2));
     
     P_star = P28/((1/M28)*sqrt(0.5*(gamma28 + 1)/(1 + (gamma28 - 1)*0.5*M28^2)));
     P29 = P_star*((1/M29)*sqrt(0.5*(gamma29+ 1)/(1 + (gamma29 - 1)*0.5*M29^2)));
@@ -1130,3 +1135,17 @@ while err > 1e-3
 end
 
 clear gamma29_new
+
+%% Injector pressure loss
+P30 = 1;
+delta_P_inj = (P29 - P30)*1e5;
+
+N_inj = [1 2 3];
+C_d = 0.61;                              % Sharp-edged orifice with diameter smaller than 2.5 mm
+A_needed = m_dot_N2/(C_d*sqrt(2*delta_P_inj*rho29));
+A_inj = A_needed./N_inj;
+d_inj = sqrt((4*A_inj)/pi);
+v_inj=C_d*sqrt(2*delta_P_inj/rho29);
+A_slab = 25*25*10e-6;                    % Area of slab test facility [m^2]
+%% Total pressure drop
+delta_P_tot = P1 - P30;     
