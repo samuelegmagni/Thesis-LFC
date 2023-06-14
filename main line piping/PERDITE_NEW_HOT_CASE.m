@@ -14,10 +14,10 @@ set(0,'DefaultLegendFontSize',12);
 %% After pressure regulator (point 1)
 
 T1 = 298;                                       % Temperature downstream the pressure regulator [K]
-P1 = 10.7;  
+P1 = 30.2;  
 
 T = (floor(T1)-3):0.5:(ceil(T1));
-P = (floor(P1)-8):0.1:(ceil(P1));
+P = (floor(P1)-13):0.1:(ceil(P1));
 data = nistdata('N2',T,P);
 
 rho_N2 = data.Rho*data.Mw;           % Density of Nitrogen [kg/m^3] 
@@ -25,7 +25,7 @@ cp_N2 = data.Cp/data.Mw;             % Specific heat at constant pressure of Nit
 cv_N2 = data.Cv/data.Mw;             % Specific heat at constant volume of Nitrogen [J/kgK]
 gamma_N2 = cp_N2./cv_N2;             % Ratio of specific heats [-]
 mu_N2 = data.mu;                     % Viscosity of Nitrogen [Pa*s]
-m_dot_N2 = 22*1e-3;                  % Nitrogen mass flow rate [kg/s]
+m_dot_N2 = 65*1e-3;                  % Nitrogen mass flow rate [kg/s]
 R = 8314/28;                         % Specific ideal gas constant [J/kgK]
 
 d1_ext = 6.35*1e-3;                   % Pipe external diameter [m]
@@ -1112,8 +1112,8 @@ A29_30 = pi*(d29_30_int/2)^2;
 eps29_30_rel = eps/d29_30_int;               % Relative roughness of stainless steel [-]
 
 
-T = (floor(T29)-10):0.5:(ceil(T29));
-P = (floor(P29)-1):0.1:(ceil(P29));
+T = (floor(T29)-50):0.5:(ceil(T29));
+P = (floor(P29)-2):0.1:(ceil(P29));
 data = nistdata('N2',T,P);
 
 rho_N2 = data.Rho*data.Mw;           % Density of Nitrogen [kg/m^3] 
@@ -1184,8 +1184,8 @@ clear gamma30_new
 P_tot30 = P30*(1 + 0.5*(gamma30 - 1)*M30^2);
 M_throat = 1;
 
-z = @(x) x/A29_30 - (M30/M_throat)*sqrt( ((1 + 0.5*(gamma30 - 1)*M_throat^2)/(1 + 0.5*(gamma30 - 1)*M6^2))^((gamma30 + 1)/(gamma30 - 1)) );
-A_throat_int = fsolve(z,0.8);
-d_inj=sqrt(4*A_throat_int/pi);
+z = @(x) x/A29_30 - (M30/M_throat)*sqrt( ((1 + 0.5*(gamma30 - 1)*M_throat^2)/(1 + 0.5*(gamma30 - 1)*M30^2))^((gamma30 + 1)/(gamma30 - 1)) );
+A_throat_int = fsolve(z,0.08);
+d_inj=sqrt(4*A_throat_int/pi)
 
 P_chamber = P_tot30/(1 + 0.5*(gamma30 - 1)*M_throat^2)
