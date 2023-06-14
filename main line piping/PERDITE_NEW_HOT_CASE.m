@@ -14,7 +14,7 @@ set(0,'DefaultLegendFontSize',12);
 %% After pressure regulator (point 1)
 
 T1 = 298;                                       % Temperature downstream the pressure regulator [K]
-P1 = 30;  
+P1 = 10.7;  
 
 T = (floor(T1)-3):0.5:(ceil(T1));
 P = (floor(P1)-8):0.1:(ceil(P1));
@@ -25,7 +25,7 @@ cp_N2 = data.Cp/data.Mw;             % Specific heat at constant pressure of Nit
 cv_N2 = data.Cv/data.Mw;             % Specific heat at constant volume of Nitrogen [J/kgK]
 gamma_N2 = cp_N2./cv_N2;             % Ratio of specific heats [-]
 mu_N2 = data.mu;                     % Viscosity of Nitrogen [Pa*s]
-m_dot_N2 = 60*1e-3;                  % Nitrogen mass flow rate [kg/s]
+m_dot_N2 = 22*1e-3;                  % Nitrogen mass flow rate [kg/s]
 R = 8314/28;                         % Specific ideal gas constant [J/kgK]
 
 d1_ext = 6.35*1e-3;                   % Pipe external diameter [m]
@@ -743,7 +743,7 @@ eps20_21_rel = eps/d20_21_int;               % Relative roughness of stainless s
 
 
 T = (floor(T20)-5):0.5:(ceil(T20));
-P = (floor(P20)-5):0.1:(ceil(P20));
+P = (floor(P20)-4):0.1:(ceil(P20));
 data = nistdata('N2',T,P);
 
 rho_N2 = data.Rho*data.Mw;           % Density of Nitrogen [kg/m^3] 
@@ -827,7 +827,7 @@ eps22_23_rel = eps/d22_23_int;               % Relative roughness of stainless s
 
 
 T = (floor(T22)-5):0.5:(ceil(T22));
-P = (floor(P22)-5):0.1:(ceil(P22));
+P = (floor(P22)-3):0.1:(ceil(P22));
 data = nistdata('N2',T,P);
 
 rho_N2 = data.Rho*data.Mw;           % Density of Nitrogen [kg/m^3] 
@@ -913,7 +913,7 @@ eps24_25_rel = eps/d24_25_int;               % Relative roughness of stainless s
 
 
 T = (floor(T24)-5):0.5:(ceil(T24));
-P = (floor(P24)-5):0.1:(ceil(P24));
+P = (floor(P24)-3):0.1:(ceil(P24));
 data = nistdata('N2',T,P);
 
 rho_N2 = data.Rho*data.Mw;           % Density of Nitrogen [kg/m^3] 
@@ -998,8 +998,8 @@ A26_27 = pi*(d26_27_int/2)^2;
 eps26_27_rel = eps/d26_27_int;               % Relative roughness of stainless steel [-]
 
 
-T = (floor(T26)-5):0.5:(ceil(T26));
-P = (floor(P26)-5):0.1:(ceil(P26));
+T = (floor(T26)-10):0.5:(ceil(T26));
+P = (floor(P26)-2):0.1:(ceil(P26));
 data = nistdata('N2',T,P);
 
 rho_N2 = data.Rho*data.Mw;           % Density of Nitrogen [kg/m^3] 
@@ -1072,8 +1072,8 @@ rho_mc_entrance = rho_N2(find(T==round(T27)),find(abs(P - round(P27,1)) < 0.001)
 v_mc_entrance = m_dot_N2/(A26_27*rho_mc_entrance);
 Ptank = P27*1e5 - rho_mc_entrance*v_mc_entrance^2;   %[Pa]
 
-T = [floor(Texit):1:ceil(Texit)+5];
-P = [floor(P27)-5:0.1:ceil(P27)];
+T = [floor(Texit)-200:1:ceil(Texit)+5];
+P = [floor(P27)-1:0.1:ceil(P27)];
 data = nistdata('N2',T,P);
                                       %[bar]
 rho_N2 = data.Rho*data.Mw; 
@@ -1089,7 +1089,7 @@ v_mc_exit = m_dot_mix/(A26_27*rho_mc_exit);
 P_exit = Ptank - 0.5*rho_mc_exit*v_mc_exit^2;              %[Pa]
 P28 = P_exit*1e-5;                                      %[bar]
 T28 = Texit;
-gamma12 = gamma_N2(find(T==round(T28)),find(abs(P - round(P28,1)) < 0.001));
+gamma28 = gamma_N2(find(T==round(T28)),find(abs(P - round(P28,1)) < 0.001));
 
 v28 = v_mc_exit;
 rho28 = rho_N2(find(T==round(T28)),find(abs(P - round(P28,1)) < 0.001)); 
@@ -1112,8 +1112,8 @@ A29_30 = pi*(d29_30_int/2)^2;
 eps29_30_rel = eps/d29_30_int;               % Relative roughness of stainless steel [-]
 
 
-T = (floor(T29)-5):0.5:(ceil(T29));
-P = (floor(P29)-5):0.1:(ceil(P29));
+T = (floor(T29)-10):0.5:(ceil(T29));
+P = (floor(P29)-1):0.1:(ceil(P29));
 data = nistdata('N2',T,P);
 
 rho_N2 = data.Rho*data.Mw;           % Density of Nitrogen [kg/m^3] 
@@ -1184,7 +1184,8 @@ clear gamma30_new
 P_tot30 = P30*(1 + 0.5*(gamma30 - 1)*M30^2);
 M_throat = 1;
 
-z = @(x) x/A29_30 - (M6/M_throat)*sqrt( ((1 + 0.5*(gamma6 - 1)*M_throat^2)/(1 + 0.5*(gamma6 - 1)*M6^2))^((gamma6 + 1)/(gamma6 - 1)) );
-A_throat_int = fsolve(z,0.8)
+z = @(x) x/A29_30 - (M30/M_throat)*sqrt( ((1 + 0.5*(gamma30 - 1)*M_throat^2)/(1 + 0.5*(gamma30 - 1)*M6^2))^((gamma30 + 1)/(gamma30 - 1)) );
+A_throat_int = fsolve(z,0.8);
+d_inj=sqrt(4*A_throat_int/pi);
 
 P_chamber = P_tot30/(1 + 0.5*(gamma30 - 1)*M_throat^2)
