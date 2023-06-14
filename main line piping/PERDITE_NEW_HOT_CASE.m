@@ -14,10 +14,10 @@ set(0,'DefaultLegendFontSize',12);
 %% After pressure regulator (point 1)
 
 T1 = 298;                                       % Temperature downstream the pressure regulator [K]
-P1 = 8.4;  
+P1 = 30.2;  
 
 T = (floor(T1)-3):0.5:(ceil(T1));
-P = (floor(P1)-4):0.1:(ceil(P1));
+P = (floor(P1)-15):0.1:(ceil(P1));
 
 data = nistdata('N2',T,P);
 
@@ -26,7 +26,7 @@ cp_N2 = data.Cp/data.Mw;             % Specific heat at constant pressure of Nit
 cv_N2 = data.Cv/data.Mw;             % Specific heat at constant volume of Nitrogen [J/kgK]
 gamma_N2 = cp_N2./cv_N2;             % Ratio of specific heats [-]
 mu_N2 = data.mu;                     % Viscosity of Nitrogen [Pa*s]
-m_dot_N2 = 17*1e-3;                  % Nitrogen mass flow rate [kg/s]
+m_dot_N2 = 65*1e-3;                  % Nitrogen mass flow rate [kg/s]
 R = 8314/28;                         % Specific ideal gas constant [J/kgK]
 
 d1_ext = 6.35*1e-3;                   % Pipe external diameter [m]
