@@ -1202,11 +1202,11 @@ clear gamma30_new
 
 %% Injector
 
-P_tot30 = P30*(1 + 0.5*(gamma30 - 1)*M30^2);
+P_tot30 = P30*((1 + 0.5*(gamma30 - 1)*M30^2)^(gamma30/(gamma30 - 1)));
 M_throat = 1;
 
 z = @(x) x/A29_30 - (M30/M_throat)*sqrt( ((1 + 0.5*(gamma30 - 1)*M_throat^2)/(1 + 0.5*(gamma30 - 1)*M30^2))^((gamma30 + 1)/(gamma30 - 1)) );
 A_throat_int = fsolve(z,0.08);
-d_inj=sqrt(4*A_throat_int/pi);
+d_inj = sqrt(4*A_throat_int/pi);
 
-P_chamber = P_tot30/(1 + 0.5*(gamma30 - 1)*M_throat^2)
+P_chamber = P_tot30/((1 + 0.5*(gamma30 - 1)*M_throat^2)^(gamma30/(gamma30 - 1)))
