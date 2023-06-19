@@ -16,15 +16,29 @@ set(0,'DefaultLegendFontSize',12);
 T1 = 298;                                       % Temperature downstream the pressure regulator [K]
 P1 = 35.7;  
 
-T = (floor(T1)-10):0.5:(ceil(T1));
-P = (floor(P1)-10):0.1:(ceil(P1));
-data = nistdata('N2',T,P);
+load('nitrogenThermoPhysicalProp.mat')
 
-rho_N2 = data.Rho*data.Mw;           % Density of Nitrogen [kg/m^3] 
-cp_N2 = data.Cp/data.Mw;             % Specific heat at constant pressure of Nitrogen [J/kgK]
-cv_N2 = data.Cv/data.Mw;             % Specific heat at constant volume of Nitrogen [J/kgK]
+rho_N2 = rho;           % Density of Nitrogen [kg/m^3] 
+cp_N2 = cp;             % Specific heat at constant pressure of Nitrogen [J/kgK]
+cv_N2 = cv;             % Specific heat at constant volume of Nitrogen [J/kgK]
 gamma_N2 = cp_N2./cv_N2;             % Ratio of specific heats [-]
-mu_N2 = data.mu;                     % Viscosity of Nitrogen [Pa*s]
+mu_N2 = mu;                     % Viscosity of Nitrogen [Pa*s]
+
+clear C; clear cp; clear Cp; clear cv; clear Cv; clear h; clear H; clear JT;
+clear k; clear mu; clear Mw; clear omega; clear P; clear pc; clear rho;
+clear Rho; clear s; clear S; clear species; clear T; clear Tc; clear u;
+clear U; clear V
+
+% T = (floor(T1)-10):0.5:(ceil(T1));
+% P = (floor(P1)-10):0.1:(ceil(P1));
+% data = nistdata('N2',T,P);
+% 
+% rho_N2 = data.Rho*data.Mw;           % Density of Nitrogen [kg/m^3] 
+% cp_N2 = data.Cp/data.Mw;             % Specific heat at constant pressure of Nitrogen [J/kgK]
+% cv_N2 = data.Cv/data.Mw;             % Specific heat at constant volume of Nitrogen [J/kgK]
+% gamma_N2 = cp_N2./cv_N2;             % Ratio of specific heats [-]
+% mu_N2 = data.mu;                     % Viscosity of Nitrogen [Pa*s]
+
 m_dot_N2 = 78*1e-3;                  % Nitrogen mass flow rate [kg/s]
 R = 8314/28;                         % Specific ideal gas constant [J/kgK]
 
@@ -197,16 +211,6 @@ eps6_7_rel = eps/d6_7_int;               % Relative roughness of stainless steel
 
 T6 = T5;
 
-T = (floor(T6)-10):0.5:(ceil(T6));
-P = (floor(P6)-6):0.1:(ceil(P6));
-data = nistdata('N2',T,P);
-
-rho_N2 = data.Rho*data.Mw;           % Density of Nitrogen [kg/m^3] 
-cp_N2 = data.Cp/data.Mw;             % Specific heat at constant pressure of Nitrogen [J/kgK]
-cv_N2 = data.Cv/data.Mw;             % Specific heat at constant volume of Nitrogen [J/kgK]
-gamma_N2 = cp_N2./cv_N2;             % Ratio of specific heats [-]
-mu_N2 = data.mu; 
-
 L6_7 = 5*1e-2;
 gamma6 = gamma_N2(find(T==round(T6)),find(abs(P - round(P6,1)) < 0.001));   % Ratio of specific heats downstream the pipe bending after the pressure regulator [-]
 gamma7 = gamma_N2(find(T==round(T6)),find(abs(P - round(P6,1)) < 0.001));   % Ratio of specific heats downstream the pipe bending after the pressure regulator [-]
@@ -280,16 +284,6 @@ eps = 0.015*1e-3;                    % Absolute roughness of stainless steel [m]
 eps8_9_rel = eps/d8_9_int;               % Relative roughness of stainless steel [-]
 
 T8 = T7;
-
-T = (floor(T8)-3):0.5:(ceil(T8));
-P = (floor(P8)-5):0.1:(ceil(P8));
-data = nistdata('N2',T,P);
-
-rho_N2 = data.Rho*data.Mw;           % Density of Nitrogen [kg/m^3] 
-cp_N2 = data.Cp/data.Mw;             % Specific heat at constant pressure of Nitrogen [J/kgK]
-cv_N2 = data.Cv/data.Mw;             % Specific heat at constant volume of Nitrogen [J/kgK]
-gamma_N2 = cp_N2./cv_N2;             % Ratio of specific heats [-]
-mu_N2 = data.mu; 
 
 L8_9 = 5*1e-2;
 gamma8 = gamma_N2(find(T==round(T8)),find(abs(P - round(P8,1)) < 0.001));   % Ratio of specific heats downstream the pipe bending after the pressure regulator [-]
@@ -368,17 +362,6 @@ A10_11 = pi*(d10_11_int/2)^2;
 
 eps10_11_rel = eps/d10_11_int;               % Relative roughness of stainless steel [-]
 
-
-T = (floor(T10)-10):0.5:(ceil(T10));
-P = (floor(P10)-5):0.1:(ceil(P10));
-data = nistdata('N2',T,P);
-
-rho_N2 = data.Rho*data.Mw;           % Density of Nitrogen [kg/m^3] 
-cp_N2 = data.Cp/data.Mw;             % Specific heat at constant pressure of Nitrogen [J/kgK]
-cv_N2 = data.Cv/data.Mw;             % Specific heat at constant volume of Nitrogen [J/kgK]
-gamma_N2 = cp_N2./cv_N2;             % Ratio of specific heats [-]
-mu_N2 = data.mu;                     % Viscosity of Nitrogen [Pa*s]
-
 L10_11 = 5*1e-2;
 rho10 = rho_N2(find(T==round(T10)),find(abs(P - round(P10,1)) < 0.001));     % Density downstream the manual ball valve [kg/m^3]
 gamma10 = gamma_N2(find(T==round(T10)),find(abs(P - round(P10,1)) < 0.001)); % Ratio of specific heats downstream the manual ball valve  [-]
@@ -448,17 +431,6 @@ d12_13_int = d12_13_ext - 2*t12_13;
 A12_13 = pi*(d12_13_int/2)^2;
 
 eps12_13_rel = eps/d12_13_int;               % Relative roughness of stainless steel [-]
-
-
-T = (floor(T12)-10):0.5:(ceil(T12));
-P = (floor(P12)-5):0.1:(ceil(P12));
-data = nistdata('N2',T,P);
-
-rho_N2 = data.Rho*data.Mw;           % Density of Nitrogen [kg/m^3] 
-cp_N2 = data.Cp/data.Mw;             % Specific heat at constant pressure of Nitrogen [J/kgK]
-cv_N2 = data.Cv/data.Mw;             % Specific heat at constant volume of Nitrogen [J/kgK]
-gamma_N2 = cp_N2./cv_N2;             % Ratio of specific heats [-]
-mu_N2 = data.mu;                     % Viscosity of Nitrogen [Pa*s]
 
 L12_13 = 5*1e-2;
 rho12 = rho_N2(find(T==round(T12)),find(abs(P - round(P12,1)) < 0.001));     % Density downstream the manual ball valve [kg/m^3]
@@ -531,17 +503,6 @@ A14_15 = pi*(d14_15_int/2)^2;
 
 eps14_15_rel = eps/d14_15_int;               % Relative roughness of stainless steel [-]
 
-
-T = (floor(T12)-10):0.5:(ceil(T12));
-P = (floor(P12)-4):0.1:(ceil(P12));
-data = nistdata('N2',T,P);
-
-rho_N2 = data.Rho*data.Mw;           % Density of Nitrogen [kg/m^3] 
-cp_N2 = data.Cp/data.Mw;             % Specific heat at constant pressure of Nitrogen [J/kgK]
-cv_N2 = data.Cv/data.Mw;             % Specific heat at constant volume of Nitrogen [J/kgK]
-gamma_N2 = cp_N2./cv_N2;             % Ratio of specific heats [-]
-mu_N2 = data.mu;                     % Viscosity of Nitrogen [Pa*s]
-
 L14_15 = 5*1e-2;
 rho14 = rho_N2(find(T==round(T14)),find(abs(P - round(P14,1)) < 0.001));     % Density downstream the manual ball valve [kg/m^3]
 gamma14 = gamma_N2(find(T==round(T14)),find(abs(P - round(P14,1)) < 0.001)); % Ratio of specific heats downstream the manual ball valve  [-]
@@ -613,17 +574,6 @@ d16_17_int = d16_17_ext - 2*t16_17;
 A16_17 = pi*(d16_17_int/2)^2;
 
 eps16_17_rel = eps/d16_17_int;               % Relative roughness of stainless steel [-]
-
-
-T = (floor(T16)-20):0.5:(ceil(T16));
-P = (floor(P16)-10):0.1:(ceil(P16));
-data = nistdata('N2',T,P);
-
-rho_N2 = data.Rho*data.Mw;           % Density of Nitrogen [kg/m^3] 
-cp_N2 = data.Cp/data.Mw;             % Specific heat at constant pressure of Nitrogen [J/kgK]
-cv_N2 = data.Cv/data.Mw;             % Specific heat at constant volume of Nitrogen [J/kgK]
-gamma_N2 = cp_N2./cv_N2;             % Ratio of specific heats [-]
-mu_N2 = data.mu;                     % Viscosity of Nitrogen [Pa*s]
 
 L16_17 = 5*1e-2;
 rho16 = rho_N2(find(T==round(T16)),find(abs(P - round(P16,1)) < 0.001));     % Density downstream the manual ball valve [kg/m^3]
@@ -730,17 +680,6 @@ A20_21 = pi*(d20_21_int/2)^2;
 
 eps20_21_rel = eps/d20_21_int;               % Relative roughness of stainless steel [-]
 
-
-T = (floor(T19)-10):0.5:(ceil(T19));
-P = (floor(P19)-3):0.1:(ceil(P19));
-data = nistdata('N2',T,P);
-
-rho_N2 = data.Rho*data.Mw;           % Density of Nitrogen [kg/m^3] 
-cp_N2 = data.Cp/data.Mw;             % Specific heat at constant pressure of Nitrogen [J/kgK]
-cv_N2 = data.Cv/data.Mw;             % Specific heat at constant volume of Nitrogen [J/kgK]
-gamma_N2 = cp_N2./cv_N2;             % Ratio of specific heats [-]
-mu_N2 = data.mu;                     % Viscosity of Nitrogen [Pa*s]
-
 L20_21 = 5*1e-2;
 rho20 = rho_N2(find(T==round(T20)),find(abs(P - round(P20,1)) < 0.001));       % Density downstream the pipe bending after the pressure regulator [kg/m^3]
 gamma20 = gamma_N2(find(T==round(T20)),find(abs(P - round(P20,1)) < 0.001));   % Ratio of specific heats downstream the pipe bending after the pressure regulator [-]
@@ -813,17 +752,6 @@ d22_23_int = d22_23_ext - 2*t22_23;
 A22_23 = pi*(d22_23_int/2)^2;
 
 eps22_23_rel = eps/d22_23_int;               % Relative roughness of stainless steel [-]
-
-
-T = (floor(T21)-20):0.5:(ceil(T21));
-P = (floor(P21)-3):0.1:(ceil(P21));
-data = nistdata('N2',T,P);
-
-rho_N2 = data.Rho*data.Mw;           % Density of Nitrogen [kg/m^3] 
-cp_N2 = data.Cp/data.Mw;             % Specific heat at constant pressure of Nitrogen [J/kgK]
-cv_N2 = data.Cv/data.Mw;             % Specific heat at constant volume of Nitrogen [J/kgK]
-gamma_N2 = cp_N2./cv_N2;             % Ratio of specific heats [-]
-mu_N2 = data.mu;                     % Viscosity of Nitrogen [Pa*s]
 
 L22_23 = 30*1e-2;
 rho22 = rho_N2(find(T==round(T22)),find(abs(P - round(P22,1)) < 0.001));       % Density downstream the pipe bending after the pressure regulator [kg/m^3]
@@ -900,17 +828,6 @@ A24_25 = pi*(d24_25_int/2)^2;
 
 eps24_25_rel = eps/d24_25_int;               % Relative roughness of stainless steel [-]
 
-
-T = (floor(T23)-10):0.5:(ceil(T23));
-P = (floor(P23)-3):0.1:(ceil(P23));
-data = nistdata('N2',T,P);
-
-rho_N2 = data.Rho*data.Mw;           % Density of Nitrogen [kg/m^3] 
-cp_N2 = data.Cp/data.Mw;             % Specific heat at constant pressure of Nitrogen [J/kgK]
-cv_N2 = data.Cv/data.Mw;             % Specific heat at constant volume of Nitrogen [J/kgK]
-gamma_N2 = cp_N2./cv_N2;             % Ratio of specific heats [-]
-mu_N2 = data.mu;                     % Viscosity of Nitrogen [Pa*s]
-
 L24_25 = 30*1e-2;
 rho24 = rho_N2(find(T==round(T24)),find(abs(P - round(P24,1)) < 0.001));       % Density downstream the pipe bending after the pressure regulator [kg/m^3]
 gamma24 = gamma_N2(find(T==round(T24)),find(abs(P - round(P24,1)) < 0.001));   % Ratio of specific heats downstream the pipe bending after the pressure regulator [-]
@@ -986,17 +903,6 @@ A26_27 = pi*(d26_27_int/2)^2;
 
 eps26_27_rel = eps/d26_27_int;               % Relative roughness of stainless steel [-]
 
-
-T = (floor(T23)-10):0.5:(ceil(T23));
-P = (floor(P25)-4):0.1:(ceil(P25));
-data = nistdata('N2',T,P);
-
-rho_N2 = data.Rho*data.Mw;           % Density of Nitrogen [kg/m^3] 
-cp_N2 = data.Cp/data.Mw;             % Specific heat at constant pressure of Nitrogen [J/kgK]
-cv_N2 = data.Cv/data.Mw;             % Specific heat at constant volume of Nitrogen [J/kgK]
-gamma_N2 = cp_N2./cv_N2;             % Ratio of specific heats [-]
-mu_N2 = data.mu;                     % Viscosity of Nitrogen [Pa*s]
-
 L26_27 = 30*1e-2;
 rho26 = rho_N2(find(T==round(T26)),find(abs(P - round(P26,1)) < 0.001));       % Density downstream the pipe bending after the pressure regulator [kg/m^3]
 gamma26 = gamma_N2(find(T==round(T26)),find(abs(P - round(P26,1)) < 0.001));   % Ratio of specific heats downstream the pipe bending after the pressure regulator [-]
@@ -1068,17 +974,6 @@ A28_29 = pi*(d28_29_int/2)^2;
 
 eps28_29_rel = eps/d28_29_int;               % Relative roughness of stainless steel [-]
 
-
-T = (floor(T27)-10):0.5:(ceil(T27));
-P = (floor(P27)-1):0.1:(ceil(P27));
-data = nistdata('N2',T,P);
-
-rho_N2 = data.Rho*data.Mw;           % Density of Nitrogen [kg/m^3] 
-cp_N2 = data.Cp/data.Mw;             % Specific heat at constant pressure of Nitrogen [J/kgK]
-cv_N2 = data.Cv/data.Mw;             % Specific heat at constant volume of Nitrogen [J/kgK]
-gamma_N2 = cp_N2./cv_N2;             % Ratio of specific heats [-]
-mu_N2 = data.mu;                     % Viscosity of Nitrogen [Pa*s]
-
 L28_29 = 30*1e-2;
 rho28 = rho_N2(find(T==round(T28)),find(abs(P - round(P28,1)) < 0.001));       % Density downstream the pipe bending after the pressure regulator [kg/m^3]
 gamma28 = gamma_N2(find(T==round(T28)),find(abs(P - round(P28,1)) < 0.001));   % Ratio of specific heats downstream the pipe bending after the pressure regulator [-]
@@ -1146,7 +1041,8 @@ C_d = 0.61;                              % Sharp-edged orifice with diameter sma
 A_needed = m_dot_N2/(C_d*sqrt(2*delta_P_inj*rho29));
 A_inj = A_needed./N_inj;
 d_inj = sqrt((4*A_inj)/pi);
-v_inj=C_d*sqrt(2*delta_P_inj/rho29);
+v_inj = C_d*sqrt(2*delta_P_inj/rho29);
 A_slab = 25*25*10e-6;                    % Area of slab test facility [m^2]
+
 %% Total pressure drop
 delta_P_tot = P1 - P30;     
