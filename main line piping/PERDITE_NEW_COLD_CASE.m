@@ -1,7 +1,20 @@
+%% Pressure drops in N2 line with 3/4 inch diameter tubes
+
+clc
+clear
+
+
+set(0,'DefaultTextFontSize',12);              % Settings for the plot
+set(0,'DefaultAxesFontSize',12);
+set(0,'DefaultLegendInterpreter','Latex');
+set(groot,'DefaultAxesTickLabelInterpreter','Latex');
+set(0,'DefaultTextInterpreter','Latex');
+set(0,'DefaultLegendFontSize',12);
+
 %% After pressure regulator (point 1)
 
 T1 = 298;                                       % Temperature downstream the pressure regulator [K]
-P1 = 30.2;  
+P1 = 9.8;  
 
 % T = (floor(T1)-3):0.5:(ceil(T1));
 % P = (floor(P1)-15):0.1:(ceil(P1));
@@ -23,7 +36,7 @@ clear k; clear mu; clear Mw; clear omega; clear pc; clear rho;
 clear Rho; clear s; clear S; clear species; clear Tc; clear u;
 clear U; clear V
 
-m_dot_N2 = 65*1e-3;                  % Nitrogen mass flow rate [kg/s]
+m_dot_N2 = 20*1e-3;                  % Nitrogen mass flow rate [kg/s]
 R_N2 = 8314/28;                         % Specific ideal gas constant [J/kgK]
 
 d1_ext = 6.35*1e-3;                   % Pipe external diameter [m]
@@ -1097,7 +1110,7 @@ gamma28 = gamma_N2(find(abs(T - round(T28,1))==min(abs(T - round(T28,1)))) ,find
 gamma29 = gamma_N2(find(abs(T - round(T28,1))==min(abs(T - round(T28,1)))) ,find( abs(P - round(P28,1))==min(abs(P - round(P28,1)))) );
 mu28 = mu_N2(find(abs(T - round(T28,1))==min(abs(T - round(T28,1)))) ,find( abs(P - round(P28,1))==min(abs(P - round(P28,1)))) );         % Viscosity downstream the pipe bending after the pressure regulator [Pa*s]
 v28 = m_dot_N2/(A28_29*rho28);                     % Gas velocity downstream the pipe bending after pressure regulator [m/s]
-c28 = (gamma28*R*T28)^0.5;                         % Sound speed downstream the pipe bending after pressure regulator [m/s]
+c28 = (gamma28*R_N2*T28)^0.5;                         % Sound speed downstream the pipe bending after pressure regulator [m/s]
 M28 = v28/c28;           
                   
 Re28 = (rho28*v28*d28_29_int)/mu28;                    % Reynolds number downstream the manual ball valve [-]
@@ -1135,12 +1148,12 @@ while err > 1e-3
     rho_star = rho28/((1/M28)*sqrt( 2*(1 + (gamma28 - 1)*0.5*M28^2)/(gamma28 + 1)));
     rho29 = rho_star*((1/M29)*sqrt( 2*(1 + (gamma29 - 1)*0.5*M29^2)/(gamma29 + 1)));
     
-    c29 = sqrt(gamma29*R*T29);
+    c29 = sqrt(gamma29*R_N2*T29);
     v29 = c29*M29;
 
     gamma29_new = gamma_N2(find(abs(T - round(T29,1))==min(abs(T - round(T29,1)))) ,find( abs(P - round(P29,1))==min(abs(P - round(P29,1)))) );
 
-    err = abs(gamma29- gamma29_new);
+    err = abs(gamma29 - gamma29_new);
 
     gamma29 = gamma29_new;
 
@@ -1150,12 +1163,12 @@ clear gamma29_new
 
 %% Injector
 
-P_tot30 = P30*((1 + 0.5*(gamma30 - 1)*M30^2)^(gamma30/(gamma30 - 1)));
+P_tot29 = P29*((1 + 0.5*(gamma29 - 1)*M29^2)^(gamma29/(gamma29 - 1)));
 M_throat = 1;
 
-z = @(x) x/A29_30 - (M30/M_throat)*sqrt( ((1 + 0.5*(gamma30 - 1)*M_throat^2)/(1 + 0.5*(gamma30 - 1)*M30^2))^((gamma30 + 1)/(gamma30 - 1)) );
+z = @(x) x/A28_29 - (M29/M_throat)*sqrt( ((1 + 0.5*(gamma29 - 1)*M_throat^2)/(1 + 0.5*(gamma29 - 1)*M29^2))^((gamma29 + 1)/(gamma29 - 1)) );
 A_throat_int = fsolve(z,0.08);
-d_inj = sqrt(4*A_throat_int/pi);
+d_inj = sqrt(4*A_throat_int/pi)*1000  % [mm]
 
-P_chamber = P_tot30/((1 + 0.5*(gamma30 - 1)*M_throat^2)^(gamma30/(gamma30 - 1)))
+P_chamber = P_tot29/((1 + 0.5*(gamma29 - 1)*M_throat^2)^(gamma29/(gamma29 - 1)))
  

@@ -14,7 +14,7 @@ set(0,'DefaultLegendFontSize',12);
 %% After pressure regulator (point 1)
 
 T1 = 298;                                       % Temperature downstream the pressure regulator [K]
-P1 = 30.2;  
+P1 = 29.8;  
 
 % T = (floor(T1)-3):0.5:(ceil(T1));
 % P = (floor(P1)-15):0.1:(ceil(P1));
@@ -1198,7 +1198,7 @@ while err > 1e-3
     rho_star = rho29/((1/M29)*sqrt( 2*(1 + (gamma29 - 1)*0.5*M29^2)/(gamma29 + 1)));
     rho30 = rho_star*((1/M30)*sqrt( 2*(1 + (gamma30 - 1)*0.5*M30^2)/(gamma30 + 1)));
     
-    c30 = sqrt(gamma30*R_N2*T30);
+    c30 = sqrt(gamma30*R_mix*T30);
     v30 = c30*M30;
 
     gamma30_N2_new = gamma_N2(find(abs(T - round(T30,1))==min(abs(T - round(T30,1)))) ,find( abs(P - round(P30,1))==min(abs(P - round(P30,1)))) );
@@ -1220,6 +1220,6 @@ M_throat = 1;
 
 z = @(x) x/A29_30 - (M30/M_throat)*sqrt( ((1 + 0.5*(gamma30 - 1)*M_throat^2)/(1 + 0.5*(gamma30 - 1)*M30^2))^((gamma30 + 1)/(gamma30 - 1)) );
 A_throat_int = fsolve(z,0.08);
-d_inj = sqrt(4*A_throat_int/pi);
+d_inj = sqrt(4*A_throat_int/pi)*1000     % [mm]
 
 P_chamber = P_tot30/((1 + 0.5*(gamma30 - 1)*M_throat^2)^(gamma30/(gamma30 - 1)))
