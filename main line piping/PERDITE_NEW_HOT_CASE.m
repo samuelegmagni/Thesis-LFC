@@ -412,10 +412,10 @@ eps10_11_rel = eps/d10_11_int;               % Relative roughness of stainless s
 % mu_N2 = data.mu;                     % Viscosity of Nitrogen [Pa*s]
 
 L10_11 = 5*1e-2;
-rho10 = rho_N2(find(T==round(T10)),find(abs(P - round(P10,1)) < 0.001));     % Density downstream the manual ball valve [kg/m^3]
-gamma10 = gamma_N2(find(T==round(T10)),find(abs(P - round(P10,1)) < 0.001)); % Ratio of specific heats downstream the manual ball valve  [-]
-gamma11 = gamma_N2(find(T==round(T10)),find(abs(P - round(P10,1)) < 0.001));
-mu10 = mu_N2(find(T==round(T10)),find(abs(P - round(P10,1)) < 0.001));       % Viscosity downstream the manual ball valve [Pa*s]
+rho10 = rho_N2( find(abs(T - round(T10,1))==min(abs(T - round(T10,1)))) ,find( abs(P - round(P10,1))==min(abs(P - round(P10,1)))) );     % Density downstream the manual ball valve [kg/m^3]
+gamma10 = gamma_N2( find(abs(T - round(T10,1))==min(abs(T - round(T10,1)))) ,find( abs(P - round(P10,1))==min(abs(P - round(P10,1)))) ); % Ratio of specific heats downstream the manual ball valve  [-]
+gamma11 = gamma_N2( find(abs(T - round(T10,1))==min(abs(T - round(T10,1)))) ,find( abs(P - round(P10,1))==min(abs(P - round(P10,1)))) );
+mu10 = mu_N2( find(abs(T - round(T10,1))==min(abs(T - round(T10,1)))) ,find( abs(P - round(P10,1))==min(abs(P - round(P10,1)))) );       % Viscosity downstream the manual ball valve [Pa*s]
 v10 = m_dot_N2/(A10_11*rho10);                     % Gas velocity downstream the manual ball valve [m/s]
 c10 = (gamma10*R_N2*T10)^0.5;                         % Sound speed downstream the manual ball valve [m/s]
 M10 = v10/c10;                                     % Mach number downstream the manual ball valve [-]
@@ -457,7 +457,7 @@ while err > 1e-3
     c11 = sqrt(gamma11*R_N2*T11);
     v11 = c11*M11;
 
-    gamma11_new = gamma_N2(find(T==round(T11)),find(abs(P - round(P11,1)) < 0.001));
+    gamma11_new = gamma_N2( find(abs(T - round(T11,1))==min(abs(T - round(T11,1)))) ,find( abs(P - round(P11,1))==min(abs(P - round(P11,1)))) );
 
     err = abs(gamma11 - gamma11_new);
 
@@ -493,10 +493,10 @@ eps12_13_rel = eps/d12_13_int;               % Relative roughness of stainless s
 % mu_N2 = data.mu;                     % Viscosity of Nitrogen [Pa*s]
 
 L12_13 = 5*1e-2;
-rho12 = rho_N2(find(T==round(T12)),find(abs(P - round(P12,1)) < 0.001));     % Density downstream the manual ball valve [kg/m^3]
-gamma12 = gamma_N2(find(T==round(T12)),find(abs(P - round(P12,1)) < 0.001)); % Ratio of specific heats downstream the manual ball valve  [-]
-gamma13 = gamma_N2(find(T==round(T12)),find(abs(P - round(P12,1)) < 0.001));
-mu12 = mu_N2(find(T==round(T12)),find(abs(P - round(P12,1)) < 0.001));       % Viscosity downstream the manual ball valve [Pa*s]
+rho12 = rho_N2( find(abs(T - round(T12,1))==min(abs(T - round(T12,1)))) ,find( abs(P - round(P12,1))==min(abs(P - round(P12,1)))) );    % Density downstream the manual ball valve [kg/m^3]
+gamma12 = gamma_N2( find(abs(T - round(T12,1))==min(abs(T - round(T12,1)))) ,find( abs(P - round(P12,1))==min(abs(P - round(P12,1)))) ); % Ratio of specific heats downstream the manual ball valve  [-]
+gamma13 = gamma_N2( find(abs(T - round(T12,1))==min(abs(T - round(T12,1)))) ,find( abs(P - round(P12,1))==min(abs(P - round(P12,1)))) );
+mu12 = mu_N2( find(abs(T - round(T12,1))==min(abs(T - round(T12,1)))) ,find( abs(P - round(P12,1))==min(abs(P - round(P12,1)))) );       % Viscosity downstream the manual ball valve [Pa*s]
 v12 = m_dot_N2/(A12_13*rho12);                     % Gas velocity downstream the manual ball valve [m/s]
 c12 = (gamma12*R_N2*T12)^0.5;                         % Sound speed downstream the manual ball valve [m/s]
 M12 = v12/c12;                                     % Mach number downstream the manual ball valve [-]
@@ -538,7 +538,7 @@ while err > 1e-3
     c13 = sqrt(gamma13*R_N2*T13);
     v13 = c13*M13;
 
-    gamma13_new = gamma_N2(find(T==round(T13)),find(abs(P - round(P13,1)) < 0.001));
+    gamma13_new = gamma_N2( find(abs(T - round(T13,1))==min(abs(T - round(T13,1)))) ,find( abs(P - round(P13,1))==min(abs(P - round(P13,1)))) );
 
     err = abs(gamma13 - gamma13_new);
 
@@ -575,10 +575,10 @@ eps14_15_rel = eps/d14_15_int;               % Relative roughness of stainless s
 % mu_N2 = data.mu;                     % Viscosity of Nitrogen [Pa*s]
 
 L14_15 = 5*1e-2;
-rho14 = rho_N2(find(T==round(T14)),find(abs(P - round(P14,1)) < 0.001));     % Density downstream the manual ball valve [kg/m^3]
-gamma14 = gamma_N2(find(T==round(T14)),find(abs(P - round(P14,1)) < 0.001)); % Ratio of specific heats downstream the manual ball valve  [-]
-gamma15 = gamma_N2(find(T==round(T14)),find(abs(P - round(P14,1)) < 0.001));
-mu14 = mu_N2(find(T==round(T14)),find(abs(P - round(P14,1)) < 0.001));       % Viscosity downstream the manual ball valve [Pa*s]
+rho14 = rho_N2( find(abs(T - round(T14,1))==min(abs(T - round(T14,1)))) ,find( abs(P - round(P14,1))==min(abs(P - round(P14,1)))) );    % Density downstream the manual ball valve [kg/m^3]
+gamma14 = gamma_N2( find(abs(T - round(T14,1))==min(abs(T - round(T14,1)))) ,find( abs(P - round(P14,1))==min(abs(P - round(P14,1)))) ); % Ratio of specific heats downstream the manual ball valve  [-]
+gamma15 = gamma_N2( find(abs(T - round(T14,1))==min(abs(T - round(T14,1)))) ,find( abs(P - round(P14,1))==min(abs(P - round(P14,1)))) );
+mu14 = mu_N2( find(abs(T - round(T14,1))==min(abs(T - round(T14,1)))) ,find( abs(P - round(P14,1))==min(abs(P - round(P14,1)))) );      % Viscosity downstream the manual ball valve [Pa*s]
 v14 = m_dot_N2/(A14_15*rho14);                     % Gas velocity downstream the manual ball valve [m/s]
 c14 = (gamma12*R_N2*T14)^0.5;                         % Sound speed downstream the manual ball valve [m/s]
 M14 = v14/c14;                                     % Mach number downstream the manual ball valve [-]
@@ -620,7 +620,7 @@ while err > 1e-3
     c15 = sqrt(gamma15*R_N2*T15);
     v15 = c15*M15;
 
-    gamma15_new = gamma_N2(find(T==round(T15)),find(abs(P - round(P15,1)) < 0.001));
+    gamma15_new = gamma_N2( find(abs(T - round(T15,1))==min(abs(T - round(T15,1)))) ,find( abs(P - round(P15,1))==min(abs(P - round(P15,1)))) );
 
     err = abs(gamma15 - gamma15_new);
 
@@ -658,10 +658,10 @@ eps16_17_rel = eps/d16_17_int;               % Relative roughness of stainless s
 % mu_N2 = data.mu;                     % Viscosity of Nitrogen [Pa*s]
 
 L16_17 = 5*1e-2;
-rho16 = rho_N2(find(T==round(T16)),find(abs(P - round(P16,1)) < 0.001));     % Density downstream the manual ball valve [kg/m^3]
-gamma16 = gamma_N2(find(T==round(T16)),find(abs(P - round(P16,1)) < 0.001)); % Ratio of specific heats downstream the manual ball valve  [-]
-gamma17 = gamma_N2(find(T==round(T16)),find(abs(P - round(P16,1)) < 0.001));
-mu16 = mu_N2(find(T==round(T16)),find(abs(P - round(P16,1)) < 0.001));       % Viscosity downstream the manual ball valve [Pa*s]
+rho16 = rho_N2( find(abs(T - round(T16,1))==min(abs(T - round(T16,1)))) ,find( abs(P - round(P16,1))==min(abs(P - round(P16,1)))) );     % Density downstream the manual ball valve [kg/m^3]
+gamma16 = gamma_N2( find(abs(T - round(T16,1))==min(abs(T - round(T16,1)))) ,find( abs(P - round(P16,1))==min(abs(P - round(P16,1)))) );  % Ratio of specific heats downstream the manual ball valve  [-]
+gamma17 = gamma_N2( find(abs(T - round(T16,1))==min(abs(T - round(T16,1)))) ,find( abs(P - round(P16,1))==min(abs(P - round(P16,1)))) ); 
+mu16 = mu_N2( find(abs(T - round(T16,1))==min(abs(T - round(T16,1)))) ,find( abs(P - round(P16,1))==min(abs(P - round(P16,1)))) );        % Viscosity downstream the manual ball valve [Pa*s]
 v16 = m_dot_N2/(A16_17*rho16);                     % Gas velocity downstream the manual ball valve [m/s]
 c16 = (gamma16*R_N2*T16)^0.5;                         % Sound speed downstream the manual ball valve [m/s]
 M16 = v16/c16;                                     % Mach number downstream the manual ball valve [-]
@@ -703,7 +703,7 @@ while err > 1e-3
     c17 = sqrt(gamma17*R_N2*T17);
     v17 = c17*M17;
 
-    gamma17_new = gamma_N2(find(T==round(T17)),find(abs(P - round(P17,1)) < 0.001));
+    gamma17_new = gamma_N2( find(abs(T - round(T17,1))==min(abs(T - round(T17,1)))) ,find( abs(P - round(P17,1))==min(abs(P - round(P17,1)))) ); 
 
     err = abs(gamma17 - gamma17_new);
 
@@ -720,9 +720,9 @@ P18 = 1e-5*(P17*1e5 - 0.5*rho17*v17^2);
 T18 = T17;
 
 
-rho18 = rho_N2(find(T==round(T18)),find(abs(P - round(P18,1)) < 0.001));       % Density downstream the pipe bending after the pressure regulator [kg/m^3]
-gamma18 = gamma_N2(find(T==round(T18)),find(abs(P - round(P18,1)) < 0.001));   % Ratio of specific heats downstream the pipe bending after the pressure regulator [-]
-mu18 = mu_N2(find(T==round(T18)),find(abs(P - round(P18,1)) < 0.001));         % Viscosity downstream the pipe bending after the pressure regulator [Pa*s]
+rho18 = rho_N2( find(abs(T - round(T18,1))==min(abs(T - round(T18,1)))) ,find( abs(P - round(P18,1))==min(abs(P - round(P18,1)))) );        % Density downstream the pipe bending after the pressure regulator [kg/m^3]
+gamma18 = gamma_N2(find(abs(T - round(T18,1))==min(abs(T - round(T18,1)))) ,find( abs(P - round(P18,1))==min(abs(P - round(P18,1)))) );     % Ratio of specific heats downstream the pipe bending after the pressure regulator [-]
+mu18 = mu_N2(find(abs(T - round(T18,1))==min(abs(T - round(T18,1)))) ,find( abs(P - round(P18,1))==min(abs(P - round(P18,1)))) );          % Viscosity downstream the pipe bending after the pressure regulator [Pa*s]
 v18 = m_dot_N2/(A16_17*rho18);                     % Gas velocity downstream the pipe bending after pressure regulator [m/s]
 c18 = (gamma18*R_N2*T18)^0.5;                         % Sound speed downstream the pipe bending after pressure regulator [m/s]
 M18 = v18/c18;    
@@ -751,9 +751,9 @@ T19 = T18;
 % mu_N2 = data.mu;                     % Viscosity of Nitrogen [Pa*s]
 % 
 
-rho19 = rho_N2(find(T==round(T19)),find(abs(P - round(P19,1)) < 0.001));       % Density downstream the pipe bending after the pressure regulator [kg/m^3]
-gamma19 = gamma_N2(find(T==round(T19)),find(abs(P - round(P19,1)) < 0.001));   % Ratio of specific heats downstream the pipe bending after the pressure regulator [-]
-mu19 = mu_N2(find(T==round(T19)),find(abs(P - round(P19,1)) < 0.001));         % Viscosity downstream the pipe bending after the pressure regulator [Pa*s]
+rho19 = rho_N2(find(abs(T - round(T19,1))==min(abs(T - round(T19,1)))) ,find( abs(P - round(P19,1))==min(abs(P - round(P19,1)))) );         % Density downstream the pipe bending after the pressure regulator [kg/m^3]
+gamma19 = gamma_N2(find(abs(T - round(T19,1))==min(abs(T - round(T19,1)))) ,find( abs(P - round(P19,1))==min(abs(P - round(P19,1)))) );      % Ratio of specific heats downstream the pipe bending after the pressure regulator [-]
+mu19 = mu_N2(find(abs(T - round(T19,1))==min(abs(T - round(T19,1)))) ,find( abs(P - round(P19,1))==min(abs(P - round(P19,1)))) );            % Viscosity downstream the pipe bending after the pressure regulator [Pa*s]
 v19 = m_dot_N2/(A18_19*rho19);                     % Gas velocity downstream the pipe bending after pressure regulator [m/s]
 c19 = (gamma19*R_N2*T19)^0.5;                         % Sound speed downstream the pipe bending after pressure regulator [m/s]
 M19 = v19/c19;   
@@ -785,10 +785,10 @@ eps20_21_rel = eps/d20_21_int;               % Relative roughness of stainless s
 % mu_N2 = data.mu;                     % Viscosity of Nitrogen [Pa*s]
 
 L20_21 = 5*1e-2;
-rho20 = rho_N2(find(T==round(T20)),find(abs(P - round(P20,1)) < 0.001));       % Density downstream the pipe bending after the pressure regulator [kg/m^3]
-gamma20 = gamma_N2(find(T==round(T20)),find(abs(P - round(P20,1)) < 0.001));   % Ratio of specific heats downstream the pipe bending after the pressure regulator [-]
-gamma21 = gamma_N2(find(T==round(T20)),find(abs(P - round(P20,1)) < 0.001));
-mu20 = mu_N2(find(T==round(T20)),find(abs(P - round(P20,1)) < 0.001));         % Viscosity downstream the pipe bending after the pressure regulator [Pa*s]
+rho20 = rho_N2(find(abs(T - round(T20,1))==min(abs(T - round(T20,1)))) ,find( abs(P - round(P20,1))==min(abs(P - round(P20,1)))) );         % Density downstream the pipe bending after the pressure regulator [kg/m^3]
+gamma20 = gamma_N2(find(abs(T - round(T20,1))==min(abs(T - round(T20,1)))) ,find( abs(P - round(P20,1))==min(abs(P - round(P20,1)))) );   % Ratio of specific heats downstream the pipe bending after the pressure regulator [-]
+gamma21 = gamma_N2(find(abs(T - round(T20,1))==min(abs(T - round(T20,1)))) ,find( abs(P - round(P20,1))==min(abs(P - round(P20,1)))) );
+mu20 = mu_N2(find(abs(T - round(T20,1))==min(abs(T - round(T20,1)))) ,find( abs(P - round(P20,1))==min(abs(P - round(P20,1)))) );        % Viscosity downstream the pipe bending after the pressure regulator [Pa*s]
 v20 = m_dot_N2/(A20_21*rho20);                     % Gas velocity downstream the pipe bending after pressure regulator [m/s]
 c20 = (gamma20*R_N2*T20)^0.5;                         % Sound speed downstream the pipe bending after pressure regulator [m/s]
 M20 = v20/c20;           
@@ -831,7 +831,7 @@ while err > 1e-3
     c21 = sqrt(gamma21*R_N2*T21);
     v21 = c21*M21;
 
-    gamma21_new = gamma_N2(find(T==round(T21)),find(abs(P - round(P21,1)) < 0.001));
+    gamma21_new = gamma_N2(find(abs(T - round(T21,1))==min(abs(T - round(T21,1)))) ,find( abs(P - round(P21,1))==min(abs(P - round(P21,1)))) );
 
     err = abs(gamma21- gamma21_new);
 
@@ -869,10 +869,10 @@ eps22_23_rel = eps/d22_23_int;               % Relative roughness of stainless s
 % mu_N2 = data.mu;                     % Viscosity of Nitrogen [Pa*s]
 
 L22_23 = 30*1e-2;
-rho22 = rho_N2(find(T==round(T22)),find(abs(P - round(P22,1)) < 0.001));       % Density downstream the pipe bending after the pressure regulator [kg/m^3]
-gamma22 = gamma_N2(find(T==round(T22)),find(abs(P - round(P22,1)) < 0.001));   % Ratio of specific heats downstream the pipe bending after the pressure regulator [-]
-gamma23 = gamma_N2(find(T==round(T22)),find(abs(P - round(P22,1)) < 0.001));
-mu22 = mu_N2(find(T==round(T22)),find(abs(P - round(P22,1)) < 0.001));         % Viscosity downstream the pipe bending after the pressure regulator [Pa*s]
+rho22 = rho_N2(find(abs(T - round(T22,1))==min(abs(T - round(T22,1)))) ,find( abs(P - round(P22,1))==min(abs(P - round(P22,1)))) );       % Density downstream the pipe bending after the pressure regulator [kg/m^3]
+gamma22 = gamma_N2(find(abs(T - round(T22,1))==min(abs(T - round(T22,1)))) ,find( abs(P - round(P22,1))==min(abs(P - round(P22,1)))) );   % Ratio of specific heats downstream the pipe bending after the pressure regulator [-]
+gamma23 = gamma_N2(find(abs(T - round(T22,1))==min(abs(T - round(T22,1)))) ,find( abs(P - round(P22,1))==min(abs(P - round(P22,1)))) );
+mu22 = mu_N2(find(abs(T - round(T22,1))==min(abs(T - round(T22,1)))) ,find( abs(P - round(P22,1))==min(abs(P - round(P22,1)))) );       % Viscosity downstream the pipe bending after the pressure regulator [Pa*s]
 v22 = m_dot_N2/(A22_23*rho22);                     % Gas velocity downstream the pipe bending after pressure regulator [m/s]
 c22 = (gamma22*R_N2*T22)^0.5;                         % Sound speed downstream the pipe bending after pressure regulator [m/s]
 M22 = v22/c22;           
@@ -915,7 +915,7 @@ while err > 1e-3
     c23 = sqrt(gamma23*R_N2*T23);
     v23 = c23*M23;
 
-    gamma23_new = gamma_N2(find(T==round(T23)),find(abs(P - round(P23,1)) < 0.001));
+    gamma23_new = gamma_N2(find(abs(T - round(T23,1))==min(abs(T - round(T23,1)))) ,find( abs(P - round(P23,1))==min(abs(P - round(P23,1)))) );
 
     err = abs(gamma23- gamma23_new);
 
@@ -955,10 +955,10 @@ eps24_25_rel = eps/d24_25_int;               % Relative roughness of stainless s
 % mu_N2 = data.mu;                     % Viscosity of Nitrogen [Pa*s]
 
 L24_25 = 30*1e-2;
-rho24 = rho_N2(find(T==round(T24)),find(abs(P - round(P24,1)) < 0.001));       % Density downstream the pipe bending after the pressure regulator [kg/m^3]
-gamma24 = gamma_N2(find(T==round(T24)),find(abs(P - round(P24,1)) < 0.001));   % Ratio of specific heats downstream the pipe bending after the pressure regulator [-]
-gamma25 = gamma_N2(find(T==round(T24)),find(abs(P - round(P24,1)) < 0.001));
-mu24 = mu_N2(find(T==round(T24)),find(abs(P - round(P24,1)) < 0.001));         % Viscosity downstream the pipe bending after the pressure regulator [Pa*s]
+rho24 = rho_N2(find(abs(T - round(T24,1))==min(abs(T - round(T24,1)))) ,find( abs(P - round(P24,1))==min(abs(P - round(P24,1)))) );      % Density downstream the pipe bending after the pressure regulator [kg/m^3]
+gamma24 = gamma_N2(find(abs(T - round(T24,1))==min(abs(T - round(T24,1)))) ,find( abs(P - round(P24,1))==min(abs(P - round(P24,1)))) );   % Ratio of specific heats downstream the pipe bending after the pressure regulator [-]
+gamma25 = gamma_N2(find(abs(T - round(T24,1))==min(abs(T - round(T24,1)))) ,find( abs(P - round(P24,1))==min(abs(P - round(P24,1)))) ); 
+mu24 = mu_N2(find(abs(T - round(T24,1))==min(abs(T - round(T24,1)))) ,find( abs(P - round(P24,1))==min(abs(P - round(P24,1)))) );        % Viscosity downstream the pipe bending after the pressure regulator [Pa*s]
 v24 = m_dot_N2/(A24_25*rho24);                     % Gas velocity downstream the pipe bending after pressure regulator [m/s]
 c24 = (gamma24*R_N2*T24)^0.5;                         % Sound speed downstream the pipe bending after pressure regulator [m/s]
 M24 = v24/c24;           
@@ -1001,7 +1001,7 @@ while err > 1e-3
     c25 = sqrt(gamma25*R_N2*T25);
     v25 = c25*M25;
 
-    gamma25_new = gamma_N2(find(T==round(T25)),find(abs(P - round(P25,1)) < 0.001));
+    gamma25_new = gamma_N2(find(abs(T - round(T25,1))==min(abs(T - round(T25,1)))) ,find( abs(P - round(P25,1))==min(abs(P - round(P25,1)))) ); 
 
     err = abs(gamma25- gamma25_new);
 
@@ -1040,10 +1040,10 @@ eps26_27_rel = eps/d26_27_int;               % Relative roughness of stainless s
 % mu_N2 = data.mu;                     % Viscosity of Nitrogen [Pa*s]
 
 L26_27 = 30*1e-2;
-rho26 = rho_N2(find(T==round(T26)),find(abs(P - round(P26,1)) < 0.001));       % Density downstream the pipe bending after the pressure regulator [kg/m^3]
-gamma26 = gamma_N2(find(T==round(T26)),find(abs(P - round(P26,1)) < 0.001));   % Ratio of specific heats downstream the pipe bending after the pressure regulator [-]
-gamma27 =gamma_N2(find(T==round(T26)),find(abs(P - round(P26,1)) < 0.001));
-mu26 = mu_N2(find(T==round(T26)),find(abs(P - round(P26,1)) < 0.001));         % Viscosity downstream the pipe bending after the pressure regulator [Pa*s]
+rho26 = rho_N2(find(abs(T - round(T26,1))==min(abs(T - round(T26,1)))) ,find( abs(P - round(P26,1))==min(abs(P - round(P26,1)))) );        % Density downstream the pipe bending after the pressure regulator [kg/m^3]
+gamma26 = gamma_N2(find(abs(T - round(T26,1))==min(abs(T - round(T26,1)))) ,find( abs(P - round(P26,1))==min(abs(P - round(P26,1)))) );   % Ratio of specific heats downstream the pipe bending after the pressure regulator [-]
+gamma27 =gamma_N2(find(abs(T - round(T26,1))==min(abs(T - round(T26,1)))) ,find( abs(P - round(P26,1))==min(abs(P - round(P26,1)))) );
+mu26 = mu_N2(find(abs(T - round(T26,1))==min(abs(T - round(T26,1)))) ,find( abs(P - round(P26,1))==min(abs(P - round(P26,1)))) );       % Viscosity downstream the pipe bending after the pressure regulator [Pa*s]
 v26 = m_dot_N2/(A26_27*rho26);                     % Gas velocity downstream the pipe bending after pressure regulator [m/s]
 c26 = (gamma26*R_N2*T26)^0.5;                         % Sound speed downstream the pipe bending after pressure regulator [m/s]
 M26 = v26/c26;           
@@ -1086,7 +1086,7 @@ while err > 1e-3
     c27 = sqrt(gamma27*R_N2*T27);
     v27 = c27*M27;
 
-    gamma27_new = gamma_N2(find(T==round(T27)),find(abs(P - round(P27,1)) < 0.001));
+    gamma27_new = gamma_N2(find(abs(T - round(T27,1))==min(abs(T - round(T27,1)))) ,find( abs(P - round(P27,1))==min(abs(P - round(P27,1)))) );
 
     err = abs(gamma27- gamma27_new);
 
@@ -1099,7 +1099,7 @@ clear gamma27_new
 %% Before mixing chamber (point 27) and after mixing chamber (point 28)
 Texit = 680; 
 
-rho_mc_entrance = rho_N2(find(T==round(T27)),find(abs(P - round(P27,1)) < 0.001)); 
+rho_mc_entrance = rho_N2(find(abs(T - round(T27,1))==min(abs(T - round(T27,1)))) ,find( abs(P - round(P27,1))==min(abs(P - round(P27,1)))) );
 v_mc_entrance = m_dot_N2/(A26_27*rho_mc_entrance);
 Ptank = P27*1e5 - rho_mc_entrance*v_mc_entrance^2;   %[Pa]
 
@@ -1108,7 +1108,7 @@ m_dot_SRP = 18*1e-3;
 gamma_SRP = 1.1122;
 rho_SRP = 0.92189;
 
-rho_mc_exit_N2 = rho_N2(find(T==round(Texit)),find(abs(P - round(Ptank*1e-5,1)) < 0.001)); 
+rho_mc_exit_N2 = rho_N2(find(abs(T - round(Texit,1))==min(abs(T - round(Texit,1)))) ,find( abs(P - round(Ptank*1e5,1))==min(abs(P - round(Ptank*1e5,1)))) );
 rho_mc_exit = (m_dot_SRP*rho_SRP + m_dot_N2*rho_mc_exit_N2)/(m_dot_N2 + m_dot_SRP);
 
 m_dot_mix = m_dot_N2 + m_dot_SRP;
@@ -1117,12 +1117,12 @@ P_exit = Ptank - 0.5*rho_mc_exit*v_mc_exit^2;              %[Pa]
 P28 = P_exit*1e-5;                                      %[bar]
 T28 = Texit;
 
-gamma28_N2 = gamma_N2(find(T==round(T28)),find(abs(P - round(P28,1)) < 0.001));
+gamma28_N2 = gamma_N2(find(abs(T - round(T28,1))==min(abs(T - round(T28,1)))) ,find( abs(P - round(P28,1))==min(abs(P - round(P28,1)))) );
 gamma28 = (m_dot_SRP*gamma_SRP + m_dot_N2*gamma28_N2)/(m_dot_N2 + m_dot_SRP);
 
 R_mix = (m_dot_SRP*R_SRP + m_dot_N2*R_N2)/(m_dot_N2 + m_dot_SRP);
 
-rho28_N2 = rho_N2(find(T==round(T28)),find(abs(P - round(P28,1)) < 0.001));
+rho28_N2 = rho_N2(find(abs(T - round(T28,1))==min(abs(T - round(T28,1)))) ,find( abs(P - round(P28,1))==min(abs(P - round(P28,1)))) );
 rho28 = (m_dot_SRP*rho_SRP + m_dot_N2*rho28_N2)/(m_dot_N2 + m_dot_SRP);
 
 v28 = v_mc_exit; 
@@ -1156,13 +1156,15 @@ eps29_30_rel = eps/d29_30_int;               % Relative roughness of stainless s
 % mu_N2 = data.mu;                     % Viscosity of Nitrogen [Pa*s]
 
 L29_30 = 30*1e-2;
-rho29_N2 = rho_N2(find(T==round(T29)),find(abs(P - round(P29,1)) < 0.001));
+rho29_N2 = rho_N2(find(abs(T - round(T29,1))==min(abs(T - round(T29,1)))) ,find( abs(P - round(P29,1))==min(abs(P - round(P29,1)))) );
 rho29 = (m_dot_SRP*rho_SRP + m_dot_N2*rho29_N2)/(m_dot_N2 + m_dot_SRP);        % Density downstream the pipe bending after the pressure regulator [kg/m^3]
-gamma29_N2 = gamma_N2(find(T==round(T29)),find(abs(P - round(P29,1)) < 0.001)); 
+
+gamma29_N2 = gamma_N2(find(abs(T - round(T29,1))==min(abs(T - round(T29,1)))) ,find( abs(P - round(P29,1))==min(abs(P - round(P29,1)))) ); 
 gamma29 = (m_dot_SRP*gamma_SRP + m_dot_N2*gamma29_N2)/(m_dot_N2 + m_dot_SRP);   % Ratio of specific heats downstream the pipe bending after the pressure regulator [-]
-gamma30_N2 = gamma_N2(find(T==round(T29)),find(abs(P - round(P29,1)) < 0.001));
+
+gamma30_N2 = gamma_N2(find(abs(T - round(T29,1))==min(abs(T - round(T29,1)))) ,find( abs(P - round(P29,1))==min(abs(P - round(P29,1)))) );
 gamma30 = (m_dot_SRP*gamma_SRP + m_dot_N2*gamma30_N2)/(m_dot_N2 + m_dot_SRP);
-mu29 = mu_N2(find(T==round(T29)),find(abs(P - round(P29,1)) < 0.001));           % Viscosity downstream the pipe bending after the pressure regulator [Pa*s]
+mu29 = mu_N2(find(abs(T - round(T29,1))==min(abs(T - round(T29,1)))) ,find( abs(P - round(P29,1))==min(abs(P - round(P29,1)))) );           % Viscosity downstream the pipe bending after the pressure regulator [Pa*s]
 v29 = m_dot_mix/(A29_30*rho29);                                                   % Gas velocity downstream the pipe bending after pressure regulator [m/s]
 c29 = (gamma29*R_mix*T29)^0.5;                         % Sound speed downstream the pipe bending after pressure regulator [m/s]
 M29 = v29/c29;           
@@ -1205,7 +1207,7 @@ while err > 1e-3
     c30 = sqrt(gamma30*R_N2*T30);
     v30 = c30*M30;
 
-    gamma30_N2_new = gamma_N2(find(T==round(T29)),find(abs(P - round(P29,1)) < 0.001));
+    gamma30_N2_new = gamma_N2(find(abs(T - round(T30,1))==min(abs(T - round(T30,1)))) ,find( abs(P - round(P30,1))==min(abs(P - round(P30,1)))) );
     gamma30_new = (m_dot_SRP*gamma_SRP + m_dot_N2*gamma30_N2_new)/(m_dot_N2 + m_dot_SRP);
 
     err = abs(gamma30 - gamma30_new);
