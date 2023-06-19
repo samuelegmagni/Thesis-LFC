@@ -35,7 +35,7 @@ clear C; clear cp; clear Cp; clear cv; clear Cv; clear h; clear H; clear JT;
 clear k; clear mu; clear Mw; clear omega; clear pc; clear rho;
 clear Rho; clear s; clear S; clear species; clear Tc; clear u;
 clear U; clear V
-%%
+
 m_dot_N2 = 65*1e-3;                  % Nitrogen mass flow rate [kg/s]
 R_N2 = 8314/28;                         % Specific ideal gas constant [J/kgK]
 
@@ -134,6 +134,7 @@ clear gamma3_new
 %% After green fitting (12 mm -> 3/4") (point 4)
 
 P4 = 1e-5*(P3*1e5 - 1*rho3*v3^2);
+T4 = T3;
 
 %% 3/4" mm tube before blue elbow (point 4 and 5)
 
@@ -216,6 +217,7 @@ clear gamma5_new
 %% After blue elbow (point 6)
 
 P6 = 1e-5*(P5*1e5 - 0.7*rho5*v5^2);
+T6 = T5;
 
 %% 3/4" mm tube after blue elbow (point 6 and 7)
 
@@ -226,8 +228,6 @@ A6_7 = pi*(d6_7_int/2)^2;
 
 eps = 0.015*1e-3;                    % Absolute roughness of stainless steel [m]
 eps6_7_rel = eps/d6_7_int;               % Relative roughness of stainless steel [-]
-
-T6 = T5;
 
 % T = (floor(T6)-3):0.5:(ceil(T6));
 % P = (floor(P6)-5):0.1:(ceil(P6));
@@ -300,6 +300,7 @@ clear gamma7_new
 %% After first T-fitting (point 8)
 
 P8 = 1e-5*(P7*1e5 - 1.3*rho7*v7^2);
+T8 = T7;
 
 %% Between T-fitting and manual ball valve (point 8 and 9)
 
@@ -310,8 +311,6 @@ A8_9 = pi*(d8_9_int/2)^2;
 
 eps = 0.015*1e-3;                    % Absolute roughness of stainless steel [m]
 eps8_9_rel = eps/d8_9_int;               % Relative roughness of stainless steel [-]
-
-T8 = T7;
 
 % T = (floor(T8)-3):0.5:(ceil(T8));
 % P = (floor(P8)-5):0.1:(ceil(P8));
@@ -553,7 +552,6 @@ clear gamma13_new
 P14 = 1e-5*(P13*1e5 - 1.3*rho13*v13^2);
 T14 = T13;
 
-
 %% After third T-fitting and before green fitting (point 14 and 15)
 
 d14_15_ext = 19.05*1e-3;
@@ -636,7 +634,6 @@ clear gamma15_new
 P16 = 1e-5*(P15*1e5 - 0.5*rho15*v15^2);
 T16 = T15;
 
-
 %% After green T-fitting and before pink fitting (point 16 and 17)
 
 d16_17_ext = 12.07*1e-3;
@@ -718,7 +715,6 @@ clear gamma17_new
 
 P18 = 1e-5*(P17*1e5 - 0.5*rho17*v17^2);
 T18 = T17;
-
 
 rho18 = rho_N2( find(abs(T - round(T18,1))==min(abs(T - round(T18,1)))) ,find( abs(P - round(P18,1))==min(abs(P - round(P18,1)))) );        % Density downstream the pipe bending after the pressure regulator [kg/m^3]
 gamma18 = gamma_N2(find(abs(T - round(T18,1))==min(abs(T - round(T18,1)))) ,find( abs(P - round(P18,1))==min(abs(P - round(P18,1)))) );     % Ratio of specific heats downstream the pipe bending after the pressure regulator [-]
@@ -846,7 +842,6 @@ clear gamma21_new
 
 P22 = 1e-5*(P21*1e5 - 1*rho21*v21^2);
 T22 = T21;
-
 
 %% After green fitting and before prenumatic valve (point 22 and 23)
 
@@ -1018,7 +1013,6 @@ q_N2 = (m_dot_N2/rho25)*1000;           % Nitrogen volumetric flow rate [L/s]
 C_V = 1.68;                             % Flow coefficient check valve
 P26 = P25 - (G_g*(q_N2*60)^2)/(14.42*C_V)^2;         % Pressure downstream the check valve [bar]
 T26 = T25;
-
 
 %% After checkvalve and before mixing chamber (point 26 and 27)
 
