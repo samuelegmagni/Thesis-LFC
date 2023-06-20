@@ -14,7 +14,7 @@ set(0,'DefaultLegendFontSize',12);
 %% After pressure regulator (point 1)
 
 T1 = 298;                                       % Temperature downstream the pressure regulator [K]
-P1 = 35.8;  
+P1 = 27.5;  
 
 % T = (floor(T1)-3):0.5:(ceil(T1));
 % P = (floor(P1)-15):0.1:(ceil(P1));
@@ -36,7 +36,7 @@ clear k; clear mu; clear Mw; clear omega; clear pc; clear rho;
 clear Rho; clear s; clear S; clear species; clear Tc; clear u;
 clear U; clear V
 
-m_dot_N2 = 78*1e-3;                  % Nitrogen mass flow rate [kg/s]
+m_dot_N2 = 60*1e-3;                  % Nitrogen mass flow rate [kg/s]
 R_N2 = 8314/28;                         % Specific ideal gas constant [J/kgK]
 
 d1_ext = 6.35*1e-3;                   % Pipe external diameter [m]
@@ -960,7 +960,7 @@ M24 = v24/c24;
                   
 Re24 = (rho24*v24*d24_25_int)/mu24;                    % Reynolds number downstream the manual ball valve [-]
 
-if Re24< 2300
+if Re24 < 2300
 
         lambda = 64/Re24;
 
@@ -1140,10 +1140,10 @@ while err > 1e-3
     M29 = fsolve(y,0.006);
     
     T_star = T28/(0.5*(gamma28 + 1)/(1 + (gamma28 - 1)*0.5*M28^2));
-    T29= T_star*(0.5*(gamma29+ 1)/(1 + (gamma29 - 1)*0.5*M29^2));
+    T29 = T_star*(0.5*(gamma29+ 1)/(1 + (gamma29 - 1)*0.5*M29^2));
     
     P_star = P28/((1/M28)*sqrt(0.5*(gamma28 + 1)/(1 + (gamma28 - 1)*0.5*M28^2)));
-    P29 = P_star*((1/M29)*sqrt(0.5*(gamma29+ 1)/(1 + (gamma29 - 1)*0.5*M29^2)));
+    P29 = P_star*((1/M29)*sqrt(0.5*(gamma29+ 1)/(1 + (gamma29 - 1)*0.5*M29^2)))
 
     rho_star = rho28/((1/M28)*sqrt( 2*(1 + (gamma28 - 1)*0.5*M28^2)/(gamma28 + 1)));
     rho29 = rho_star*((1/M29)*sqrt( 2*(1 + (gamma29 - 1)*0.5*M29^2)/(gamma29 + 1)));
@@ -1163,12 +1163,12 @@ clear gamma29_new
 
 %% Injector
 
-P_tot29 = P29*((1 + 0.5*(gamma29 - 1)*M29^2)^(gamma29/(gamma29 - 1)));
+P_tot29 = P29*((1 + 0.5*(gamma29 - 1)*M29^2)^(gamma29/(gamma29 - 1)))
 M_throat = 1;
 
 z = @(x) x/A28_29 - (M29/M_throat)*sqrt( ((1 + 0.5*(gamma29 - 1)*M_throat^2)/(1 + 0.5*(gamma29 - 1)*M29^2))^((gamma29 + 1)/(gamma29 - 1)) );
 A_throat_int = fsolve(z,0.08);
-d_inj = sqrt(4*A_throat_int/pi)*1000  % [mm]
+d_inj = sqrt(4*A_throat_int/pi)*1000;  % [mm]
 
-P_chamber = P_tot29/((1 + 0.5*(gamma29 - 1)*M_throat^2)^(gamma29/(gamma29 - 1)))
+P_chamber = P_tot29/((1 + 0.5*(gamma29 - 1)*M_throat^2)^(gamma29/(gamma29 - 1)));
  

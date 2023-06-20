@@ -29,7 +29,7 @@ clear k; clear mu; clear Mw; clear omega; clear pc; clear rho;
 clear Rho; clear s; clear S; clear species; clear Tc; clear u;
 clear U; clear V
 
-m_dot_N2 = 75*1e-3;                  % Nitrogen mass flow rate [kg/s]
+m_dot_N2 = 20*1e-3;                  % Nitrogen mass flow rate [kg/s]
 R_N2 = 8314/28;                         % Specific ideal gas constant [J/kgK]
 
 R_SRP = 8314/36.32;
@@ -41,21 +41,22 @@ R_mix = (m_dot_SRP*R_SRP + m_dot_N2*R_N2)/(m_dot_N2 + m_dot_SRP);
 
 m_dot_mix = m_dot_N2 + m_dot_SRP;
 
-M_throat = 1;
+rho_chamber_N2 = rho_N2(find(abs(T - round(T_chamber,1))==min(abs(T - round(T_chamber,1)))) ,find( abs(P - round(P_chamber,1))==min(abs(P - round(P_chamber,1)))) );
+rho_chamber = (m_dot_SRP*rho_SRP + m_dot_N2*rho_chamber_N2)/(m_dot_N2 + m_dot_SRP);
+
+gamma_chamber_N2 = gamma_N2(find(abs(T - round(T_chamber,1))==min(abs(T - round(T_chamber,1)))) ,find( abs(P - round(P_chamber,1))==min(abs(P - round(P_chamber,1)))) );
+gamma_chamber = (m_dot_SRP*gamma_SRP + m_dot_N2*gamma_chamber_N2)/(m_dot_N2 + m_dot_SRP);
 
 gamma30_N2 = gamma_N2(find(abs(T - round(T_chamber,1))==min(abs(T - round(T_chamber,1)))) ,find( abs(P - round(P_chamber,1))==min(abs(P - round(P_chamber,1)))) );
 gamma30 = (m_dot_SRP*gamma_SRP + m_dot_N2*gamma30_N2)/(m_dot_N2 + m_dot_SRP);
 
-rho30_N2 = rho_N2(find(abs(T - round(T_chamber,1))==min(abs(T - round(T_chamber,1)))) ,find( abs(P - round(P_chamber,1))==min(abs(P - round(P_chamber,1)))) );
-rho30 = (m_dot_SRP*rho_SRP + m_dot_N2*rho30_N2)/(m_dot_N2 + m_dot_SRP);
-
-mu30 = mu_N2(find(abs(T - round(T_chamber,1))==min(abs(T - round(T_chamber,1)))) ,find( abs(P - round(P_chamber,1))==min(abs(P - round(P_chamber,1)))) );
-
-
-P_tot = P_chamber*((1 + 0.5*(gamma30 - 1)*M_throat^2)^(gamma30/(gamma30 - 1)));
 
 d_inj = 11.35*1e-3;    % [mm]
 A_throat_int = 0.25*pi*d_inj^2;
+
+M_throat = 1;
+
+P_tot = P_chamber*((1 + 0.5*(gamma_chamber - 1)*M_throat^2)^(gamma_chamber/(gamma_chamber - 1)));
 
 d29_30_ext = 19.05*1e-3;
 t29_30 = 1.5*1e-3;
@@ -65,12 +66,43 @@ A29_30 = pi*(d29_30_int/2)^2;
 eps = 0.015*1e-3;
 eps29_30_rel = eps/d29_30_int;               % Relative roughness of stainless steel [-]
 
+z = @(x) A_throat_int/A29_30 - (x/M_throat)*sqrt( ((1 + 0.5*(gamma_chamber - 1)*M_throat^2)/(1 + 0.5*(gamma_chamber - 1)*x^2))^((gamma_chamber + 1)/(gamma_chamber - 1)) );
 
-z = @(x) A_throat_int/A29_30 - (x/M_throat)*sqrt( ((1 + 0.5*(gamma30 - 1)*M_throat^2)/(1 + 0.5*(gamma30 - 1)*x^2))^((gamma30 + 1)/(gamma30 - 1)) );
+M30 = fsolve(z,0.08)
 
-M30 = fsolve(z,0.08);
+iter = 0;
+err = 1;
 
-c30 = sqrt(gamma30*R_mix*T_chamber);
+while err > 1e-3
+    iter = iter + 1;
+
+    P30 = P_tot/((1 + 0.5*(gamma30 - 1)*M30^2)^(gamma30/(gamma30 - 1)));
+
+    T_tot = T_chamber*(1 + 0.5*(gamma_chamber - 1)*M_throat^2);
+
+    T30 = T_tot/(1 + 0.5*(gamma30 - 1)*M30^2);
+
+    gamma30_N2_new = gamma_N2(find(abs(T - round(T30,1))==min(abs(T - round(T30,1)))) ,find( abs(P - round(P30,1))==min(abs(P - round(P30,1)))) ); 
+    gamma30_new = (m_dot_SRP*gamma_SRP + m_dot_N2*gamma30_N2_new)/(m_dot_N2 + m_dot_SRP);
+
+    err = abs(gamma30 - gamma30_new);
+
+    gamma30 = gamma30_new;
+
+end
+
+clear gamma30_new
+clear gamma30_N2_new
+
+%%
+
+rho30_N2 = rho_N2(find(abs(T - round(T30,1))==min(abs(T - round(T30,1)))) ,find( abs(P - round(P30,1))==min(abs(P - round(P30,1)))) );
+rho30 = (m_dot_SRP*rho_SRP + m_dot_N2*rho30_N2)/(m_dot_N2 + m_dot_SRP);
+
+gamma30_N2 = gamma_N2(find(abs(T - round(T30,1))==min(abs(T - round(T30,1)))) ,find( abs(P - round(P30,1))==min(abs(P - round(P30,1)))) );
+gamma30 = (m_dot_SRP*gamma_SRP + m_dot_N2*gamma30_N2)/(m_dot_N2 + m_dot_SRP);
+
+c30 = sqrt(gamma30*R_mix*T30);
 
 v30 = m_dot_mix/(A29_30*rho30)
 
@@ -93,8 +125,9 @@ end
 
 g_M30 = (1 - M30^2)/(gamma30*M30^2) + ((gamma30 + 1)/(2*gamma30))*log(((gamma30 + 1)*M30^2)/(2 + (gamma30 - 1)*M30^2) );
 
-g_M29 = g_M30 + lambda*(L29_30/d29_30_int);
+g_M29 = g_M30 + 3;
+%lambda*(L29_30/d29_30_int)
+gamma29 = gamma30 + 0.01;
 
-gamma29 = gamma30 + 0.1;
 y = @(x) g_M29 - (1 - x^2)/(gamma29*x^2) + ((gamma29 + 1)/(2*gamma29))*log(((gamma29 + 1)*x^2)/(2 + (gamma29 - 1)*x^2) );
-M29 = fsolve(y,0.006)
+M29 = fzero(y,M30)

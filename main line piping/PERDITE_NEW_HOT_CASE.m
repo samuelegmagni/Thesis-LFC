@@ -14,7 +14,7 @@ set(0,'DefaultLegendFontSize',12);
 %% After pressure regulator (point 1)
 
 T1 = 298;                                       % Temperature downstream the pressure regulator [K]
-P1 = 36;  
+P1 = 10.5;  
 
 load('nitrogenThermoPhysicalProp.mat')
 
@@ -31,7 +31,7 @@ clear k; clear mu; clear Mw; clear omega; clear pc; clear rho;
 clear Rho; clear s; clear S; clear species; clear Tc; clear u;
 clear U; clear V
 
-m_dot_N2 = 75*1e-3;                  % Nitrogen mass flow rate [kg/s]
+m_dot_N2 = 20*1e-3;                  % Nitrogen mass flow rate [kg/s]
 R_N2 = 8314/28;                         % Specific ideal gas constant [J/kgK]
 
 d1_ext = 6.35*1e-3;                   % Pipe external diameter [m]
@@ -1042,7 +1042,7 @@ while err > 1e-3
     g_M29 = (1 - M29^2)/(gamma29*M29^2) + ((gamma29 + 1)/(2*gamma29))*log(((gamma29 + 1)*M29^2)/(2 + (gamma29 - 1)*M29^2) );
     g_M30 = g_M29 - lambda*(L29_30/d29_30_int);
 
-    y = @(x) g_M30 - (1 - x^2)/(gamma30*x^2) + ((gamma30 + 1)/(2*gamma30))*log(((gamma30+ 1)*x^2)/(2 + (gamma30 - 1)*x^2) );
+    y = @(x) g_M30 - (1 - x^2)/(gamma30*x^2) + ((gamma30 + 1)/(2*gamma30))*log(((gamma30 + 1)*x^2)/(2 + (gamma30 - 1)*x^2) );
     M30 = fsolve(y,0.006);
     
     T_star = T29/(0.5*(gamma29 + 1)/(1 + (gamma29 - 1)*0.5*M29^2));
@@ -1080,16 +1080,22 @@ d_inj = sqrt(4*A_throat_int/pi)*1000;     % [mm]
 
 P_chamber = P_tot30/((1 + 0.5*(gamma30 - 1)*M_throat^2)^(gamma30/(gamma30 - 1)));
 
-P_needed = 2*1e5;
-T_needed = 600;
-
-rho_chamber = P_needed/(R_mix*T_needed);
-
-A_chamber = 25*25*1e-6;
-v_chamber = m_dot_mix/(rho_chamber*A_chamber);
-c_chamber = sqrt(gamma30*R_mix*T_needed);
-M_chamber = v_chamber/c_chamber;
-
-P_tot_chamber = (P_needed/1e5)*((1 + 0.5*(gamma30 - 1)*M_chamber^2)^(gamma30/(gamma30 - 1)))
-
-P_exit_inj = P_tot_chamber/((1 + 0.5*(gamma30 - 1)*M_throat^2)^(gamma30/(gamma30 - 1)))
+% 
+% P_needed = 2;
+% T_needed = 600;
+% 
+% P_tot_needed = P_needed*((1 + 0.5*(gamma30 - 1)*M_throat^2)^(gamma30/(gamma30 - 1)));
+% 
+% P_inj = P_tot_needed/((1 + 0.5*(gamma30 - 1)*M30^2)^(gamma30/(gamma30 - 1)))
+% 
+% 
+% % rho_chamber = P_needed/(R_mix*T_needed);
+% % 
+% % A_chamber = 25*25*1e-6;
+% % v_chamber = m_dot_mix/(rho_chamber*A_chamber);
+% % c_chamber = sqrt(gamma30*R_mix*T_needed);
+% % M_chamber = v_chamber/c_chamber;
+% % 
+% % P_tot_chamber = (P_needed/1e5)*((1 + 0.5*(gamma30 - 1)*M_chamber^2)^(gamma30/(gamma30 - 1)))
+% % 
+% % P_exit_inj = P_tot_chamber/((1 + 0.5*(gamma30 - 1)*M_throat^2)^(gamma30/(gamma30 - 1)))
