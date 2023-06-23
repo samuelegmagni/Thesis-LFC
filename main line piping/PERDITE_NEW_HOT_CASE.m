@@ -14,7 +14,11 @@ set(0,'DefaultLegendFontSize',12);
 %% After pressure regulator (point 1)
 
 T1 = 298;                                       % Temperature downstream the pressure regulator [K]
+<<<<<<< Updated upstream
 P1 = 28.2;  
+=======
+P1 = 12.7;  
+>>>>>>> Stashed changes
 
 load('nitrogenThermoPhysicalProp.mat')
 
@@ -31,7 +35,11 @@ clear k; clear mu; clear Mw; clear omega; clear pc; clear rho;
 clear Rho; clear s; clear S; clear species; clear Tc; clear u;
 clear U; clear V
 
+<<<<<<< Updated upstream
 m_dot_N2 = 60*1e-3;                  % Nitrogen mass flow rate [kg/s]
+=======
+m_dot_N2 = 25*1e-3;                  % Nitrogen mass flow rate [kg/s]
+>>>>>>> Stashed changes
 R_N2 = 8314/28;                         % Specific ideal gas constant [J/kgK]
 
 d1_ext = 6.35*1e-3;                   % Pipe external diameter [m]

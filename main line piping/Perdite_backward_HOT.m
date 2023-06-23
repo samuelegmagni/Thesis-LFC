@@ -29,7 +29,7 @@ clear k; clear mu; clear Mw; clear omega; clear pc; clear rho;
 clear Rho; clear s; clear S; clear species; clear Tc; clear u;
 clear U; clear V
 
-m_dot_N2 = 20*1e-3;                  % Nitrogen mass flow rate [kg/s]
+m_dot_N2 = 60*1e-3;                  % Nitrogen mass flow rate [kg/s]
 R_N2 = 8314/28;                         % Specific ideal gas constant [J/kgK]
 
 R_SRP = 8314/36.32;
