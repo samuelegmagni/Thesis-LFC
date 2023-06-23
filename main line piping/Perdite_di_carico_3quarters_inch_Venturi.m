@@ -244,6 +244,7 @@ end
 clear gamma6_new
 
 %% Before Venturi channel (point 6) and after Venturi channel (point 7)
+
 d_throat_int = 7.5*1e-3;
 A_throat_int = 0.25*pi*d_throat_int^2;
 

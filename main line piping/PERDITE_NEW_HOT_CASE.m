@@ -14,11 +14,7 @@ set(0,'DefaultLegendFontSize',12);
 %% After pressure regulator (point 1)
 
 T1 = 298;                                       % Temperature downstream the pressure regulator [K]
-<<<<<<< Updated upstream
 P1 = 28.2;  
-=======
-P1 = 12.7;  
->>>>>>> Stashed changes
 
 load('nitrogenThermoPhysicalProp.mat')
 
@@ -35,11 +31,7 @@ clear k; clear mu; clear Mw; clear omega; clear pc; clear rho;
 clear Rho; clear s; clear S; clear species; clear Tc; clear u;
 clear U; clear V
 
-<<<<<<< Updated upstream
-m_dot_N2 = 60*1e-3;                  % Nitrogen mass flow rate [kg/s]
-=======
 m_dot_N2 = 25*1e-3;                  % Nitrogen mass flow rate [kg/s]
->>>>>>> Stashed changes
 R_N2 = 8314/28;                         % Specific ideal gas constant [J/kgK]
 
 d1_ext = 6.35*1e-3;                   % Pipe external diameter [m]
@@ -784,7 +776,7 @@ while err > 1e-3
     M23 = fsolve(y,0.006);
     
     T_star = T22/(0.5*(gamma22 + 1)/(1 + (gamma22 - 1)*0.5*M22^2));
-    T23= T_star*(0.5*(gamma23+ 1)/(1 + (gamma23 - 1)*0.5*M23^2));
+    T23 = T_star*(0.5*(gamma23+ 1)/(1 + (gamma23 - 1)*0.5*M23^2));
     
     P_star = P22/((1/M22)*sqrt(0.5*(gamma22 + 1)/(1 + (gamma22 - 1)*0.5*M22^2)));
     P23 = P_star*((1/M23)*sqrt(0.5*(gamma23 + 1)/(1 + (gamma23 - 1)*0.5*M23^2)));
@@ -834,7 +826,7 @@ M24 = v24/c24;
                   
 Re24 = (rho24*v24*d24_25_int)/mu24;                    % Reynolds number downstream the manual ball valve [-]
 
-if Re24< 2300
+if Re24 < 2300
 
         lambda = 64/Re24;
 
