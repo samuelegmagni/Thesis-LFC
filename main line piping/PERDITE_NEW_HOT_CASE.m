@@ -11,10 +11,21 @@ set(groot,'DefaultAxesTickLabelInterpreter','Latex');
 set(0,'DefaultTextInterpreter','Latex');
 set(0,'DefaultLegendFontSize',12);
 
+m_dot_N2 = 20*1e-3;                  % Nitrogen mass flow rate [kg/s]
+
+mdotvect = [1.042 2.083 4.167 8.333 20.83 41.67 60 83.33]*1e-3;
+P_in_MFMvect = [0.5283 1.5222 3.743 8.336 22.25 45.47 65.92 91.94];
+deltaP_MFMvect = [8.33*1e-3 3.33*1e-2 0.1334 0.5349 3.404 14.66 35.35 80];
+
+p1 = polyfit(mdotvect,P_in_MFMvect,1);
+p2 = polyfit(mdotvect,deltaP_MFMvect,7);
+P_in_min_MFM = polyval(p1,m_dot_N2)
+deltaP_MFM = polyval(p2,m_dot_N2)
+
 %% After pressure regulator (point 1)
 
 T1 = 298;                                       % Temperature downstream the pressure regulator [K]
-P1 = 28.2;  
+P1 = P_in_min_MFM + 0.1*P_in_min_MFM; 
 
 load('nitrogenThermoPhysicalProp.mat')
 
@@ -31,7 +42,6 @@ clear k; clear mu; clear Mw; clear omega; clear pc; clear rho;
 clear Rho; clear s; clear S; clear species; clear Tc; clear u;
 clear U; clear V
 
-m_dot_N2 = 25*1e-3;                  % Nitrogen mass flow rate [kg/s]
 R_N2 = 8314/28;                         % Specific ideal gas constant [J/kgK]
 
 d1_ext = 6.35*1e-3;                   % Pipe external diameter [m]
@@ -638,12 +648,13 @@ d18_19_ext = 12*1e-3;
 t18_19 = 1.5*1e-3;
 d18_19_int = d18_19_ext - 2*t18_19;
 A18_19 = pi*(d18_19_int/2)^2;
-
-G_g = rho18/1000;                       % Nitrogen specific gravity [-]
-q_N2 = (m_dot_N2/rho18)*1000;           % Nitrogen volumetric flow rate [L/s]
-C_V = 0.73;                             % Flow coefficient needle valve
-
-P19 = P18 - (G_g*(q_N2*60)^2)/(14.42*C_V)^2;                                            % Pressure downstream the mass flow meter (needle valve approx) [bar]
+% 
+% G_g = rho18/1000;                       % Nitrogen specific gravity [-]
+% q_N2 = (m_dot_N2/rho18)*1000;           % Nitrogen volumetric flow rate [L/s]
+% C_V = 0.73;                             % Flow coefficient needle valve
+% 
+% P19 = P18 - (G_g*(q_N2*60)^2)/(14.42*C_V)^2;                                            % Pressure downstream the mass flow meter (needle valve approx) [bar]
+P19 = P18 - deltaP_MFM;
 T19 = T18;     
 
 rho19 = rho_N2(find(abs(T - round(T19,1))==min(abs(T - round(T19,1)))) ,find( abs(P - round(P19,1))==min(abs(P - round(P19,1)))) );         % Density downstream the pipe bending after the pressure regulator [kg/m^3]
@@ -882,7 +893,7 @@ T26 = T25;
 
 %% After checkvalve and before mixing chamber (point 26 and 27)
 
-d26_27_ext = 19.05*1e-3;
+d26_27_ext = 19.052*1e-3;
 t26_27 = 1.5*1e-3;
 d26_27_int = d26_27_ext - 2*t24_25;
 A26_27 = pi*(d26_27_int/2)^2;
@@ -919,7 +930,7 @@ while err > 1e-3
     iter = iter + 1;
 
     g_M26 = (1 - M26^2)/(gamma26*M26^2) + ((gamma26 + 1)/(2*gamma26))*log(((gamma26 + 1)*M26^2)/(2 + (gamma26 - 1)*M26^2) );
-    g_M27 = g_M26- lambda*(L26_27/d26_27_int);
+    g_M27 = g_M26 - lambda*(L26_27/d26_27_int);
 
     y = @(x) g_M27 - (1 - x^2)/(gamma27*x^2) + ((gamma27 + 1)/(2*gamma27))*log(((gamma27+ 1)*x^2)/(2 + (gamma27 - 1)*x^2) );
     M27 = fsolve(y,0.006);
@@ -993,17 +1004,6 @@ d29_30_int = d29_30_ext - 2*t29_30;
 A29_30 = pi*(d29_30_int/2)^2;
 
 eps29_30_rel = eps/d29_30_int;               % Relative roughness of stainless steel [-]
-
-
-% T = (floor(T29)-80):1:(ceil(T29));
-% P = (floor(P29)-2):0.1:(ceil(P29));
-% data = nistdata('N2',T,P);
-% 
-% rho_N2 = data.Rho*data.Mw;           % Density of Nitrogen [kg/m^3] 
-% cp_N2 = data.Cp/data.Mw;             % Specific heat at constant pressure of Nitrogen [J/kgK]
-% cv_N2 = data.Cv/data.Mw;             % Specific heat at constant volume of Nitrogen [J/kgK]
-% gamma_N2 = cp_N2./cv_N2;             % Ratio of specific heats [-]
-% mu_N2 = data.mu;                     % Viscosity of Nitrogen [Pa*s]
 
 L29_30 = 30*1e-2;
 rho29_N2 = rho_N2(find(abs(T - round(T29,1))==min(abs(T - round(T29,1)))) ,find( abs(P - round(P29,1))==min(abs(P - round(P29,1)))) );
@@ -1079,23 +1079,3 @@ A_throat_int = fsolve(z,0.08);
 d_inj = sqrt(4*A_throat_int/pi)*1000;     % [mm]
 
 P_chamber = P_tot30/((1 + 0.5*(gamma30 - 1)*M_throat^2)^(gamma30/(gamma30 - 1)));
-
-% 
-% P_needed = 2;
-% T_needed = 600;
-% 
-% P_tot_needed = P_needed*((1 + 0.5*(gamma30 - 1)*M_throat^2)^(gamma30/(gamma30 - 1)));
-% 
-% P_inj = P_tot_needed/((1 + 0.5*(gamma30 - 1)*M30^2)^(gamma30/(gamma30 - 1)))
-% 
-% 
-% % rho_chamber = P_needed/(R_mix*T_needed);
-% % 
-% % A_chamber = 25*25*1e-6;
-% % v_chamber = m_dot_mix/(rho_chamber*A_chamber);
-% % c_chamber = sqrt(gamma30*R_mix*T_needed);
-% % M_chamber = v_chamber/c_chamber;
-% % 
-% % P_tot_chamber = (P_needed/1e5)*((1 + 0.5*(gamma30 - 1)*M_chamber^2)^(gamma30/(gamma30 - 1)))
-% % 
-% % P_exit_inj = P_tot_chamber/((1 + 0.5*(gamma30 - 1)*M_throat^2)^(gamma30/(gamma30 - 1)))

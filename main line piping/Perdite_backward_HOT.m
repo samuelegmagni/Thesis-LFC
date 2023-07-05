@@ -51,7 +51,7 @@ gamma30_N2 = gamma_N2(find(abs(T - round(T_chamber,1))==min(abs(T - round(T_cham
 gamma30 = (m_dot_SRP*gamma_SRP + m_dot_N2*gamma30_N2)/(m_dot_N2 + m_dot_SRP);
 
 
-d_inj = 11.35*1e-3;    % [mm]
+d_inj = 11.35*1e-3;    % [m]
 A_throat_int = 0.25*pi*d_inj^2;
 
 M_throat = 1;
@@ -93,41 +93,3 @@ end
 
 clear gamma30_new
 clear gamma30_N2_new
-
-%%
-
-rho30_N2 = rho_N2(find(abs(T - round(T30,1))==min(abs(T - round(T30,1)))) ,find( abs(P - round(P30,1))==min(abs(P - round(P30,1)))) );
-rho30 = (m_dot_SRP*rho_SRP + m_dot_N2*rho30_N2)/(m_dot_N2 + m_dot_SRP);
-
-gamma30_N2 = gamma_N2(find(abs(T - round(T30,1))==min(abs(T - round(T30,1)))) ,find( abs(P - round(P30,1))==min(abs(P - round(P30,1)))) );
-gamma30 = (m_dot_SRP*gamma_SRP + m_dot_N2*gamma30_N2)/(m_dot_N2 + m_dot_SRP);
-
-c30 = sqrt(gamma30*R_mix*T30);
-
-v30 = m_dot_mix/(A29_30*rho30)
-
-v_prova = M30*c30
-
-Re30 = (rho30*v30*d29_30_int)/mu30;  % Reynolds number downstream the manual ball valve [-]
-
-L29_30 = 30*1e-2;
-
-if Re30 < 2300
-
-        lambda = 64/Re30;
-
-    else 
-
-        z = @(x) 1/sqrt(x) + 2*log10(2.51/(Re30*sqrt(x)) + eps29_30_rel/3.71);   % Colebrook-White correlation
-        lambda = fsolve(z,0.0004);
-
-end
-
-g_M30 = (1 - M30^2)/(gamma30*M30^2) + ((gamma30 + 1)/(2*gamma30))*log(((gamma30 + 1)*M30^2)/(2 + (gamma30 - 1)*M30^2) );
-
-g_M29 = g_M30 + 3;
-%lambda*(L29_30/d29_30_int)
-gamma29 = gamma30 + 0.01;
-
-y = @(x) g_M29 - (1 - x^2)/(gamma29*x^2) + ((gamma29 + 1)/(2*gamma29))*log(((gamma29 + 1)*x^2)/(2 + (gamma29 - 1)*x^2) );
-M29 = fzero(y,M30)
