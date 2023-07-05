@@ -11,21 +11,18 @@ set(groot,'DefaultAxesTickLabelInterpreter','Latex');
 set(0,'DefaultTextInterpreter','Latex');
 set(0,'DefaultLegendFontSize',12);
 
-m_dot_N2 = 20*1e-3;                  % Nitrogen mass flow rate [kg/s]
+m_dot_N2 = 75*1e-3;                  % Nitrogen mass flow rate [kg/s]
 
 mdotvect = [1.042 2.083 4.167 8.333 20.83 41.67 60 83.33]*1e-3;
 P_in_MFMvect = [0.5283 1.5222 3.743 8.336 22.25 45.47 65.92 91.94];
-deltaP_MFMvect = [8.33*1e-3 3.33*1e-2 0.1334 0.5349 3.404 14.66 35.35 80];
 
 p1 = polyfit(mdotvect,P_in_MFMvect,1);
-p2 = polyfit(mdotvect,deltaP_MFMvect,7);
-P_in_min_MFM = polyval(p1,m_dot_N2)
-deltaP_MFM = polyval(p2,m_dot_N2)
+P_in_min_MFM = polyval(p1,m_dot_N2);
 
 %% After pressure regulator (point 1)
 
 T1 = 298;                                       % Temperature downstream the pressure regulator [K]
-P1 = P_in_min_MFM + 0.1*P_in_min_MFM; 
+P1 = P_in_min_MFM + 0.1831*P_in_min_MFM; 
 
 load('nitrogenThermoPhysicalProp.mat')
 
@@ -654,6 +651,44 @@ A18_19 = pi*(d18_19_int/2)^2;
 % C_V = 0.73;                             % Flow coefficient needle valve
 % 
 % P19 = P18 - (G_g*(q_N2*60)^2)/(14.42*C_V)^2;                                            % Pressure downstream the mass flow meter (needle valve approx) [bar]
+
+
+%% Nei casi 20, 25 e 26 g/s
+
+% x_20 = [100 80 22.25];
+% y_20 = [2.709 3.404 22.25];
+% 
+% poly_20 = polyfit(x_20,y_20,2);
+% deltaP_20 = polyval(poly_20,P18);
+% 
+% deltaP_MFM = (m_dot_N2/(20.83*1e-3))*deltaP_20;
+% 
+% clear delta_P20; clear poly_20;
+% clear x_20; clear y_20;
+
+ %% Nei casi 75 e 78 g/s
+
+x_83 = [100 91.94];
+y_83 = [61.46 91.94];
+
+poly_83 = polyfit(x_83,y_83,1);
+deltaP_83 = polyval(poly_83,P18);
+
+deltaP_MFM = (m_dot_N2/(83.33*1e-3))*deltaP_83;
+
+clear delta_P83; clear poly_83;
+clear x_83; clear y_83
+
+%% Nel caso 60 g/s
+% x_60 = [100 80 65.92];
+% y_60 = [25.35 44.65 65.92];
+% 
+% poly_60 = polyfit(x_60,y_60,2);
+% deltaP_MFM = polyval(poly_60,P18);
+% 
+% clear poly_60; clear x_60; clear y_60
+
+%%
 P19 = P18 - deltaP_MFM;
 T19 = T18;     
 
