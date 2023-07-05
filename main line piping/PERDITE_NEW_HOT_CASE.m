@@ -22,7 +22,7 @@ P_in_min_MFM = polyval(p1,m_dot_N2);
 %% After pressure regulator (point 1)
 
 T1 = 298;                                       % Temperature downstream the pressure regulator [K]
-P1 = P_in_min_MFM + 0.1831*P_in_min_MFM; 
+P1 = P_in_min_MFM + 0.185*P_in_min_MFM; 
 
 load('nitrogenThermoPhysicalProp.mat')
 
