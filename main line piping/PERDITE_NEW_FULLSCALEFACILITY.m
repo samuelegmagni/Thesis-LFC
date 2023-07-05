@@ -786,7 +786,7 @@ T21 = T_tot/(1 + ((gamma20_2 - 1)/2)*M21^2);
 
 eps21_22_rel = eps/d21_22_int;               % Relative roughness of stainless steel [-]
 
-L21_22 = 20*1e-2;
+L21_22 = 30*1e-2;
 rho21 = rho_N2(find(abs(T - round(T21,1))==min(abs(T - round(T21,1)))) ,find( abs(P - round(P21,1))==min(abs(P - round(P21,1)))) );       % Density downstream the pipe bending after the pressure regulator [kg/m^3]
 gamma21 = gamma_N2(find(abs(T - round(T21,1))==min(abs(T - round(T21,1)))) ,find( abs(P - round(P21,1))==min(abs(P - round(P21,1)))) );   % Ratio of specific heats downstream the pipe bending after the pressure regulator [-]
 gamma22 = gamma_N2(find(abs(T - round(T21,1))==min(abs(T - round(T21,1)))) ,find( abs(P - round(P21,1))==min(abs(P - round(P21,1)))) );
