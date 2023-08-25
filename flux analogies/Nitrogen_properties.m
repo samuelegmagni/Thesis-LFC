@@ -28,37 +28,37 @@ clear U; clear V
 figure()
 contourf(P,T,rho_N2); 
 title('Nitrogen density')
-xlabel('Pressure $[bar]$')
-ylabel('Temperature $[K]$')
+xlabel('Pressure, P $[bar]$')
+ylabel('Temperature, T $[K]$')
 c = colorbar;
-c.Label.String = '\rho_{N_2} [kg/m^3]';
+c.Label.String = 'Density, \rho [kg/m^3]';
 %% Heat capacity at constant pressure
 
 figure()
 contourf(P,T,cp_N2); 
 title('Nitrogen heat capacity')
-xlabel('Pressure $[bar]$')
-ylabel('Temperature $[K]$')
+xlabel('Pressure, P $[bar]$')
+ylabel('Temperature, T $[K]$')
 c = colorbar;
-c.Label.String = 'c_{p,N_2} [J/Kg*K]';
+c.Label.String = 'Specific heat, c_p [J/Kg*K]';
 
 %% Conductivity 
 
 figure()
 contourf(P,T,k); 
 title('Nitrogen conductivity')
-xlabel('Pressure $[bar]$')
-ylabel('Temperature $[K]$')
+xlabel('Pressure, P $[bar]$')
+ylabel('Temperature, T $[K]$')
 c = colorbar;
-c.Label.String = '\lambda_{N_2} [W/m*K]';
+c.Label.String = 'Thermal conductivity, \lambda [W/m*K]';
 
 %% Viscosity 
 
 figure()
 contourf(P,T,mu_N2); 
 title('Nitrogen viscosity')
-xlabel('Pressure $[bar]$')
-ylabel('Temperature $[K]$')
+xlabel('Pressure, P $[bar]$')
+ylabel('Temperature, T $[K]$')
 c = colorbar;
-c.Label.String = '\mu_{N_2} [Pa*s]';
+c.Label.String = 'Viscosity, \mu [Pa*s]';
 

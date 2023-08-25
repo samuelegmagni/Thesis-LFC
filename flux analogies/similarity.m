@@ -53,20 +53,20 @@ q_dot_exp = m_dot_exp.*( (data.Cp/data.Mw).*T_vect' - ( (data.Cp(1,1)/data.Mw)*T
 figure()
 contourf(data.P*1e-5,data.T,m_dot_exp); 
 shading flat;
-title('Mass flow rate $Re_D$ similarity')
-xlabel('Pressure $[bar]$')
-ylabel('Temperature $[K]$')
+title('Mass flow rate: $Re_D$ similarity')
+xlabel('Pressure, P $[bar]$')
+ylabel('Temperature, T $[K]$')
 c = colorbar;
-c.Label.String = 'm_{N_2} [kg/s]';
+c.Label.String = 'Mass flow rate, \dot{m} [kg/s]';
 
 figure()
 contourf(data.P*1e-5,data.T,1e-3*q_dot_exp/1);     % area di riferimento 1 m^2
 shading flat;
-title('Energy flux $Re_D$ similarity')
-xlabel('Pressure $[bar]$')
-ylabel('Temperature $[K]$')
+title('Energy flow rate: $Re_D$ similarity')
+xlabel('Pressure, P $[bar]$')
+ylabel('Temperature, T $[K]$')
 c = colorbar;
-c.Label.String = 'q_{N_2} [kW/m^2]';
+c.Label.String = 'Energy flow rate, \dot{q} [kW]';
 
 %% Full scale test section: mass flux similarity
 
@@ -80,19 +80,21 @@ q_dot_exp = m_dot_exp.*( (data.Cp/data.Mw).*T_vect' - ( (data.Cp(1,1)/data.Mw)*T
 
 figure()
 contourf(data.P*1e-5,data.T,m_dot_exp); 
+shading flat;
 title('Mass flow rate: mass flux similarity')
-xlabel('Pressure $[bar]$')
-ylabel('Temperature $[K]$')
+xlabel('Pressure, P $[bar]$')
+ylabel('Temperature, T $[K]$')
 c = colorbar;
-c.Label.String = 'm_{N_2} [kg/s]';
+c.Label.String = 'Mass flow rate, \dot{m} [kg/s]';
 
 figure()
 contourf(data.P*1e-5,data.T,1e-3*q_dot_exp/1);     % area di riferimento 1 m^2
-title('Energy flux: mass flux similarity')
-xlabel('Pressure $[bar]$')
-ylabel('Temperature $[K]$')
+shading flat;
+title('Energy flow rate: mass flux similarity')
+xlabel('Pressure, P $[bar]$')
+ylabel('Temperature, T $[K]$')
 c = colorbar;
-c.Label.String = 'q_{N_2} [kW/m^2]';
+c.Label.String = 'Energy flow rate, \dot{q} [kW]';
 
 %% Full scale test section: momentum flux similarity
 
@@ -106,19 +108,21 @@ q_dot_exp = m_dot_exp.*( (data.Cp/data.Mw).*T_vect' - ( (data.Cp(1,1)/data.Mw)*T
 
 figure()
 contourf(data.P*1e-5,data.T,m_dot_exp); 
+shading flat;
 title('Mass flow rate: momentum flux similarity')
-xlabel('Pressure $[bar]$')
-ylabel('Temperature $[K]$')
+xlabel('Pressure, P $[bar]$')
+ylabel('Temperature, T $[K]$')
 c = colorbar;
-c.Label.String = 'm_{N_2} [kg/s]';
+c.Label.String = 'Mass flow rate, \dot{m} [kg/s]';
 
 figure()
 contourf(data.P*1e-5,data.T,1e-3*q_dot_exp/1);     % area di riferimento 1 m^2
-title('Energy flux: momentum flux similarity')
-xlabel('Pressure $[bar]$')
-ylabel('Temperature $[K]$')
+shading flat;
+title('Energy flow rate: momentum flux similarity')
+xlabel('Pressure, P $[bar]$')
+ylabel('Temperature, T $[K]$')
 c = colorbar;
-c.Label.String = 'q_{N_2} [kW/m^2]';
+c.Label.String = 'Energy flow rate, \dot{q} [kW]';
 
 %% Full scale test section: energy flux similarity
 
@@ -132,20 +136,21 @@ q_dot_exp = m_dot_exp.*( (data.Cp/data.Mw).*T_vect' - ( (data.Cp(1,1)/data.Mw)*T
 
 figure()
 contourf(data.P*1e-5,data.T,m_dot_exp); 
+shading flat;
 title('Mass flow rate: energy flux similarity')
-xlabel('Pressure $[bar]$')
-ylabel('Temperature $[K]$')
+xlabel('Pressure, P $[bar]$')
+ylabel('Temperature, T $[K]$')
 c = colorbar;
-c.Label.String = 'm_{N_2} [kg/s]';
-clim([6 16])
+c.Label.String = 'Mass flow rate, \dot{m} [kg/s]';
 
 figure()
 contourf(data.P*1e-5,data.T,1e-3*q_dot_exp/1);     % area di riferimento 1 m^2
-title('Energy flux: energy flux similarity')
-xlabel('Pressure $[bar]$')
-ylabel('Temperature $[K]$')
+shading flat;
+title('Energy flow rate: momentum flux similarity')
+xlabel('Pressure, P $[bar]$')
+ylabel('Temperature, T $[K]$')
 c = colorbar;
-c.Label.String = 'q_{N_2} [kW/m^2]';
+c.Label.String = 'Energy flow rate, \dot{q} [kW]';
 
 %% Small scale test facility
 
@@ -169,19 +174,19 @@ q_dot_exp = m_dot_exp.*( (data.Cp/data.Mw).*T_small' - ( (data.Cp(1,1)/data.Mw)*
 
 figure()
 contourf(data.P*1e-5,data.T,m_dot_exp); 
-title('Slab 30x30: mass flow rate momentum flux analogy')
-xlabel('Pressure $[bar]$')
-ylabel('Temperature $[K]$')
+title('Slab 30x30 momentum flux analogy: mass flow rate')
+xlabel('Pressure, P $[bar]$')
+ylabel('Temperature, T $[K]$')
 c = colorbar;
-c.Label.String = 'm_{N_2} [kg/s]';
+c.Label.String = 'Mass flow rate, \dot{m} [kg/s]';
 
 figure()
 contourf(data.P*1e-5,data.T,1e-3*q_dot_exp/1);     % area di riferimento 1 m^2
-title('Slab 30x30: energy flux momentum flux analogy')
-xlabel('Pressure $[bar]$')
-ylabel('Temperature $[K]$')
+title('Slab 30x30 momentum flux analogy: energy flow rate')
+xlabel('Pressure, P $[bar]$')
+ylabel('Temperature, T $[K]$')
 c = colorbar;
-c.Label.String = 'q_{N_2} [kW/m^2]';
+c.Label.String = 'Energy flow rate, \dot{q} [kW]';
 
 %% 49x30 momentum flux analogy
 A_test = 49*30*1e-6;
@@ -196,19 +201,19 @@ q_dot_exp = m_dot_exp.*( (data.Cp/data.Mw).*T_small' - ( (data.Cp(1,1)/data.Mw)*
 
 figure()
 contourf(data.P*1e-5,data.T,m_dot_exp); 
-title('Slab 49x30: mass flow rate momentum flux analogy')
-xlabel('Pressure $[bar]$')
-ylabel('Temperature $[K]$')
+title('Slab 49x30 momentum flux analogy: mass flow rate')
+xlabel('Pressure, P $[bar]$')
+ylabel('Temperature, T $[K]$')
 c = colorbar;
-c.Label.String = 'm_{N_2} [kg/s]';
+c.Label.String = 'Mass flow rate, \dot{m} [kg/s]';
 
 figure()
 contourf(data.P*1e-5,data.T,1e-3*q_dot_exp/1);     % area di riferimento 1 m^2
-title('Slab 49x30: energy flux momentum flux analogy')
-xlabel('Pressure $[bar]$')
-ylabel('Temperature $[K]$')
+title('Slab 49x30 momentum flux analogy: energy flow rate')
+xlabel('Pressure, P $[bar]$')
+ylabel('Temperature, T $[K]$')
 c = colorbar;
-c.Label.String = 'q_{N_2} [kW/m^2]';
+c.Label.String = 'Energy flow rate, \dot{q} [kW]';
 
 %% 69x30 momentum flux analogy
 A_test = 69*30*1e-6;
@@ -223,19 +228,19 @@ q_dot_exp = m_dot_exp.*( (data.Cp/data.Mw).*T_small' - ( (data.Cp(1,1)/data.Mw)*
 
 figure()
 contourf(data.P*1e-5,data.T,m_dot_exp); 
-title('Slab 69x30: mass flow rate momentum flux analogy')
-xlabel('Pressure $[bar]$')
-ylabel('Temperature $[K]$')
+title('Slab 69x30 momentum flux analogy: mass flow rate')
+xlabel('Pressure, P $[bar]$')
+ylabel('Temperature, T $[K]$')
 c = colorbar;
-c.Label.String = 'm_{N_2} [kg/s]';
+c.Label.String = 'Mass flow rate, \dot{m} [kg/s]';
 
 figure()
 contourf(data.P*1e-5,data.T,1e-3*q_dot_exp/1);     % area di riferimento 1 m^2
-title('Slab 69x30: energy flux momentum flux analogy')
-xlabel('Pressure $[bar]$')
-ylabel('Temperature $[K]$')
+title('Slab 69x30 momentum flux analogy: energy flow rate')
+xlabel('Pressure, P $[bar]$')
+ylabel('Temperature, T $[K]$')
 c = colorbar;
-c.Label.String = 'q_{N_2} [kW/m^2]';
+c.Label.String = 'Energy flow rate, \dot{q} [kW]';
 
 %% 69x69 momentum flux analogy
 A_test = 69*69*1e-6;
@@ -250,19 +255,22 @@ q_dot_exp = m_dot_exp.*( (data.Cp/data.Mw).*T_small' - ( (data.Cp(1,1)/data.Mw)*
 
 figure()
 contourf(data.P*1e-5,data.T,m_dot_exp); 
-title('Slab 69x69: mass flow rate momentum flux analogy')
-xlabel('Pressure $[bar]$')
-ylabel('Temperature $[K]$')
+title('Slab 69x69 momentum flux analogy: mass flow rate')
+xlabel('Pressure, P $[bar]$')
+ylabel('Temperature, T $[K]$')
 c = colorbar;
-c.Label.String = 'm_{N_2} [kg/s]';
+c.Label.String = 'Mass flow rate, \dot{m} [kg/s]';
 
 figure()
 contourf(data.P*1e-5,data.T,1e-3*q_dot_exp/1);     % area di riferimento 1 m^2
-title('Slab 69x69: energy flux momentum flux analogy')
-xlabel('Pressure $[bar]$')
-ylabel('Temperature $[K]$')
+title('Slab 69x69 momentum flux analogy: energy flow rate')
+xlabel('Pressure, P $[bar]$')
+ylabel('Temperature, T $[K]$')
 c = colorbar;
-c.Label.String = 'q_{N_2} [kW/m^2]';
+c.Label.String = 'Energy flow rate, \dot{q} [kW]';
+
+
+
 
 %% 30x30 Reynolds analogy
 L_test = 30*1e-3;
