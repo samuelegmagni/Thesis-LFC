@@ -18,14 +18,14 @@ clear all
 mdot=60*1e-3;
 Atube=pi*(8*1e-3)^2;
 T = [290:5:600];
-P = [1:0.1:5];
+P = [1:0.1:12];
 data = nistdata('N2',T,P);
 Tmix = 295;                             
-Ptank = 4;                        
+Ptank = 12;                        
 rho_N2 = data.Rho*data.Mw; 
 rho1= rho_N2(find(T==round(Tmix)),find(abs(P - round(Ptank,1)) < 0.001)); 
 v1=mdot/(Atube*rho1);
-P1=4*1e5;
+P1=12*1e5;
 P2=P1-rho1*v1^2;
 Texit=600;
 rho2= rho_N2(find(T==round(Texit)),find(abs(P - round(P2*1e-5,1)) < 0.001)); 
