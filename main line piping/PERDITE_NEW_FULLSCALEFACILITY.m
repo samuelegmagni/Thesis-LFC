@@ -14,7 +14,7 @@ set(0,'DefaultLegendFontSize',12);
 %% After pressure regulator (point 1)
 
 T1 = 298;                                       % Temperature downstream the pressure regulator [K]
-P1 = 31;  
+P1 = 29;  
 
 load('nitrogenThermoPhysicalProp.mat')
 
@@ -339,7 +339,7 @@ clear gamma9_new
 G_g = rho9/1000;                      % Nitrogen specific gravity [-]
 q_N2 = (m_dot_N2/rho9)*1000;           % Nitrogen volumetric flow rate [L/s]
 % q_N2_std = (P4*q_N2*T4*60)/(1*273.15); % Nitrogen volumetric flow rate at std conditions [std L/min]
-C_V = 3.8;
+C_V = 7.1;
 
 P10 = P9 - (G_g*(q_N2*60)^2)/(14.42*C_V)^2;
 T10 = T9;
@@ -491,7 +491,7 @@ rho14 = rho_N2( find(abs(T - round(T14,1))==min(abs(T - round(T14,1)))) ,find( a
 G_g = rho14/1000;                      % Nitrogen specific gravity [-]
 q_N2 = (m_dot_N2/rho14)*1000;           % Nitrogen volumetric flow rate [L/s]
 
-C_V = 1.68;                             % Flow coefficient check valve
+C_V = 2.2;                             % Flow coefficient check valve
 P15 = P14 - (G_g*(q_N2*60)^2)/(14.42*C_V)^2;         % Pressure downstream the check valve [bar]
 T15 = T14;
 
@@ -702,7 +702,7 @@ clear gamma20_new
 %% Across venturi channel (point 20 and 21)
 
 
-d_throat_int = 7*1e-3;
+d_throat_int = 7.5*1e-3;
 A_throat_int = 0.25*pi*d_throat_int^2;
 
 d21_22_ext = 19.05*1e-3;
@@ -847,7 +847,7 @@ clear gamma22_new
 
 G_g = rho22/1000;                      % Nitrogen specific gravity [-]
 q_N2 = (m_dot_new/rho22)*1000;           % Nitrogen volumetric flow rate [L/s]
-C_V = 3.8;                             % Flow coefficient ball valve
+C_V = 7.1;                             % Flow coefficient ball valve
 
 P23 = P22 - (G_g*(q_N2*60)^2)/(14.42*C_V)^2;     % Pressure downstream the servovalve (ball valve approx) [bar]
 T23 = T22;                        % Temperature downstream the servovalve (ball valve approx) [K]
@@ -923,7 +923,7 @@ clear gamma24_new
 G_g = rho24/1000;                      % Nitrogen specific gravity [-]
 q_N2 = (m_dot_new/rho24)*1000;           % Nitrogen volumetric flow rate [L/s]
 
-C_V = 1.68;                             % Flow coefficient check valve
+C_V = 2.2;                             % Flow coefficient check valve
 P25 = P24 - (G_g*(q_N2*60)^2)/(14.42*C_V)^2;         % Pressure downstream the check valve [bar]
 T25 = T24;
 
