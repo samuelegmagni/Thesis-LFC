@@ -38,8 +38,8 @@ htank = 5*1e-2;
 rtank = sqrt(Vtank./(pi*htank));
 t_des = Pburst*rtank./sigma_snerv;
 t_ASME = Pburst*rtank./(0.8*sigma_ult-0.6*Pburst);
-Vtank_int = pi*(rtank-t_des).^2*htank;
-mtank = (Vtank-Vtank_int).*rho_steel;
+Vtank_est = pi*(rtank+t_des).^2*htank;
+mtank = (Vtank_est -Vtank).*rho_steel;
 
 % Von Mises stresses
 sigma_l = Pburst.*rtank/(2*t_des);
