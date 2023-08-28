@@ -53,7 +53,7 @@ q_dot_exp = m_dot_exp.*( (data.Cp/data.Mw).*T_vect' - ( (data.Cp(1,1)/data.Mw)*T
 figure()
 contourf(data.P*1e-5,data.T,m_dot_exp); 
 shading flat;
-title('Mass flow rate: $Re_D$ similarity')
+title('$Re_D$ similarity')
 xlabel('Pressure, P $[bar]$')
 ylabel('Temperature, T $[K]$')
 c = colorbar;
@@ -63,7 +63,7 @@ c.Label.Interpreter = 'latex';
 figure()
 contourf(data.P*1e-5,data.T,1e-3*q_dot_exp/1);     % area di riferimento 1 m^2
 shading flat;
-title('Energy flow rate: $Re_D$ similarity')
+title('$Re_D$ similarity')
 xlabel('Pressure, P $[bar]$')
 ylabel('Temperature, T $[K]$')
 c = colorbar;
@@ -83,7 +83,7 @@ q_dot_exp = m_dot_exp.*( (data.Cp/data.Mw).*T_vect' - ( (data.Cp(1,1)/data.Mw)*T
 figure()
 contourf(data.P*1e-5,data.T,m_dot_exp); 
 shading flat;
-title('Mass flow rate: mass flux similarity')
+title('Mass flux similarity')
 xlabel('Pressure, P $[bar]$')
 ylabel('Temperature, T $[K]$')
 c = colorbar('Ticks',[max(max(m_dot_exp))],'TickLabels',{'0.79856'});
@@ -93,7 +93,7 @@ c.Label.Interpreter = 'latex';
 figure()
 contourf(data.P*1e-5,data.T,1e-3*q_dot_exp/1);     % area di riferimento 1 m^2
 shading flat;
-title('Energy flow rate: mass flux similarity')
+title('Mass flux similarity')
 xlabel('Pressure, P $[bar]$')
 ylabel('Temperature, T $[K]$')
 c = colorbar;
@@ -113,7 +113,7 @@ q_dot_exp = m_dot_exp.*( (data.Cp/data.Mw).*T_vect' - ( (data.Cp(1,1)/data.Mw)*T
 figure()
 contourf(data.P*1e-5,data.T,m_dot_exp); 
 shading flat;
-title('Mass flow rate: momentum flux similarity')
+title('Momentum flux similarity')
 xlabel('Pressure, P $[bar]$')
 ylabel('Temperature, T $[K]$')
 c = colorbar;
@@ -123,7 +123,7 @@ c.Label.Interpreter = 'latex';
 figure()
 contourf(data.P*1e-5,data.T,1e-3*q_dot_exp/1);     % area di riferimento 1 m^2
 shading flat;
-title('Energy flow rate: momentum flux similarity')
+title('Momentum flux similarity')
 xlabel('Pressure, P $[bar]$')
 ylabel('Temperature, T $[K]$')
 c = colorbar;
@@ -143,7 +143,7 @@ q_dot_exp = m_dot_exp.*( (data.Cp/data.Mw).*T_vect' - ( (data.Cp(1,1)/data.Mw)*T
 figure()
 contourf(data.P*1e-5,data.T,m_dot_exp); 
 shading flat;
-title('Mass flow rate: energy flux similarity')
+title('Energy flux similarity')
 xlabel('Pressure, P $[bar]$')
 ylabel('Temperature, T $[K]$')
 c = colorbar;
@@ -153,7 +153,7 @@ c.Label.Interpreter = 'latex';
 figure()
 contourf(data.P*1e-5,data.T,1e-3*q_dot_exp/1);     % area di riferimento 1 m^2
 shading flat;
-title('Energy flow rate: energy flux similarity')
+title('Energy flux similarity')
 xlabel('Pressure, P $[bar]$')
 ylabel('Temperature, T $[K]$')
 c = colorbar;
@@ -162,10 +162,41 @@ c.Label.Interpreter = 'latex';
 
 %% Small scale test facility
 
-T_small = [298:5:600];
+T_small = [300:5:600];
 P_small = [1:0.5:3];
 
 data = nistdata('N2',T_small,P_small);
+
+%% 25x25 momentum flux analogy
+L_test = 25*1e-3;
+
+mom_flux = rho*u^2;      % mom_flux_paper = 896.89;
+
+u_exp = sqrt(mom_flux./(data.Rho*data.Mw));
+
+m_dot_exp = data.Rho*data.Mw.*u_exp*L_test^2;
+
+adjust_vect = ones(length(T_small),length(P_small));
+
+q_dot_exp = m_dot_exp.*( (data.Cp/data.Mw).*T_small' - ( (data.Cp(1,1)/data.Mw)*T_small(1)*adjust_vect ) );
+
+figure()
+contourf(data.P*1e-5,data.T,m_dot_exp); 
+title('Slab 25x25 momentum flux analogy')
+xlabel('Pressure, P $[bar]$')
+ylabel('Temperature, T $[K]$')
+c = colorbar;
+c.Label.String = 'Mass flow rate, $\dot{m}$ [kg/s]';
+c.Label.Interpreter = 'latex';
+
+figure()
+contourf(data.P*1e-5,data.T,1e-3*q_dot_exp/1);     % area di riferimento 1 m^2
+title('Slab 25x25 momentum flux analogy')
+xlabel('Pressure, P $[bar]$')
+ylabel('Temperature, T $[K]$')
+c = colorbar;
+c.Label.String = 'Energy flow rate, $\dot{q}$ [kW]';
+c.Label.Interpreter = 'latex';
 
 %% 30x30 momentum flux analogy
 L_test = 30*1e-3;
@@ -182,7 +213,7 @@ q_dot_exp = m_dot_exp.*( (data.Cp/data.Mw).*T_small' - ( (data.Cp(1,1)/data.Mw)*
 
 figure()
 contourf(data.P*1e-5,data.T,m_dot_exp); 
-title('Slab 30x30 momentum flux analogy: mass flow rate')
+title('Slab 30x30 momentum flux analogy')
 xlabel('Pressure, P $[bar]$')
 ylabel('Temperature, T $[K]$')
 c = colorbar;
@@ -191,7 +222,7 @@ c.Label.Interpreter = 'latex';
 
 figure()
 contourf(data.P*1e-5,data.T,1e-3*q_dot_exp/1);     % area di riferimento 1 m^2
-title('Slab 30x30 momentum flux analogy: energy flow rate')
+title('Slab 30x30 momentum flux analogy')
 xlabel('Pressure, P $[bar]$')
 ylabel('Temperature, T $[K]$')
 c = colorbar;
@@ -211,7 +242,7 @@ q_dot_exp = m_dot_exp.*( (data.Cp/data.Mw).*T_small' - ( (data.Cp(1,1)/data.Mw)*
 
 figure()
 contourf(data.P*1e-5,data.T,m_dot_exp); 
-title('Slab 49x30 momentum flux analogy: mass flow rate')
+title('Slab 49x30 momentum flux analogy')
 xlabel('Pressure, P $[bar]$')
 ylabel('Temperature, T $[K]$')
 c = colorbar;
@@ -220,7 +251,7 @@ c.Label.Interpreter = 'latex';
 
 figure()
 contourf(data.P*1e-5,data.T,1e-3*q_dot_exp/1);     % area di riferimento 1 m^2
-title('Slab 49x30 momentum flux analogy: energy flow rate')
+title('Slab 49x30 momentum flux analogy')
 xlabel('Pressure, P $[bar]$')
 ylabel('Temperature, T $[K]$')
 c = colorbar;
@@ -240,7 +271,7 @@ q_dot_exp = m_dot_exp.*( (data.Cp/data.Mw).*T_small' - ( (data.Cp(1,1)/data.Mw)*
 
 figure()
 contourf(data.P*1e-5,data.T,m_dot_exp); 
-title('Slab 69x30 momentum flux analogy: mass flow rate')
+title('Slab 69x30 momentum flux analogy')
 xlabel('Pressure, P $[bar]$')
 ylabel('Temperature, T $[K]$')
 c = colorbar;
@@ -249,7 +280,7 @@ c.Label.Interpreter = 'latex';
 
 figure()
 contourf(data.P*1e-5,data.T,1e-3*q_dot_exp/1);     % area di riferimento 1 m^2
-title('Slab 69x30 momentum flux analogy: energy flow rate')
+title('Slab 69x30 momentum flux analogy')
 xlabel('Pressure, P $[bar]$')
 ylabel('Temperature, T $[K]$')
 c = colorbar;
@@ -269,7 +300,7 @@ q_dot_exp = m_dot_exp.*( (data.Cp/data.Mw).*T_small' - ( (data.Cp(1,1)/data.Mw)*
 
 figure()
 contourf(data.P*1e-5,data.T,m_dot_exp); 
-title('Slab 69x69 momentum flux analogy: mass flow rate')
+title('Slab 69x69 momentum flux analogy')
 xlabel('Pressure, P $[bar]$')
 ylabel('Temperature, T $[K]$')
 c = colorbar;
@@ -278,7 +309,7 @@ c.Label.Interpreter = 'latex';
 
 figure()
 contourf(data.P*1e-5,data.T,1e-3*q_dot_exp/1);     % area di riferimento 1 m^2
-title('Slab 69x69 momentum flux analogy: energy flow rate')
+title('Slab 69x69 momentum flux analogy')
 xlabel('Pressure, P $[bar]$')
 ylabel('Temperature, T $[K]$')
 c = colorbar;
