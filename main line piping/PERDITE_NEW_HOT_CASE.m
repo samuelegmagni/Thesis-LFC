@@ -22,7 +22,7 @@ P_in_min_MFM = polyval(p1,m_dot_N2)
 %% After pressure regulator (point 1)
 
 T1 = 298;                                       % Temperature downstream the pressure regulator [K]
-P1 = P_in_min_MFM + 0.25*P_in_min_MFM; 
+P1 = P_in_min_MFM + 0.15*P_in_min_MFM; 
 
 load('nitrogenThermoPhysicalProp.mat')
 
@@ -346,7 +346,7 @@ clear gamma9_new
 G_g = rho9/1000;                      % Nitrogen specific gravity [-]
 q_N2 = (m_dot_N2/rho9)*1000;           % Nitrogen volumetric flow rate [L/s]
 % q_N2_std = (P4*q_N2*T4*60)/(1*273.15); % Nitrogen volumetric flow rate at std conditions [std L/min]
-C_V = 3.8;
+C_V = 7.1;
 
 P10 = P9 - (G_g*(q_N2*60)^2)/(14.42*C_V)^2;
 T10 = T9;
@@ -849,7 +849,7 @@ clear gamma23_new
 %% Before servovalve (point 23) and after servovalve (point 24)
 G_g = rho23/1000;                      % Nitrogen specific gravity [-]
 q_N2 = (m_dot_N2/rho23)*1000;           % Nitrogen volumetric flow rate [L/s]
-C_V = 3.8;                             % Flow coefficient ball valve
+C_V = 7.1;                             % Flow coefficient ball valve
 
 P24 = P23 - (G_g*(q_N2*60)^2)/(14.42*C_V)^2;     % Pressure downstream the servovalve (ball valve approx) [bar]
 T24 = T23;                        % Temperature downstream the servovalve (ball valve approx) [K]
@@ -924,7 +924,7 @@ clear gamma25_new
 G_g = rho25/1000;                      % Nitrogen specific gravity [-]
 q_N2 = (m_dot_N2/rho25)*1000;           % Nitrogen volumetric flow rate [L/s]
 
-C_V = 1.68;                             % Flow coefficient check valve
+C_V = 2.2;                             % Flow coefficient check valve
 P26 = P25 - (G_g*(q_N2*60)^2)/(14.42*C_V)^2;         % Pressure downstream the check valve [bar]
 T26 = T25;
 

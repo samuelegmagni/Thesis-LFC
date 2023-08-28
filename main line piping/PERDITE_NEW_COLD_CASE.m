@@ -356,7 +356,7 @@ clear gamma9_new
 G_g = rho9/1000;                      % Nitrogen specific gravity [-]
 q_N2 = (m_dot_N2/rho9)*1000;           % Nitrogen volumetric flow rate [L/s]
 % q_N2_std = (P4*q_N2*T4*60)/(1*273.15); % Nitrogen volumetric flow rate at std conditions [std L/min]
-C_V = 3.8;
+C_V = 7.1;
 
 P10 = P9 - (G_g*(q_N2*60)^2)/(14.42*C_V)^2;
 T10 = T9;
@@ -677,16 +677,16 @@ A18_19 = pi*(d18_19_int/2)^2;
 
 %% Nei casi 75 e 78 g/s
 
-x_83 = [100 91.94];
-y_83 = [61.46 91.94];
+%x_83 = [100 91.94];
+%y_83 = [61.46 91.94];
 
-poly_83 = polyfit(x_83,y_83,1);
-deltaP_83 = polyval(poly_83,P18);
+%poly_83 = polyfit(x_83,y_83,1);
+%deltaP_83 = polyval(poly_83,P18);
 
-deltaP_MFM = (m_dot_N2/(83.33*1e-3))*deltaP_83;
+%deltaP_MFM = (m_dot_N2/(83.33*1e-3))*deltaP_83;
 
-clear delta_P83; clear poly_83;
-clear x_83; clear y_83
+%clear delta_P83; clear poly_83;
+%clear x_83; clear y_83
 
 %% Nel caso 60 g/s
 % x_60 = [100 80 65.92];
@@ -698,8 +698,46 @@ clear x_83; clear y_83
 % clear poly_60; clear x_60; clear y_60
 
 %%
+if (m_dot_N2 == 20*1e-3 || m_dot_N2 == 25*1e-3 || m_dot_N2 == 26*1e-3)
+    
+    x_20 = [100 80 22.25];
+    y_20 = [2.709 3.404 22.25];
+
+    poly_20 = polyfit(x_20,y_20,2);
+    deltaP_20 = polyval(poly_20,P18);
+
+    deltaP_MFM = (m_dot_N2/(20.83*1e-3))*deltaP_20;
+
+    clear delta_P20; clear poly_20; clear x_20; clear y_20;
+
+elseif (m_dot_N2 == 75*1e-3 || m_dot_N2 == 78*1e-3)
+    
+    x_83 = [100 91.94];
+    y_83 = [61.46 91.94];
+
+    poly_83 = polyfit(x_83,y_83,1);
+    deltaP_83 = polyval(poly_83,P18);
+
+    deltaP_MFM = (m_dot_N2/(83.33*1e-3))*deltaP_83;
+
+    clear delta_P83; clear poly_83;
+    clear x_83; clear y_83
+
+else
+    
+    x_60 = [100 80 65.92];
+    y_60 = [25.35 44.65 65.92];
+
+    poly_60 = polyfit(x_60,y_60,2);
+    
+    deltaP_MFM = polyval(poly_60,P18);
+    
+    clear poly_60; clear x_60; clear y_60
+
+end
+
 P19 = P18 - deltaP_MFM;
-T19 = T18;     
+T19 = T18;      
 
 rho19 = rho_N2(find(abs(T - round(T19,1))==min(abs(T - round(T19,1)))) ,find( abs(P - round(P19,1))==min(abs(P - round(P19,1)))) );         % Density downstream the pipe bending after the pressure regulator [kg/m^3]
 gamma19 = gamma_N2(find(abs(T - round(T19,1))==min(abs(T - round(T19,1)))) ,find( abs(P - round(P19,1))==min(abs(P - round(P19,1)))) );      % Ratio of specific heats downstream the pipe bending after the pressure regulator [-]
@@ -807,16 +845,6 @@ A22_23 = pi*(d22_23_int/2)^2;
 eps22_23_rel = eps/d22_23_int;               % Relative roughness of stainless steel [-]
 
 
-% T = (floor(T22)-5):0.5:(ceil(T22));
-% P = (floor(P22)-3):0.1:(ceil(P22));
-% data = nistdata('N2',T,P);
-% 
-% rho_N2 = data.Rho*data.Mw;           % Density of Nitrogen [kg/m^3] 
-% cp_N2 = data.Cp/data.Mw;             % Specific heat at constant pressure of Nitrogen [J/kgK]
-% cv_N2 = data.Cv/data.Mw;             % Specific heat at constant volume of Nitrogen [J/kgK]
-% gamma_N2 = cp_N2./cv_N2;             % Ratio of specific heats [-]
-% mu_N2 = data.mu;                     % Viscosity of Nitrogen [Pa*s]
-
 L22_23 = 30*1e-2;
 rho22 = rho_N2(find(abs(T - round(T22,1))==min(abs(T - round(T22,1)))) ,find( abs(P - round(P22,1))==min(abs(P - round(P22,1)))) );       % Density downstream the pipe bending after the pressure regulator [kg/m^3]
 gamma22 = gamma_N2(find(abs(T - round(T22,1))==min(abs(T - round(T22,1)))) ,find( abs(P - round(P22,1))==min(abs(P - round(P22,1)))) );   % Ratio of specific heats downstream the pipe bending after the pressure regulator [-]
@@ -878,7 +906,7 @@ clear gamma23_new
 %% Before servovalve (point 23) and after servovalve (point 24)
 G_g = rho23/1000;                      % Nitrogen specific gravity [-]
 q_N2 = (m_dot_N2/rho23)*1000;           % Nitrogen volumetric flow rate [L/s]
-C_V = 3.8;                             % Flow coefficient ball valve
+C_V = 7.1;                             % Flow coefficient ball valve
 
 P24 = P23 - (G_g*(q_N2*60)^2)/(14.42*C_V)^2;     % Pressure downstream the servovalve (ball valve approx) [bar]
 T24 = T23;                        % Temperature downstream the servovalve (ball valve approx) [K]
@@ -892,16 +920,6 @@ A24_25 = pi*(d24_25_int/2)^2;
 
 eps24_25_rel = eps/d24_25_int;               % Relative roughness of stainless steel [-]
 
-
-% T = (floor(T24)-5):0.5:(ceil(T24));
-% P = (floor(P24)-3):0.1:(ceil(P24));
-% data = nistdata('N2',T,P);
-% 
-% rho_N2 = data.Rho*data.Mw;           % Density of Nitrogen [kg/m^3] 
-% cp_N2 = data.Cp/data.Mw;             % Specific heat at constant pressure of Nitrogen [J/kgK]
-% cv_N2 = data.Cv/data.Mw;             % Specific heat at constant volume of Nitrogen [J/kgK]
-% gamma_N2 = cp_N2./cv_N2;             % Ratio of specific heats [-]
-% mu_N2 = data.mu;                     % Viscosity of Nitrogen [Pa*s]
 
 L24_25 = 30*1e-2;
 rho24 = rho_N2(find(abs(T - round(T24,1))==min(abs(T - round(T24,1)))) ,find( abs(P - round(P24,1))==min(abs(P - round(P24,1)))) );      % Density downstream the pipe bending after the pressure regulator [kg/m^3]
@@ -964,7 +982,7 @@ clear gamma25_new
 G_g = rho25/1000;                      % Nitrogen specific gravity [-]
 q_N2 = (m_dot_N2/rho25)*1000;           % Nitrogen volumetric flow rate [L/s]
 
-C_V = 1.68;                             % Flow coefficient check valve
+C_V = 2.2;                             % Flow coefficient check valve
 P26 = P25 - (G_g*(q_N2*60)^2)/(14.42*C_V)^2;         % Pressure downstream the check valve [bar]
 T26 = T25;
 
@@ -976,16 +994,6 @@ d26_27_int = d26_27_ext - 2*t24_25;
 A26_27 = pi*(d26_27_int/2)^2;
 
 eps26_27_rel = eps/d26_27_int;               % Relative roughness of stainless steel [-]
-
-% T = (floor(T26)-10):0.5:(ceil(T26));
-% P = (floor(P26)-2):0.1:(ceil(P26));
-% data = nistdata('N2',T,P);
-% 
-% rho_N2 = data.Rho*data.Mw;           % Density of Nitrogen [kg/m^3] 
-% cp_N2 = data.Cp/data.Mw;             % Specific heat at constant pressure of Nitrogen [J/kgK]
-% cv_N2 = data.Cv/data.Mw;             % Specific heat at constant volume of Nitrogen [J/kgK]
-% gamma_N2 = cp_N2./cv_N2;             % Ratio of specific heats [-]
-% mu_N2 = data.mu;                     % Viscosity of Nitrogen [Pa*s]
 
 L26_27 = 30*1e-2;
 rho26 = rho_N2(find(abs(T - round(T26,1))==min(abs(T - round(T26,1)))) ,find( abs(P - round(P26,1))==min(abs(P - round(P26,1)))) );        % Density downstream the pipe bending after the pressure regulator [kg/m^3]
