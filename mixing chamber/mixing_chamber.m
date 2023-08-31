@@ -23,9 +23,10 @@ rho_SRP_gas = 3.5928;                      % density from NASA CEA [kg/m^3]
 % Define volumetric mass flow rate
 qvol_N2 = mdot_N2/rho_N2_mix;
 qvol_SRP = mdot_SRP/rho_SRP_gas;
-
+%%
 % Define volume of mixing chamber in tot sec of flow
-t_res=[ 0.02 0.022 0.024 0.026 0.028 0.03 0.032 0.034 0.036 0.038 0.04];
+%t_res=[ 0.02 0.022 0.024 0.026 0.028 0.03 0.032 0.034 0.036 0.038 0.04 0.041 0.043 0.045];
+t_res = 0.041;
 V_N2 = qvol_N2.*t_res;
 V_SRP = qvol_SRP.*t_res;
 Vtank = 1.05*(V_N2+V_SRP);
@@ -36,8 +37,9 @@ sigma_ult = 505*1e6;
 sigma_snerv = 215*1e6;
 htank = 5*1e-2;
 rtank = sqrt(Vtank./(pi*htank));
-t_des = Pburst*rtank./sigma_snerv;
-t_ASME = Pburst*rtank./(0.8*sigma_ult-0.6*Pburst);
+dtank = 2*rtank
+t_des = Pburst*rtank./sigma_snerv
+t_ASME = Pburst*rtank./(0.8*sigma_ult-0.6*Pburst)
 Vtank_est = pi*(rtank+t_des).^2*htank;
 mtank = (Vtank_est -Vtank).*rho_steel;
 
@@ -45,11 +47,11 @@ mtank = (Vtank_est -Vtank).*rho_steel;
 sigma_l = Pburst.*rtank/(2*t_des);
 sigma_h = Pburst.*rtank/t_des;
 sigma_vm = (1/sqrt(2))*sqrt((sigma_h-sigma_l)^2+sigma_l^2+sigma_h^2);
-
+%%
 %Plot
 figure()
 plot(t_res,rtank*1e2,'ro','linewidth',1.5)
 grid on
 xlabel('Residence time [s]')
 ylabel('Tank radius [cm]')
-title('Tank radius vs residence time in chamber')
+% title('Tank radius vs residence time in chamber')
