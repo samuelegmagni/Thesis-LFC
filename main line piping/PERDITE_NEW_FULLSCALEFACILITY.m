@@ -781,7 +781,6 @@ M21 = fsolve(z,0.8);
 P21 = P_tot20_2/(1 + ((gamma20_2 - 1)/2)*M21^2)^(gamma20_2/(gamma20_2 - 1));
 T21 = T_tot/(1 + ((gamma20_2 - 1)/2)*M21^2);
 
-
 %% After Venturi channel, before servovalve (point 21 and 22)
 
 eps21_22_rel = eps/d21_22_int;               % Relative roughness of stainless steel [-]
@@ -792,9 +791,78 @@ gamma21 = gamma_N2(find(abs(T - round(T21,1))==min(abs(T - round(T21,1)))) ,find
 gamma22 = gamma_N2(find(abs(T - round(T21,1))==min(abs(T - round(T21,1)))) ,find( abs(P - round(P21,1))==min(abs(P - round(P21,1)))) );
 mu21 = mu_N2(find(abs(T - round(T21,1))==min(abs(T - round(T21,1)))) ,find( abs(P - round(P21,1))==min(abs(P - round(P21,1)))) );       % Viscosity downstream the pipe bending after the pressure regulator [Pa*s]
 v21 = m_dot_new/(A21_22*rho21);                     % Gas velocity downstream the pipe bending after pressure regulator [m/s]
-c21 = (gamma21*R_N2*T21)^0.5;                         % Sound speed downstream the pipe bending after pressure regulator [m/s]
-M21 = v21/c21;           
-                  
+c21 = (gamma21*R_N2*T21)^0.5;           % Sound speed downstream the pipe bending after pressure regulator [m/s]       
+
+x1 = 0;
+x2 = 0.0348*1e3;
+x3 = x2 + L_throat;
+x4 = x3 + 0.0489*1000;
+d_vect = [x1 x2 x3 x4];
+v_vect = [v20 v20_1 v20_2 v21];
+P_vect = [P20 P20_1 P20_2 P21];
+T_vect = [T20 T20_1 T20_2 T21];
+rho_vect = [rho20 rho20_1 rho20_2 rho21];
+M_vect = [M20 M20_1 M20_2 M21];
+
+
+figure()
+plot(d_vect(1),v_vect(1),'ro','linewidth',1.5)
+grid on
+hold on
+plot(d_vect(2),v_vect(2),'bo','linewidth',1.5)
+plot(d_vect(3),v_vect(3),'go','linewidth',1.5)
+plot(d_vect(4),v_vect(4),'ko','linewidth',1.5)
+legend('$v_{in,conv}$','$v_{in,throat}$','$v_{out,throat}$','$v_{out,div}$')
+xlabel('Position, $x_i$ $[mm]$')
+ylabel('Velocity, $v_i$ $[m/s]$')
+
+figure()
+plot(d_vect(1),M_vect(1),'ro','linewidth',1.5)
+grid on
+hold on
+plot(d_vect(2),M_vect(2),'bo','linewidth',1.5)
+plot(d_vect(3),M_vect(3),'go','linewidth',1.5)
+plot(d_vect(4),M_vect(4),'ko','linewidth',1.5)
+legend('$M_{in,conv}$','$M_{in,throat}$','$M_{out,throat}$','$M_{out,div}$')
+xlabel('Position, $x_i$ $[mm]$')
+ylabel('Mach Number, $M_i$ $[-]$')
+
+figure()
+plot(d_vect(1),P_vect(1),'ro','linewidth',1.5)
+grid on
+hold on
+plot(d_vect(2),P_vect(2),'bo','linewidth',1.5)
+plot(d_vect(3),P_vect(3),'go','linewidth',1.5)
+plot(d_vect(4),P_vect(4),'ko','linewidth',1.5)
+legend('$P_{in,conv}$','$P_{in,throat}$','$P_{out,throat}$','$P_{out,div}$')
+xlabel('Position, $x_i$ $[mm]$')
+ylabel('Pressure, $P_i$ $[bar]$')
+
+
+figure()
+plot(d_vect(1),T_vect(1),'ro','linewidth',1.5)
+grid on
+hold on
+plot(d_vect(2),T_vect(2),'bo','linewidth',1.5)
+plot(d_vect(3),T_vect(3),'go','linewidth',1.5)
+plot(d_vect(4),T_vect(4),'ko','linewidth',1.5)
+legend('$T_{in,conv}$','$T_{in,throat}$','$T_{out,throat}$','$T_{out,div}$')
+xlabel('Position, $x_i$ $[mm]$')
+ylabel('Temperature, $T_i$ $[K]$')
+
+figure()
+plot(d_vect(1),rho_vect(1),'ro','linewidth',1.5)
+grid on
+hold on
+plot(d_vect(2),rho_vect(2),'bo','linewidth',1.5)
+plot(d_vect(3),rho_vect(3),'go','linewidth',1.5)
+plot(d_vect(4),rho_vect(4),'ko','linewidth',1.5)
+legend('$\rho_{in,conv}$','$\rho_{in,throat}$','$\rho_{out,throat}$','$\rho_{out,div}$')
+xlabel('Position, $x_i$ $[mm]$')
+ylabel('Density, $\rho_i$ $[kg/m^3]$')
+
+
+
 Re21 = (rho21*v21*d21_22_int)/mu21;                    % Reynolds number downstream the manual ball valve [-]
 
 if Re21 < 2300
