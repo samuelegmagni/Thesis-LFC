@@ -12,10 +12,10 @@ F_tot_bolt = F_bolt*n_bolt
 d_circ = 113.97;                                    % O-Ring internal diameter [mm]
 l_circ = pi*d_circ;
 F_max = ((35/2.205)*9.81)/25.4;                     % Force per unit length [N/mm]
-F_OR = F_max*l_circ;
+F_OR = F_max*l_circ
 
 P_int = 12*1e5;
 A_int = 0.25*pi*(d_circ*1e-3)^2;
-F_press = P_int*A_int;
+F_press = P_int*A_int
 
 F_tot_needed = F_press + F_OR

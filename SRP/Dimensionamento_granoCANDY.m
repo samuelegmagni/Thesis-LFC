@@ -12,7 +12,7 @@ cp_g = 3625.4;                          % J/kgK
 T_fl = 0.7*1645.89;                     % K
 
 f = @(x) m_dot_N2*cp_N2*T_beforeinj + x*cp_g*(T_fl) - (m_dot_N2 + x) * ( (cp_N2_fin*m_dot_N2 + cp_g*x)/(m_dot_N2 + x) )*(T_fin);
-m_dot_p = fzero(f,0.5);
+m_dot_p = fzero(f,0.5)
 
 
 P = 12*14.504;                        % psi
@@ -28,11 +28,11 @@ V_Sucrose = m_Sucrose/rho_Sucrose;    % m^3
 rho_mix = (m_KNO3 + m_Sucrose)/(V_KNO3 + V_Sucrose);  % kg/m^3
 t_b = 20;                                             % s
 
-A_b = (m_dot_p/(r_b*rho_mix))*1e6;                    % mm^2
-d_b = 2*sqrt(A_b/pi);                                 % mm
+A_b = (m_dot_p/(r_b*rho_mix))*1e6                    % mm^2
+d_b = 2*sqrt(A_b/pi)                                 % mm
 
-thickness = r_b*t_b*1e3;                              % mm
-m_prop=A_b*thickness*1e-9*rho_mix;                    % kg
+thickness = r_b*t_b*1e3                              % mm
+m_prop=A_b*thickness*1e-9*rho_mix                  % kg
 
 %%
 

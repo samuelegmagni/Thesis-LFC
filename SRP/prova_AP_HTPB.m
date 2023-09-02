@@ -1,7 +1,7 @@
 clear
 clc
 
-% all data calculated at 4 bar 
+% all data calculated at 12 bar 
 
 m_dot_N2 = 60*1e-3;          % kg/s
 T_fin = 1.2*600;             % K

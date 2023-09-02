@@ -11,7 +11,7 @@ set(0,'DefaultLegendFontSize',12);
 
 %% After pressure regulator (point 1)
 
-T_chamber = 600;                                       % Temperature downstream the pressure regulator [K]
+T_chamber = 600;                                    
 P_chamber = 2;  
 
 load('nitrogenThermoPhysicalProp.mat')
