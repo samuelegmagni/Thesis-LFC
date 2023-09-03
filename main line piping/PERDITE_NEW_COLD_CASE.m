@@ -1123,14 +1123,23 @@ end
 
 clear gamma29_new
 
-%% Injector
-% 
-P_tot29 = P29*((1 + 0.5*(gamma29 - 1)*M29^2)^(gamma29/(gamma29 - 1)))
-% M_throat = 1;
-% 
-% z = @(x) x/A28_29 - (M29/M_throat)*sqrt( ((1 + 0.5*(gamma29 - 1)*M_throat^2)/(1 + 0.5*(gamma29 - 1)*M29^2))^((gamma29 + 1)/(gamma29 - 1)) );
-% A_throat_int = fsolve(z,0.08);
-% d_inj = sqrt(4*A_throat_int/pi)*1000;  % [mm]
-% 
-% P_chamber = P_tot29/((1 + 0.5*(gamma29 - 1)*M_throat^2)^(gamma29/(gamma29 - 1)));
-% 
+%% Figures
+
+P_vect = [P1 P10 P18 P19 P29];
+x1 = 0; x10 = (L2_3 + L4_5 + L6_7 + L8_9)*1e2 + 10; 
+x18 = x10 + (L10_11 + L12_13 + L14_15 + L16_17)*1e2 + 20;
+x19 = x18 + 5;
+x29 = x19 + (L20_21 + L22_23 + L24_25 + L26_27 + L28_29)*1e2;
+x_vect = [x1 x10 x18 x19 x29];
+
+figure()
+plot(x_vect(1),P_vect(1),'ro','linewidth',1.5)
+grid on
+hold on
+plot(x_vect(2),P_vect(2),'bo','linewidth',1.5)
+plot(x_vect(3),P_vect(3),'go','linewidth',1.5)
+plot(x_vect(4),P_vect(4),'ko','linewidth',1.5)
+plot(x_vect(5),P_vect(5),'co','linewidth',1.5)
+legend('$P_{initial}$','$P_{out,ball \ valve}$','$P_{in,MFM}$','$P_{out,MFM}$','$P_{before \ chamber}$')
+xlabel('Position, $x_i$ $[cm]$')
+ylabel('Pressure, $P_i$ $[bar]$')
