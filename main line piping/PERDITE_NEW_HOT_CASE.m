@@ -11,7 +11,7 @@ set(groot,'DefaultAxesTickLabelInterpreter','Latex');
 set(0,'DefaultTextInterpreter','Latex');
 set(0,'DefaultLegendFontSize',12);
 
-m_dot_N2 = 20*1e-3;                  % Nitrogen mass flow rate [kg/s]
+m_dot_N2 = 75*1e-3;                  % Nitrogen mass flow rate [kg/s]
 
 mdotvect = [1.042 2.083 4.167 8.333 20.83 41.67 60 83.33]*1e-3;
 P_in_MFMvect = [0.5283 1.5222 3.743 8.336 22.25 45.47 65.92 91.94];
@@ -22,7 +22,7 @@ P_in_min_MFM = polyval(p1,m_dot_N2)
 %% After pressure regulator (point 1)
 
 T1 = 298;                                       % Temperature downstream the pressure regulator [K]
-P1 = P_in_min_MFM + 0.25*P_in_min_MFM; 
+P1 = P_in_min_MFM + 0.1823*P_in_min_MFM; 
 
 load('nitrogenThermoPhysicalProp.mat')
 
@@ -1177,6 +1177,7 @@ A_throat_int = fsolve(z,0.08);
 d_inj = sqrt(4*A_throat_int/pi)*1000    % [mm]
 
 P_chamber = P_tot31/((1 + 0.5*(gamma31 - 1)*M_throat^2)^(gamma31/(gamma31 - 1)));
+P_ch_corr=2;
 
 %% Figures
 L_fitting = 5;       % [cm]
@@ -1184,7 +1185,7 @@ L_MFM = 10;          % [cm]
 L_mix_chamber = 10;  % [cm]
 
 
-P_vect = [P1 P10 P18 P19 P27 P28 P31];
+P_vect = [P1 P10 P18 P19 P27 P28 P31 P_ch_corr];
 x1 = 0; 
 x10 = (L2_3 + L4_5 + L6_7 + L8_9)*1e2 + 3*L_fitting; 
 x18 = x10 + (L10_11 + L12_13 + L14_15 + L16_17)*1e2 + 4*L_fitting;
@@ -1192,7 +1193,8 @@ x19 = x18 + L_MFM;
 x27 = x19 + (L20_21 + L22_23 + L24_25 + L26_27)*1e2 + 4*L_fitting;
 x28 = x27 + L_mix_chamber;
 x31 = x28 + (L28_29 + L30_31)*1e2 + L_fitting;
-x_vect = [x1 x10 x18 x19 x27 x28 x31];
+xcc = x28 + (L28_29 + L30_31)*1e2 + 2*L_fitting;
+x_vect = [x1 x10 x18 x19 x27 x28 x31 xcc];
 
 figure()
 plot(x_vect(1),P_vect(1),'ro','linewidth',1.5)
@@ -1204,6 +1206,7 @@ plot(x_vect(4),P_vect(4),'ko','linewidth',1.5)
 plot(x_vect(5),P_vect(5),'co','linewidth',1.5)
 plot(x_vect(6),P_vect(6),'mo','linewidth',1.5)
 plot(x_vect(7),P_vect(7),'yo','linewidth',1.5)
-legend('$P_{initial}$','$P_{out,ball \ valve}$','$P_{in,MFM}$','$P_{out,MFM}$','$P_{in,mix \ chamber}$','$P_{out,mix \ chamber}$','$P_{before \ test \ chamber}$')
+plot(x_vect(8),P_vect(8),'o','linewidth',1.5)
+legend('$P_{initial}$','$P_{out,ball \ valve}$','$P_{in,MFM}$','$P_{out,MFM}$','$P_{in,mix \ chamber}$','$P_{out,mix \ chamber}$','$P_{before \ test \ chamber}$' , '$P_{ test \ chamber}$')
 xlabel('Position, $x_i$ $[cm]$')
 ylabel('Pressure, $P_i$ $[bar]$')

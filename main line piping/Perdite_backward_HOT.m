@@ -29,7 +29,7 @@ clear k; clear mu; clear Mw; clear omega; clear pc; clear rho;
 clear Rho; clear s; clear S; clear species; clear Tc; clear u;
 clear U; clear V
 
-m_dot_N2 = 20*1e-3;                  % Nitrogen mass flow rate [kg/s]
+m_dot_N2 = 75*1e-3;                  % Nitrogen mass flow rate [kg/s]
 R_N2 = 8314/28;                         % Specific ideal gas constant [J/kgK]
 
 R_SRP = 8314/36.32;
@@ -51,7 +51,7 @@ gamma30_N2 = gamma_N2(find(abs(T - round(T_chamber,1))==min(abs(T - round(T_cham
 gamma30 = (m_dot_SRP*gamma_SRP + m_dot_N2*gamma30_N2)/(m_dot_N2 + m_dot_SRP);
 
 
-d_inj = 11.9*1e-3;    % [m]
+d_inj = 11.24*1e-3;    % [m]
 A_throat_int = 0.25*pi*d_inj^2;
 
 M_throat = 1;
