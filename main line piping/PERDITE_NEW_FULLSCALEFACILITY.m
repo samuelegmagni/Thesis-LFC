@@ -574,7 +574,7 @@ A17_18 = pi*(d17_18_int/2)^2;
 
 eps17_18_rel = eps/d17_18_int;               % Relative roughness of stainless steel [-]
 
-L17_18 = 15*1e-2;
+L17_18 = 5*1e-2;
 rho17 = rho_N2( find(abs(T - round(T17,1))==min(abs(T - round(T17,1)))) ,find( abs(P - round(P17,1))==min(abs(P - round(P17,1)))) );    % Density downstream the manual ball valve [kg/m^3]
 gamma17 = gamma_N2( find(abs(T - round(T17,1))==min(abs(T - round(T17,1)))) ,find( abs(P - round(P17,1))==min(abs(P - round(P17,1)))) );  % Ratio of specific heats downstream the manual ball valve  [-]
 gamma18 = gamma_N2( find(abs(T - round(T17,1))==min(abs(T - round(T17,1)))) ,find( abs(P - round(P17,1))==min(abs(P - round(P17,1)))) ); 
@@ -785,7 +785,7 @@ T21 = T_tot/(1 + ((gamma20_2 - 1)/2)*M21^2);
 
 eps21_22_rel = eps/d21_22_int;               % Relative roughness of stainless steel [-]
 
-L21_22 = 30*1e-2;
+L21_22 = 5*1e-2;
 rho21 = rho_N2(find(abs(T - round(T21,1))==min(abs(T - round(T21,1)))) ,find( abs(P - round(P21,1))==min(abs(P - round(P21,1)))) );       % Density downstream the pipe bending after the pressure regulator [kg/m^3]
 gamma21 = gamma_N2(find(abs(T - round(T21,1))==min(abs(T - round(T21,1)))) ,find( abs(P - round(P21,1))==min(abs(P - round(P21,1)))) );   % Ratio of specific heats downstream the pipe bending after the pressure regulator [-]
 gamma22 = gamma_N2(find(abs(T - round(T21,1))==min(abs(T - round(T21,1)))) ,find( abs(P - round(P21,1))==min(abs(P - round(P21,1)))) );
@@ -1133,13 +1133,17 @@ end
 clear gamma28_new
 
 %% Figures
+L_fitting = 5;       % [cm]
+L_conv_Venturi = 0.0348*1e2;  % [cm]
+L_div_Venturi = 0.0489*1e2;   % [cm]
 
 P_vect = [P1 P10 P17 P20 P21 P28];
-x1 = 0; x10 = (L2_3 + L4_5 + L6_7 + L8_9)*1e2 + 10; 
-x17 = x10 + (L10_11 + L12_13 + L15_16)*1e2 + 20;
-x20 = x17 + (L17_18 + L19_20)*1e2 + 5;
-x21 = x20 + 0.0348*1e2 + L_throat*1e-1 + 0.0489*1e2;
-x28 = x21 + (L21_22 + L23_24 + L25_26 + L27_28)*1e2 +20;
+x1 = 0;
+x10 = (L2_3 + L4_5 + L6_7 + L8_9)*1e2 + 3*L_fitting; 
+x17 = x10 + (L10_11 + L12_13 + L15_16)*1e2 + 3*L_fitting;
+x20 = x17 + (L17_18 + L19_20)*1e2 + L_fitting;
+x21 = x20 + L_conv_Venturi + L_throat*1e-1 + L_div_Venturi;
+x28 = x21 + (L21_22 + L23_24 + L25_26 + L27_28)*1e2 + 3*L_fitting;
 x_vect = [x1 x10 x17 x20 x21 x28];
 
 figure()

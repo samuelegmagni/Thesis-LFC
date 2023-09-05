@@ -845,7 +845,7 @@ A22_23 = pi*(d22_23_int/2)^2;
 eps22_23_rel = eps/d22_23_int;               % Relative roughness of stainless steel [-]
 
 
-L22_23 = 30*1e-2;
+L22_23 = 5*1e-2;
 rho22 = rho_N2(find(abs(T - round(T22,1))==min(abs(T - round(T22,1)))) ,find( abs(P - round(P22,1))==min(abs(P - round(P22,1)))) );       % Density downstream the pipe bending after the pressure regulator [kg/m^3]
 gamma22 = gamma_N2(find(abs(T - round(T22,1))==min(abs(T - round(T22,1)))) ,find( abs(P - round(P22,1))==min(abs(P - round(P22,1)))) );   % Ratio of specific heats downstream the pipe bending after the pressure regulator [-]
 gamma23 = gamma_N2(find(abs(T - round(T22,1))==min(abs(T - round(T22,1)))) ,find( abs(P - round(P22,1))==min(abs(P - round(P22,1)))) );
@@ -986,7 +986,7 @@ C_V = 2.2;                             % Flow coefficient check valve
 P26 = P25 - (G_g*(q_N2*60)^2)/(14.42*C_V)^2;         % Pressure downstream the check valve [bar]
 T26 = T25;
 
-%% After checkvalve and before mixing chamber (point 26 and 27)
+%% After checkvalve and before cross fitting (point 26 and 27)
 
 d26_27_ext = 19.05*1e-3;
 t26_27 = 1.5*1e-3;
@@ -995,7 +995,7 @@ A26_27 = pi*(d26_27_int/2)^2;
 
 eps26_27_rel = eps/d26_27_int;               % Relative roughness of stainless steel [-]
 
-L26_27 = 30*1e-2;
+L26_27 = 20*1e-2;
 rho26 = rho_N2(find(abs(T - round(T26,1))==min(abs(T - round(T26,1)))) ,find( abs(P - round(P26,1))==min(abs(P - round(P26,1)))) );        % Density downstream the pipe bending after the pressure regulator [kg/m^3]
 gamma26 = gamma_N2(find(abs(T - round(T26,1))==min(abs(T - round(T26,1)))) ,find( abs(P - round(P26,1))==min(abs(P - round(P26,1)))) );   % Ratio of specific heats downstream the pipe bending after the pressure regulator [-]
 gamma27 =gamma_N2(find(abs(T - round(T26,1))==min(abs(T - round(T26,1)))) ,find( abs(P - round(P26,1))==min(abs(P - round(P26,1)))) );
@@ -1066,7 +1066,7 @@ A28_29 = pi*(d28_29_int/2)^2;
 
 eps28_29_rel = eps/d28_29_int;               % Relative roughness of stainless steel [-]
 
-L28_29 = 30*1e-2;
+L28_29 = 5*1e-2;
 rho28 = rho_N2(find(abs(T - round(T28,1))==min(abs(T - round(T28,1)))) ,find( abs(P - round(P28,1))==min(abs(P - round(P28,1)))) );       % Density downstream the pipe bending after the pressure regulator [kg/m^3]
 gamma28 = gamma_N2(find(abs(T - round(T28,1))==min(abs(T - round(T28,1)))) ,find( abs(P - round(P28,1))==min(abs(P - round(P28,1)))) );   % Ratio of specific heats downstream the pipe bending after the pressure regulator [-]
 gamma29 = gamma_N2(find(abs(T - round(T28,1))==min(abs(T - round(T28,1)))) ,find( abs(P - round(P28,1))==min(abs(P - round(P28,1)))) );
@@ -1124,12 +1124,15 @@ end
 clear gamma29_new
 
 %% Figures
+L_fitting = 5;       % [cm]
+L_MFM = 10;          % [cm]
 
 P_vect = [P1 P10 P18 P19 P29];
-x1 = 0; x10 = (L2_3 + L4_5 + L6_7 + L8_9)*1e2 + 10; 
-x18 = x10 + (L10_11 + L12_13 + L14_15 + L16_17)*1e2 + 20;
-x19 = x18 + 5;
-x29 = x19 + (L20_21 + L22_23 + L24_25 + L26_27 + L28_29)*1e2;
+x1 = 0; 
+x10 = (L2_3 + L4_5 + L6_7 + L8_9)*1e2 + 3*L_fitting; 
+x18 = x10 + (L10_11 + L12_13 + L14_15 + L16_17)*1e2 + 4*L_fitting;
+x19 = x18 + L_MFM;
+x29 = x19 + (L20_21 + L22_23 + L24_25 + L26_27 + L28_29)*1e2 + 5*L_fitting;
 x_vect = [x1 x10 x18 x19 x29];
 
 figure()
@@ -1140,6 +1143,6 @@ plot(x_vect(2),P_vect(2),'bo','linewidth',1.5)
 plot(x_vect(3),P_vect(3),'go','linewidth',1.5)
 plot(x_vect(4),P_vect(4),'ko','linewidth',1.5)
 plot(x_vect(5),P_vect(5),'co','linewidth',1.5)
-legend('$P_{initial}$','$P_{out,ball \ valve}$','$P_{in,MFM}$','$P_{out,MFM}$','$P_{before \ chamber}$')
+legend('$P_{initial}$','$P_{out,ball \ valve}$','$P_{in,MFM}$','$P_{out,MFM}$','$P_{before \ test \ chamber}$')
 xlabel('Position, $x_i$ $[cm]$')
 ylabel('Pressure, $P_i$ $[bar]$')

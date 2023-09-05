@@ -788,7 +788,7 @@ A22_23 = pi*(d22_23_int/2)^2;
 
 eps22_23_rel = eps/d22_23_int;               % Relative roughness of stainless steel [-]
 
-L22_23 = 30*1e-2;
+L22_23 = 5*1e-2;
 rho22 = rho_N2(find(abs(T - round(T22,1))==min(abs(T - round(T22,1)))) ,find( abs(P - round(P22,1))==min(abs(P - round(P22,1)))) );       % Density downstream the pipe bending after the pressure regulator [kg/m^3]
 gamma22 = gamma_N2(find(abs(T - round(T22,1))==min(abs(T - round(T22,1)))) ,find( abs(P - round(P22,1))==min(abs(P - round(P22,1)))) );   % Ratio of specific heats downstream the pipe bending after the pressure regulator [-]
 gamma23 = gamma_N2(find(abs(T - round(T22,1))==min(abs(T - round(T22,1)))) ,find( abs(P - round(P22,1))==min(abs(P - round(P22,1)))) );
@@ -932,12 +932,12 @@ T26 = T25;
 
 d26_27_ext = 19.052*1e-3;
 t26_27 = 1.5*1e-3;
-d26_27_int = d26_27_ext - 2*t24_25;
+d26_27_int = d26_27_ext - 2*t26_27;
 A26_27 = pi*(d26_27_int/2)^2;
 
 eps26_27_rel = eps/d26_27_int;               % Relative roughness of stainless steel [-]
 
-L26_27 = 30*1e-2;
+L26_27 = 5*1e-2;
 rho26 = rho_N2(find(abs(T - round(T26,1))==min(abs(T - round(T26,1)))) ,find( abs(P - round(P26,1))==min(abs(P - round(P26,1)))) );        % Density downstream the pipe bending after the pressure regulator [kg/m^3]
 gamma26 = gamma_N2(find(abs(T - round(T26,1))==min(abs(T - round(T26,1)))) ,find( abs(P - round(P26,1))==min(abs(P - round(P26,1)))) );   % Ratio of specific heats downstream the pipe bending after the pressure regulator [-]
 gamma27 =gamma_N2(find(abs(T - round(T26,1))==min(abs(T - round(T26,1)))) ,find( abs(P - round(P26,1))==min(abs(P - round(P26,1)))) );
@@ -948,7 +948,7 @@ M26 = v26/c26;
                   
 Re26 = (rho26*v26*d26_27_int)/mu26;                    % Reynolds number downstream the manual ball valve [-]
 
-if Re26< 2300
+if Re26 < 2300
 
         lambda = 64/Re26;
 
@@ -973,7 +973,7 @@ while err > 1e-3
     M27 = fsolve(y,0.006);
     
     T_star = T26/(0.5*(gamma26 + 1)/(1 + (gamma26 - 1)*0.5*M26^2));
-    T27= T_star*(0.5*(gamma27+ 1)/(1 + (gamma27 - 1)*0.5*M27^2));
+    T27 = T_star*(0.5*(gamma27+ 1)/(1 + (gamma27 - 1)*0.5*M27^2));
     
     P_star = P26/((1/M26)*sqrt(0.5*(gamma26 + 1)/(1 + (gamma26 - 1)*0.5*M26^2)));
     P27 = P_star*((1/M27)*sqrt(0.5*(gamma27+ 1)/(1 + (gamma27 - 1)*0.5*M27^2)));
@@ -1027,44 +1027,29 @@ v28 = v_mc_exit;
 c28 = (gamma28*R_mix*T28)^0.5;
 M28 = v28/c28; 
 
+%% After mixing chamber and before cross fitting (point 28 and 29)
 
-%% After cross fitting (point 29)
+d28_29_ext = 19.052*1e-3;
+t28_29 = 1.5*1e-3;
+d28_29_int = d28_29_ext - 2*t28_29;
+A28_29 = pi*(d28_29_int/2)^2;
 
-P29 = 1e-5*(P28*1e5 - 2*rho28*v28^2);
-T29 = T28;
+eps28_29_rel = eps/d28_29_int;               % Relative roughness of stainless steel [-]
 
-%% After cross fitting and before injector (point 29 and 30)
-
-d29_30_ext = 19.05*1e-3;
-t29_30 = 1.5*1e-3;
-d29_30_int = d29_30_ext - 2*t29_30;
-A29_30 = pi*(d29_30_int/2)^2;
-
-eps29_30_rel = eps/d29_30_int;               % Relative roughness of stainless steel [-]
-
-L29_30 = 30*1e-2;
-rho29_N2 = rho_N2(find(abs(T - round(T29,1))==min(abs(T - round(T29,1)))) ,find( abs(P - round(P29,1))==min(abs(P - round(P29,1)))) );
-rho29 = (m_dot_SRP*rho_SRP + m_dot_N2*rho29_N2)/(m_dot_N2 + m_dot_SRP);        % Density downstream the pipe bending after the pressure regulator [kg/m^3]
-
-gamma29_N2 = gamma_N2(find(abs(T - round(T29,1))==min(abs(T - round(T29,1)))) ,find( abs(P - round(P29,1))==min(abs(P - round(P29,1)))) ); 
+L28_29 = 20*1e-2;
+gamma29_N2 = gamma_N2(find(abs(T - round(T28,1))==min(abs(T - round(T28,1)))) ,find( abs(P - round(P28,1))==min(abs(P - round(P28,1)))) ); 
 gamma29 = (m_dot_SRP*gamma_SRP + m_dot_N2*gamma29_N2)/(m_dot_N2 + m_dot_SRP);   % Ratio of specific heats downstream the pipe bending after the pressure regulator [-]
-
-gamma30_N2 = gamma_N2(find(abs(T - round(T29,1))==min(abs(T - round(T29,1)))) ,find( abs(P - round(P29,1))==min(abs(P - round(P29,1)))) );
-gamma30 = (m_dot_SRP*gamma_SRP + m_dot_N2*gamma30_N2)/(m_dot_N2 + m_dot_SRP);
-mu29 = mu_N2(find(abs(T - round(T29,1))==min(abs(T - round(T29,1)))) ,find( abs(P - round(P29,1))==min(abs(P - round(P29,1)))) );           % Viscosity downstream the pipe bending after the pressure regulator [Pa*s]
-v29 = m_dot_mix/(A29_30*rho29);                                                   % Gas velocity downstream the pipe bending after pressure regulator [m/s]
-c29 = (gamma29*R_mix*T29)^0.5;                         % Sound speed downstream the pipe bending after pressure regulator [m/s]
-M29 = v29/c29;           
+mu28 = mu_N2(find(abs(T - round(T28,1))==min(abs(T - round(T28,1)))) ,find( abs(P - round(P28,1))==min(abs(P - round(P28,1)))) );       % Viscosity downstream the pipe bending after the pressure regulator [Pa*s]
                   
-Re29 = (rho29*v29*d29_30_int)/mu29;                    % Reynolds number downstream the manual ball valve [-]
+Re28 = (rho28*v28*d28_29_int)/mu28;                    % Reynolds number downstream the manual ball valve [-]
 
-if Re29 < 2300
+if Re28 < 2300
 
-        lambda = 64/Re29;
+        lambda = 64/Re28;
 
     else 
 
-        z = @(x) 1/sqrt(x) + 2*log10(2.51/(Re29*sqrt(x)) + eps29_30_rel/3.71);   % Colebrook-White correlation
+        z = @(x) 1/sqrt(x) + 2*log10(2.51/(Re28*sqrt(x)) + eps28_29_rel/3.71);   % Colebrook-White correlation
         lambda = fsolve(z,0.0004);
 
 end
@@ -1076,69 +1061,149 @@ while err > 1e-3
 
     iter = iter + 1;
 
-    g_M29 = (1 - M29^2)/(gamma29*M29^2) + ((gamma29 + 1)/(2*gamma29))*log(((gamma29 + 1)*M29^2)/(2 + (gamma29 - 1)*M29^2) );
-    g_M30 = g_M29 - lambda*(L29_30/d29_30_int);
+    g_M28 = (1 - M28^2)/(gamma28*M28^2) + ((gamma28 + 1)/(2*gamma28))*log(((gamma28 + 1)*M28^2)/(2 + (gamma28 - 1)*M28^2) );
+    g_M29 = g_M28 - lambda*(L28_29/d28_29_int);
 
-    y = @(x) g_M30 - (1 - x^2)/(gamma30*x^2) + ((gamma30 + 1)/(2*gamma30))*log(((gamma30 + 1)*x^2)/(2 + (gamma30 - 1)*x^2) );
-    M30 = fsolve(y,0.006);
+    y = @(x) g_M29 - (1 - x^2)/(gamma29*x^2) + ((gamma29 + 1)/(2*gamma29))*log(((gamma29 + 1)*x^2)/(2 + (gamma29 - 1)*x^2) );
+    M29 = fsolve(y,0.006);
     
-    T_star = T29/(0.5*(gamma29 + 1)/(1 + (gamma29 - 1)*0.5*M29^2));
-    T30 = T_star*(0.5*(gamma30+ 1)/(1 + (gamma30 - 1)*0.5*M30^2));
+    T_star = T28/(0.5*(gamma28 + 1)/(1 + (gamma28 - 1)*0.5*M28^2));
+    T29 = T_star*(0.5*(gamma29 + 1)/(1 + (gamma29 - 1)*0.5*M29^2));
     
-    P_star = P29/((1/M29)*sqrt(0.5*(gamma29 + 1)/(1 + (gamma29 - 1)*0.5*M29^2)));
-    P30 = P_star*((1/M30)*sqrt(0.5*(gamma30+ 1)/(1 + (gamma30 - 1)*0.5*M30^2)))
+    P_star = P28/((1/M28)*sqrt(0.5*(gamma28 + 1)/(1 + (gamma28 - 1)*0.5*M28^2)));
+    P29 = P_star*((1/M29)*sqrt(0.5*(gamma29 + 1)/(1 + (gamma29 - 1)*0.5*M29^2)));
 
-    rho_star = rho29/((1/M29)*sqrt( 2*(1 + (gamma29 - 1)*0.5*M29^2)/(gamma29 + 1)));
-    rho30 = rho_star*((1/M30)*sqrt( 2*(1 + (gamma30 - 1)*0.5*M30^2)/(gamma30 + 1)));
+    rho_star = rho28/((1/M28)*sqrt( 2*(1 + (gamma28 - 1)*0.5*M28^2)/(gamma28 + 1)));
+    rho29 = rho_star*((1/M29)*sqrt( 2*(1 + (gamma29 - 1)*0.5*M29^2)/(gamma29 + 1)));
     
-    c30 = sqrt(gamma30*R_mix*T30);
-    v30 = c30*M30;
+    c29 = sqrt(gamma29*R_mix*T29);
+    v29 = c29*M29;
 
-    gamma30_N2_new = gamma_N2(find(abs(T - round(T30,1))==min(abs(T - round(T30,1)))) ,find( abs(P - round(P30,1))==min(abs(P - round(P30,1)))) );
-    gamma30_new = (m_dot_SRP*gamma_SRP + m_dot_N2*gamma30_N2_new)/(m_dot_N2 + m_dot_SRP);
+    gamma29_N2_new = gamma_N2(find(abs(T - round(T29,1))==min(abs(T - round(T29,1)))) ,find( abs(P - round(P29,1))==min(abs(P - round(P29,1)))) );
+    gamma29_new = (m_dot_SRP*gamma_SRP + m_dot_N2*gamma29_N2_new)/(m_dot_N2 + m_dot_SRP);
 
-    err = abs(gamma30 - gamma30_new);
+    err = abs(gamma29 - gamma29_new);
 
-    gamma30 = gamma30_new;
+    gamma29 = gamma29_new;
+end
+
+clear gamma29_new
+
+%% After cross fitting (point 30)
+
+P30 = 1e-5*(P29*1e5 - 2*rho29*v29^2);
+T30 = T29;
+
+%% After cross fitting and before injector (point 30 and 31)
+
+d30_31_ext = 19.05*1e-3;
+t30_31 = 1.5*1e-3;
+d30_31_int = d30_31_ext - 2*t30_31;
+A30_31 = pi*(d30_31_int/2)^2;
+
+eps30_31_rel = eps/d30_31_int;               % Relative roughness of stainless steel [-]
+
+L30_31 = 5*1e-2;
+rho30_N2 = rho_N2(find(abs(T - round(T30,1))==min(abs(T - round(T30,1)))) ,find( abs(P - round(P30,1))==min(abs(P - round(P30,1)))) );
+rho30 = (m_dot_SRP*rho_SRP + m_dot_N2*rho30_N2)/(m_dot_N2 + m_dot_SRP);        % Density downstream the pipe bending after the pressure regulator [kg/m^3]
+
+gamma30_N2 = gamma_N2(find(abs(T - round(T30,1))==min(abs(T - round(T30,1)))) ,find( abs(P - round(P30,1))==min(abs(P - round(P30,1)))) ); 
+gamma30 = (m_dot_SRP*gamma_SRP + m_dot_N2*gamma30_N2)/(m_dot_N2 + m_dot_SRP);   % Ratio of specific heats downstream the pipe bending after the pressure regulator [-]
+
+gamma31_N2 = gamma_N2(find(abs(T - round(T30,1))==min(abs(T - round(T30,1)))) ,find( abs(P - round(P30,1))==min(abs(P - round(P30,1)))) );
+gamma31 = (m_dot_SRP*gamma_SRP + m_dot_N2*gamma30_N2)/(m_dot_N2 + m_dot_SRP);
+mu30 = mu_N2(find(abs(T - round(T30,1))==min(abs(T - round(T30,1)))) ,find( abs(P - round(P30,1))==min(abs(P - round(P30,1)))) );           % Viscosity downstream the pipe bending after the pressure regulator [Pa*s]
+v30 = m_dot_mix/(A30_31*rho30);                                                   % Gas velocity downstream the pipe bending after pressure regulator [m/s]
+c30 = (gamma30*R_mix*T30)^0.5;                         % Sound speed downstream the pipe bending after pressure regulator [m/s]
+M30 = v30/c30;           
+                  
+Re30 = (rho30*v30*d30_31_int)/mu30;                    % Reynolds number downstream the manual ball valve [-]
+
+if Re30 < 2300
+
+        lambda = 64/Re30;
+
+    else 
+
+        z = @(x) 1/sqrt(x) + 2*log10(2.51/(Re30*sqrt(x)) + eps30_31_rel/3.71);   % Colebrook-White correlation
+        lambda = fsolve(z,0.0004);
 
 end
 
-clear gamma30_new
-clear gamma30_N2_new
+iter = 0;
+err = 1;
+
+while err > 1e-3
+
+    iter = iter + 1;
+
+    g_M30 = (1 - M30^2)/(gamma30*M30^2) + ((gamma30 + 1)/(2*gamma30))*log(((gamma30 + 1)*M30^2)/(2 + (gamma30 - 1)*M30^2) );
+    g_M31 = g_M30 - lambda*(L30_31/d30_31_int);
+
+    y = @(x) g_M31 - (1 - x^2)/(gamma31*x^2) + ((gamma31 + 1)/(2*gamma31))*log(((gamma31 + 1)*x^2)/(2 + (gamma31 - 1)*x^2) );
+    M31 = fsolve(y,0.006);
+    
+    T_star = T30/(0.5*(gamma30 + 1)/(1 + (gamma30 - 1)*0.5*M30^2));
+    T31 = T_star*(0.5*(gamma31 + 1)/(1 + (gamma31 - 1)*0.5*M31^2));
+    
+    P_star = P30/((1/M30)*sqrt(0.5*(gamma30 + 1)/(1 + (gamma30 - 1)*0.5*M30^2)));
+    P31 = P_star*((1/M31)*sqrt(0.5*(gamma31 + 1)/(1 + (gamma31 - 1)*0.5*M31^2)));
+
+    rho_star = rho30/((1/M30)*sqrt( 2*(1 + (gamma30 - 1)*0.5*M30^2)/(gamma30 + 1)));
+    rho31 = rho_star*((1/M31)*sqrt( 2*(1 + (gamma31 - 1)*0.5*M31^2)/(gamma31 + 1)));
+    
+    c31 = sqrt(gamma31*R_mix*T31);
+    v31 = c31*M31;
+
+    gamma31_N2_new = gamma_N2(find(abs(T - round(T31,1))==min(abs(T - round(T31,1)))) ,find( abs(P - round(P31,1))==min(abs(P - round(P31,1)))) );
+    gamma31_new = (m_dot_SRP*gamma_SRP + m_dot_N2*gamma31_N2_new)/(m_dot_N2 + m_dot_SRP);
+
+    err = abs(gamma31 - gamma31_new);
+
+    gamma31 = gamma31_new;
+
+end
+
+clear gamma31_new
+clear gamma31_N2_new
 
 %% Injector
 
-P_tot30 = P30*((1 + 0.5*(gamma30 - 1)*M30^2)^(gamma30/(gamma30 - 1)));
+P_tot31 = P31*((1 + 0.5*(gamma31 - 1)*M31^2)^(gamma31/(gamma31 - 1)));
 M_throat = 1;
 
-z = @(x) x/A29_30 - (M30/M_throat)*sqrt( ((1 + 0.5*(gamma30 - 1)*M_throat^2)/(1 + 0.5*(gamma30 - 1)*M30^2))^((gamma30 + 1)/(gamma30 - 1)) );
+z = @(x) x/A30_31 - (M31/M_throat)*sqrt( ((1 + 0.5*(gamma31 - 1)*M_throat^2)/(1 + 0.5*(gamma31 - 1)*M31^2))^((gamma31 + 1)/(gamma31 - 1)) );
 A_throat_int = fsolve(z,0.08);
 d_inj = sqrt(4*A_throat_int/pi)*1000    % [mm]
 
-P_chamber = P_tot30/((1 + 0.5*(gamma30 - 1)*M_throat^2)^(gamma30/(gamma30 - 1)));
+P_chamber = P_tot31/((1 + 0.5*(gamma31 - 1)*M_throat^2)^(gamma31/(gamma31 - 1)));
 
 %% Figures
-% 
-% 
-% P_vect = [P1 P10 P18 P19 P27 P28 P30];
-% x1 = 0; x10 = (L2_3 + L4_5 + L6_7 + L8_9)*1e2 + 10; 
-% x18 = x10 + (L10_11 + L12_13 + L14_15 + L16_17)*1e2 + 15;
-% x19 = x18 + 5;
-% x27 = x19 + (L20_21 + L22_23 + L24_25 + L26_27)*1e2;
-% x28 = x27 + 5;
-% x30 = x28 + L29_30*1e2;
-% x_vect = [x1 x10 x18 x19 x27 x28 x30];
-% 
-% figure()
-% plot(x_vect(1),P_vect(1),'ro','linewidth',1.5)
-% grid on
-% hold on
-% plot(x_vect(2),P_vect(2),'bo','linewidth',1.5)
-% plot(x_vect(3),P_vect(3),'go','linewidth',1.5)
-% plot(x_vect(4),P_vect(4),'ko','linewidth',1.5)
-% plot(x_vect(5),P_vect(5),'co','linewidth',1.5)
-% plot(x_vect(6),P_vect(6),'mo','linewidth',1.5)
-% plot(x_vect(7),P_vect(7),'yo','linewidth',1.5)
-% legend('$P_{initial}$','$P_{out,ball \ valve}$','$P_{in,MFM}$','$P_{out,MFM}$','$P_{in,mix \ chamber}$','$P_{out,mix \ chamber}$','$P_{before \ test \ chamber}$')
-% xlabel('Position, $x_i$ $[cm]$')
-% ylabel('Pressure, $P_i$ $[bar]$')
+L_fitting = 5;       % [cm]
+L_MFM = 10;          % [cm]
+L_mix_chamber = 10;  % [cm]
+
+
+P_vect = [P1 P10 P18 P19 P27 P28 P31];
+x1 = 0; 
+x10 = (L2_3 + L4_5 + L6_7 + L8_9)*1e2 + 3*L_fitting; 
+x18 = x10 + (L10_11 + L12_13 + L14_15 + L16_17)*1e2 + 4*L_fitting;
+x19 = x18 + L_MFM;
+x27 = x19 + (L20_21 + L22_23 + L24_25 + L26_27)*1e2 + 4*L_fitting;
+x28 = x27 + L_mix_chamber;
+x31 = x28 + (L28_29 + L30_31)*1e2 + L_fitting;
+x_vect = [x1 x10 x18 x19 x27 x28 x31];
+
+figure()
+plot(x_vect(1),P_vect(1),'ro','linewidth',1.5)
+grid on
+hold on
+plot(x_vect(2),P_vect(2),'bo','linewidth',1.5)
+plot(x_vect(3),P_vect(3),'go','linewidth',1.5)
+plot(x_vect(4),P_vect(4),'ko','linewidth',1.5)
+plot(x_vect(5),P_vect(5),'co','linewidth',1.5)
+plot(x_vect(6),P_vect(6),'mo','linewidth',1.5)
+plot(x_vect(7),P_vect(7),'yo','linewidth',1.5)
+legend('$P_{initial}$','$P_{out,ball \ valve}$','$P_{in,MFM}$','$P_{out,MFM}$','$P_{in,mix \ chamber}$','$P_{out,mix \ chamber}$','$P_{before \ test \ chamber}$')
+xlabel('Position, $x_i$ $[cm]$')
+ylabel('Pressure, $P_i$ $[bar]$')
