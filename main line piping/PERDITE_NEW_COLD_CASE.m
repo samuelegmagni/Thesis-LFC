@@ -22,7 +22,7 @@ P_in_min_MFM = polyval(p1,m_dot_N2);
 %% After pressure regulator (point 1)
 
 T1 = 298;                                       % Temperature downstream the pressure regulator [K]
-P1 = P_in_min_MFM + 0.15*P_in_min_MFM;
+P1 = P_in_min_MFM + 0.1463*P_in_min_MFM;
 
 load('nitrogenThermoPhysicalProp.mat')
 
@@ -1123,17 +1123,19 @@ end
 
 clear gamma29_new
 
+Pcc=1;
 %% Figures
 L_fitting = 5;       % [cm]
 L_MFM = 10;          % [cm]
 
-P_vect = [P1 P10 P18 P19 P29];
+P_vect = [P1 P10 P18 P19 P29 Pcc];
 x1 = 0; 
 x10 = (L2_3 + L4_5 + L6_7 + L8_9)*1e2 + 3*L_fitting; 
 x18 = x10 + (L10_11 + L12_13 + L14_15 + L16_17)*1e2 + 4*L_fitting;
 x19 = x18 + L_MFM;
 x29 = x19 + (L20_21 + L22_23 + L24_25 + L26_27 + L28_29)*1e2 + 5*L_fitting;
-x_vect = [x1 x10 x18 x19 x29];
+xcc = x19 + (L20_21 + L22_23 + L24_25 + L26_27 + L28_29)*1e2 + 6*L_fitting;
+x_vect = [x1 x10 x18 x19 x29 xcc];
 
 figure()
 plot(x_vect(1),P_vect(1),'ro','linewidth',1.5)
@@ -1143,6 +1145,7 @@ plot(x_vect(2),P_vect(2),'bo','linewidth',1.5)
 plot(x_vect(3),P_vect(3),'go','linewidth',1.5)
 plot(x_vect(4),P_vect(4),'ko','linewidth',1.5)
 plot(x_vect(5),P_vect(5),'co','linewidth',1.5)
-legend('$P_{initial}$','$P_{out,ball \ valve}$','$P_{in,MFM}$','$P_{out,MFM}$','$P_{before \ test \ chamber}$')
+plot(x_vect(6),P_vect(6),'o','linewidth',1.5)
+legend('$P_{initial}$','$P_{out,ball \ valve}$','$P_{in,MFM}$','$P_{out,MFM}$','$P_{before \ test \ chamber}$' , '$P_{ test \ chamber}$')
 xlabel('Position, $x_i$ $[cm]$')
 ylabel('Pressure, $P_i$ $[bar]$')

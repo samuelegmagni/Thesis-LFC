@@ -1132,19 +1132,21 @@ end
 
 clear gamma28_new
 
+Pcc=1;
 %% Figures
 L_fitting = 5;       % [cm]
 L_conv_Venturi = 0.0348*1e2;  % [cm]
 L_div_Venturi = 0.0489*1e2;   % [cm]
 
-P_vect = [P1 P10 P17 P20 P21 P28];
+P_vect = [P1 P10 P17 P20 P21 P28 Pcc];
 x1 = 0;
 x10 = (L2_3 + L4_5 + L6_7 + L8_9)*1e2 + 3*L_fitting; 
 x17 = x10 + (L10_11 + L12_13 + L15_16)*1e2 + 3*L_fitting;
 x20 = x17 + (L17_18 + L19_20)*1e2 + L_fitting;
 x21 = x20 + L_conv_Venturi + L_throat*1e-1 + L_div_Venturi;
 x28 = x21 + (L21_22 + L23_24 + L25_26 + L27_28)*1e2 + 3*L_fitting;
-x_vect = [x1 x10 x17 x20 x21 x28];
+xcc = x21 + (L21_22 + L23_24 + L25_26 + L27_28)*1e2 + 4*L_fitting;
+x_vect = [x1 x10 x17 x20 x21 x28 xcc];
 
 figure()
 plot(x_vect(1),P_vect(1),'ro','linewidth',1.5)
@@ -1155,6 +1157,7 @@ plot(x_vect(3),P_vect(3),'go','linewidth',1.5)
 plot(x_vect(4),P_vect(4),'ko','linewidth',1.5)
 plot(x_vect(5),P_vect(5),'co','linewidth',1.5)
 plot(x_vect(6),P_vect(6),'mo','linewidth',1.5)
-legend('$P_{initial}$','$P_{out,ball \ valve}$','$P_{after \ merging}$','$P_{in,Venturi}$','$P_{out,Venturi}$','$P_{before \ chamber}$')
+plot(x_vect(7),P_vect(7),'o','linewidth',1.5)
+legend('$P_{initial}$','$P_{out,ball \ valve}$','$P_{after \ merging}$','$P_{in,Venturi}$','$P_{out,Venturi}$','$P_{before \ chamber}$', '$P_{ test \ chamber}$')
 xlabel('Position, $x_i$ $[cm]$')
 ylabel('Pressure, $P_i$ $[bar]$')
