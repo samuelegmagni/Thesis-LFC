@@ -11,7 +11,7 @@ set(groot,'DefaultAxesTickLabelInterpreter','Latex');
 set(0,'DefaultTextInterpreter','Latex');
 set(0,'DefaultLegendFontSize',12);
 
-m_dot_N2 = 75*1e-3;                  % Nitrogen mass flow rate [kg/s]
+m_dot_N2 = 50*1e-3;                  % Nitrogen mass flow rate [kg/s]
 
 mdotvect = [1.042 2.083 4.167 8.333 20.83 41.67 60 83.33]*1e-3;
 P_in_MFMvect = [0.5283 1.5222 3.743 8.336 22.25 45.47 65.92 91.94];
@@ -22,7 +22,7 @@ P_in_min_MFM = polyval(p1,m_dot_N2)
 %% After pressure regulator (point 1)
 
 T1 = 298;                                       % Temperature downstream the pressure regulator [K]
-P1 = P_in_min_MFM + 0.1823*P_in_min_MFM; 
+P1 = P_in_min_MFM + 0.5*P_in_min_MFM; 
 
 load('nitrogenThermoPhysicalProp.mat')
 
