@@ -18,7 +18,7 @@ m_dot_N2 = 50*1e-3;                  % Nitrogen mass flow rate [kg/s]
 %% After pressure regulator (point 1)
 
 T1 = 298;                                       % Temperature downstream the pressure regulator [K]
-P1 = 69.5; 
+P1 = 80; 
 
 load('nitrogenThermoPhysicalProp.mat')
 
