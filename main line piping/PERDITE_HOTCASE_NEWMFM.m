@@ -647,8 +647,8 @@ q_N2 = (m_dot_N2/rho18)*1000;           % Nitrogen volumetric flow rate [L/s]
 C_V = 0.1;                             % Flow coefficient needle valve
 
 P19 = P18 - (G_g*(q_N2*60)^2)/(14.42*C_V)^2;     % Pressure downstream the mass flow meter (needle valve approx) [bar]
+T19=T18;
 
-T19 = T18;     
 
 rho19 = rho_N2(find(abs(T - round(T19,1))==min(abs(T - round(T19,1)))) ,find( abs(P - round(P19,1))==min(abs(P - round(P19,1)))) );         % Density downstream the pipe bending after the pressure regulator [kg/m^3]
 gamma19 = gamma_N2(find(abs(T - round(T19,1))==min(abs(T - round(T19,1)))) ,find( abs(P - round(P19,1))==min(abs(P - round(P19,1)))) );      % Ratio of specific heats downstream the pipe bending after the pressure regulator [-]
