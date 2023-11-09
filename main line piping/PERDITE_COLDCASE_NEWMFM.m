@@ -11,13 +11,13 @@ set(groot,'DefaultAxesTickLabelInterpreter','Latex');
 set(0,'DefaultTextInterpreter','Latex');
 set(0,'DefaultLegendFontSize',12);
 
-m_dot_N2 = 61*1e-3;                  % Nitrogen mass flow rate [kg/s]
+m_dot_N2 = 78*1e-3;                  % Nitrogen mass flow rate [kg/s]
 
 
 %% After pressure regulator (point 1)
 
 T1 = 298;                                       % Temperature downstream the pressure regulator [K]
-P1 = 25.7;
+P1 =66;
 
 load('nitrogenThermoPhysicalProp.mat')
 
@@ -653,9 +653,12 @@ A18_19 = pi*(d18_19_int/2)^2;
 
 G_g = rho18/1000;                       % Nitrogen specific gravity [-]
 q_N2 = (m_dot_N2/rho18)*1000;           % Nitrogen volumetric flow rate [L/s]
-C_V = 1;                             % Flow coefficient needle valve
+mdotvect = [6.67 50 78 ]*1e-3;
+Cv_MFMvect = [0.01139 0.10481 0.1916];
+p1 = polyfit(mdotvect,Cv_MFMvect,1);
+Cv = polyval(p1,m_dot_N2)
 
-P19 = P18 - (G_g*(q_N2*60)^2)/(14.42*C_V)^2;                                            % Pressure downstream the mass flow meter (needle valve approx) [bar]
+P19 = P18 - (G_g*(q_N2*60)^2)/(14.42*Cv)^2;                                            % Pressure downstream the mass flow meter (needle valve approx) [bar]
 T19 = T18;      
 
 rho19 = rho_N2(find(abs(T - round(T19,1))==min(abs(T - round(T19,1)))) ,find( abs(P - round(P19,1))==min(abs(P - round(P19,1)))) );         % Density downstream the pipe bending after the pressure regulator [kg/m^3]
