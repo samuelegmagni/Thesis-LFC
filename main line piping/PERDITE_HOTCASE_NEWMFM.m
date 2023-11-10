@@ -18,7 +18,7 @@ m_dot_N2 =73*1e-3;                  % Nitrogen mass flow rate [kg/s]
 %% After pressure regulator (point 1)
 
 T1 = 298;                                       % Temperature downstream the pressure regulator [K]
-P1 = 65.5; 
+P1 = 38.5; 
 
 load('nitrogenThermoPhysicalProp.mat')
 
@@ -645,10 +645,11 @@ A18_19 = pi*(d18_19_int/2)^2;
 G_g = rho18/1000;                       % Nitrogen specific gravity [-]
 q_N2 = (m_dot_N2/rho18)*1000;           % Nitrogen volumetric flow rate [L/s]
 
-mdotvect = [6.67 50 78 ]*1e-3;
-Cv_MFMvect = [0.01139 0.10481 0.1916];
-p1 = polyfit(mdotvect,Cv_MFMvect,1);
-Cv = polyval(p1,m_dot_N2)
+% mdotvect = [6.67 50 78 ]*1e-3;
+% Cv_MFMvect = [0.01139 0.10481 0.1916];
+% p1 = polyfit(mdotvect,Cv_MFMvect,1);
+% Cv = polyval(p1,m_dot_N2)
+Cv=0.44;
 P19 = P18 - (G_g*(q_N2*60)^2)/(14.42*Cv)^2;     % Pressure downstream the mass flow meter (needle valve approx) [bar]
 T19=T18;
 
