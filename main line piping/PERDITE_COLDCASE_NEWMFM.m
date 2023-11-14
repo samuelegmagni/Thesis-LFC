@@ -11,13 +11,13 @@ set(groot,'DefaultAxesTickLabelInterpreter','Latex');
 set(0,'DefaultTextInterpreter','Latex');
 set(0,'DefaultLegendFontSize',12);
 
-m_dot_N2 =61*1e-3;                  % Nitrogen mass flow rate [kg/s]
+m_dot_N2 =78*1e-3;                  % Nitrogen mass flow rate [kg/s]
 
 
 %% After pressure regulator (point 1)
 
 T1 = 298;                                       % Temperature downstream the pressure regulator [K]
-P1 =56.5;
+P1 =132.3;
 load('nitrogenThermoPhysicalProp.mat')
 
 rho_N2 = rho;           % Density of Nitrogen [kg/m^3] 
@@ -656,7 +656,7 @@ q_N2 = (m_dot_N2/rho18)*1000;           % Nitrogen volumetric flow rate [L/s]
 % Cv_MFMvect = [0.01139 0.10481 0.1916];
 % p1 = polyfit(mdotvect,Cv_MFMvect,1);
 % Cv = polyval(p1,m_dot_N2)
-Cv=0.165;
+Cv=0.08;
 P19 = P18 - (G_g*(q_N2*60)^2)/(14.42*Cv)^2;                                            % Pressure downstream the mass flow meter (needle valve approx) [bar]
 T19 = T18;      
 
