@@ -11,7 +11,7 @@ set(0,'DefaultTextInterpreter','Latex');
 set(0,'DefaultLegendFontSize',12);
 
 %%
-T_vect = [280:5:600];
+T_vect = [280:5:650];
 P_vect = [1:0.5:3];
 
 data = nistdata('N2',T_vect,P_vect);
@@ -162,7 +162,7 @@ c.Label.Interpreter = 'latex';
 
 %% Small scale test facility
 
-T_small = [300:5:600];
+T_small = [300:5:650];
 P_small = [1:0.5:3];
 
 data = nistdata('N2',T_small,P_small);
